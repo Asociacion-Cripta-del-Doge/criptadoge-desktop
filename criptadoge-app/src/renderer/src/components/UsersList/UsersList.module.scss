@@ -1,0 +1,46 @@
+@import '../../styles/variables';
+
+.container {
+  background-color: $bg-main;
+  color: $text-main;
+  font-family: $font-main;
+  min-height: 100vh;
+  padding: 2rem;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+
+  h1 {
+    font-family: $font-title;
+    color: $text-main;
+    font-size: 2rem;
+    margin: 0;
+  }
+}
+
+.primaryBtn {
+  background-color: $color-primary;
+  color: $text-main;
+  border: none;
+  padding: 0.75rem 1.5rem;
+  border-radius: 6px;
+  font-family: $font-main;
+  font-weight: bold;
+  cursor: pointer;
+  transition: opacity 0.2s;
+
+  &:hover {
+    opacity: 0.9;
+  }
+}
+
+.card {
+  background-color: $bg-card;
+  border: 1px solid $color-border;
+  border-radius: 8px;
+  padding: 1.5rem;
+}
