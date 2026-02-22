@@ -118,3 +118,37 @@
     color: v.$color-primary;
   }
 }
+
+.toolbar {
+  margin-bottom: 1.5rem;
+  display: flex;
+}
+
+.searchInput {
+  width: 100%;
+  max-width: 400px;
+  padding: 0.75rem 1rem;
+  border-radius: 6px;
+  border: 1px solid v.$color-border;
+  background-color: v.$bg-main; 
+  color: v.$text-main;
+  font-family: v.$font-main;
+  font-size: 0.95rem;
+  outline: none;
+  transition: border-color 0.2s;
+
+  &:focus {
+    border-color: v.$color-primary;
+  }
+
+  &::placeholder {
+    color: v.$text-muted;
+  }
+}
+
+.noResults {
+  text-align: center;
+  padding: 3rem 0 !important;
+  color: v.$text-muted;
+  font-style: italic;
+}

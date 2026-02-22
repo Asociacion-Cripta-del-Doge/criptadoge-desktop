@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
 import styles from './UsersList.module.scss';
-import { MemberRow, Member } from '../MemberRow/MemberRow'; 
+import { MemberRow, Member } from '../MemberRow/MemberRow';
 
 const MOCK_MEMBERS: Member[] = [
   { id: '1', name: 'Ana García', email: 'ana@ejemplo.com', status: 'Activo', joinDate: '2025-01-15' },
@@ -11,6 +11,16 @@ const MOCK_MEMBERS: Member[] = [
 
 export const UsersList: React.FC = () => {
   const [members] = useState<Member[]>(MOCK_MEMBERS);
+  const [searchTerm, setSearchTerm] = useState('');
+  const filteredMembers = useMemo(() => {
+    return members.filter((member) => {
+      const lowerCaseTerm = searchTerm.toLowerCase();
+      return (
+        member.name.toLowerCase().includes(lowerCaseTerm) ||
+        member.email.toLowerCase().includes(lowerCaseTerm)
+      );
+    });
+  }, [members, searchTerm]);
 
   return (
     <div className={styles.container}>
@@ -20,6 +30,16 @@ export const UsersList: React.FC = () => {
       </header>
 
       <div className={styles.card}>
+        <div className={styles.toolbar}>
+          <input
+            type="text"
+            placeholder="Buscar por nombre o email..."
+            className={styles.searchInput}
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)} 
+          />
+        </div>
+
         <table className={styles.table}>
           <thead>
             <tr>
@@ -31,9 +51,17 @@ export const UsersList: React.FC = () => {
             </tr>
           </thead>
           <tbody>
-            {members.map((member) => (
-              <MemberRow key={member.id} member={member} />
-            ))}
+            {filteredMembers.length > 0 ? (
+              filteredMembers.map((member) => (
+                <MemberRow key={member.id} member={member} />
+              ))
+            ) : (
+              <tr>
+                <td colSpan={5} className={styles.noResults}>
+                  No se han encontrado socios con "{searchTerm}"
+                </td>
+              </tr>
+            )}
           </tbody>
         </table>
       </div>
