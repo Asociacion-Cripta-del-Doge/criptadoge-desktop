@@ -11,9 +11,10 @@ export interface Member {
 
 interface MemberRowProps {
   member: Member;
+  onViewProfile: (member: Member) => void;
 }
 
-export const MemberRow: React.FC<MemberRowProps> = ({ member }) => {
+export const MemberRow: React.FC<MemberRowProps> = ({ member, onViewProfile }) => {
   return (
     <tr>
       <td>{member.name}</td>
@@ -25,7 +26,12 @@ export const MemberRow: React.FC<MemberRowProps> = ({ member }) => {
       </td>
       <td>{member.joinDate}</td>
       <td>
-        <button className={styles.actionBtn}>Ver Ficha</button>
+        <button 
+          className={styles.actionBtn} 
+          onClick={() => onViewProfile(member)}
+        >
+          Ver Ficha
+        </button>
       </td>
     </tr>
   );

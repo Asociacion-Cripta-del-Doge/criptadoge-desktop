@@ -1,6 +1,7 @@
 import React, { useState, useMemo } from 'react';
 import styles from './UsersList.module.scss';
 import { MemberRow, Member } from '../MemberRow/MemberRow';
+import { MemberProfile } from '../MemberProfile/MemberProfile';
 
 const MOCK_MEMBERS: Member[] = [
   { id: '1', name: 'Ana García', email: 'ana@ejemplo.com', status: 'Activo', joinDate: '2025-01-15' },
@@ -12,6 +13,7 @@ const MOCK_MEMBERS: Member[] = [
 export const UsersList: React.FC = () => {
   const [members] = useState<Member[]>(MOCK_MEMBERS);
   const [searchTerm, setSearchTerm] = useState('');
+  const [selectedMember, setSelectedMember] = useState<Member | null>(null);
   const filteredMembers = useMemo(() => {
     return members.filter((member) => {
       const lowerCaseTerm = searchTerm.toLowerCase();
@@ -21,6 +23,15 @@ export const UsersList: React.FC = () => {
       );
     });
   }, [members, searchTerm]);
+
+  if (selectedMember) {
+    return (
+      <MemberProfile 
+        member={selectedMember} 
+        onBack={() => setSelectedMember(null)}
+      />
+    );
+  }
 
   return (
     <div className={styles.container}>
@@ -53,7 +64,7 @@ export const UsersList: React.FC = () => {
           <tbody>
             {filteredMembers.length > 0 ? (
               filteredMembers.map((member) => (
-                <MemberRow key={member.id} member={member} />
+                <MemberRow key={member.id} member={member} onViewProfile={setSelectedMember} />
               ))
             ) : (
               <tr>
