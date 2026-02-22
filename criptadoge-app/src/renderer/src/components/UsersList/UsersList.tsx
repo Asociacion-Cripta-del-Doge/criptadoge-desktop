@@ -1,12 +1,6 @@
 import React, { useState } from 'react';
 import styles from './UsersList.module.scss';
-interface Member {
-  id: string;
-  name: string;
-  email: string;
-  status: 'Activo' | 'Inactivo' | 'Pendiente';
-  joinDate: string;
-}
+import { MemberRow, Member } from '../MemberRow/MemberRow'; 
 
 const MOCK_MEMBERS: Member[] = [
   { id: '1', name: 'Ana García', email: 'ana@ejemplo.com', status: 'Activo', joinDate: '2025-01-15' },
@@ -38,19 +32,7 @@ export const UsersList: React.FC = () => {
           </thead>
           <tbody>
             {members.map((member) => (
-              <tr key={member.id}>
-                <td>{member.name}</td>
-                <td>{member.email}</td>
-                <td>
-                  <span className={`${styles.badge} ${styles[member.status.toLowerCase()]}`}>
-                    {member.status}
-                  </span>
-                </td>
-                <td>{member.joinDate}</td>
-                <td>
-                  <button className={styles.actionBtn}>Ver Ficha</button>
-                </td>
-              </tr>
+              <MemberRow key={member.id} member={member} />
             ))}
           </tbody>
         </table>
