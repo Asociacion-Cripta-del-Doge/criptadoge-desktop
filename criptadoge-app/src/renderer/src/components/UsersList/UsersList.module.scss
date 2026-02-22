@@ -1,9 +1,10 @@
-@import '../../styles/variables';
+
+@use '../../styles/variables' as v;
 
 .container {
-  background-color: $bg-main;
-  color: $text-main;
-  font-family: $font-main;
+  background-color: v.$bg-main;
+  color: v.$text-main;
+  font-family: v.$font-main;
   min-height: 100vh;
   padding: 2rem;
 }
@@ -15,20 +16,20 @@
   margin-bottom: 2rem;
 
   h1 {
-    font-family: $font-title;
-    color: $text-main;
+    font-family: v.$font-title;
+    color: v.$text-main;
     font-size: 2rem;
     margin: 0;
   }
 }
 
 .primaryBtn {
-  background-color: $color-primary;
-  color: $text-main;
+  background-color: v.$color-primary;
+  color: v.$text-main;
   border: none;
   padding: 0.75rem 1.5rem;
   border-radius: 6px;
-  font-family: $font-main;
+  font-family: v.$font-main;
   font-weight: bold;
   cursor: pointer;
   transition: opacity 0.2s;
@@ -39,8 +40,8 @@
 }
 
 .card {
-  background-color: $bg-card;
-  border: 1px solid $color-border;
+  background-color: v.$bg-card;
+  border: 1px solid v.$color-border;
   border-radius: 8px;
   padding: 1.5rem;
 }
