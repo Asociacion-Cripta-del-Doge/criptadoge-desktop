@@ -34,9 +34,30 @@
   box-sizing: border-box;
 }
 
-html, body, #root {
+html,
+body,
+#root {
   width: 100vw;
   height: 100vh;
-  background-color: #0f172a; /* Fondo principal de tu guía */
-  overflow: hidden; /* Evita scrollbars nativos dobles en la ventana */
+  background-color: #0f172a;
+  overflow: hidden;
+}
+
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.02);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #334155;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #475569;
 }
