@@ -21,6 +21,8 @@ export const MemberProfile: React.FC = () => {
     )
   }
 
+  const status = getMemberStatus(member.expirationDate)
+
   const handleConfirmRenew = () => {
     console.log(`Simulando llamada a API: POST /renew para el socio ${member.id}`)
     setShowModal(false)
@@ -63,16 +65,6 @@ export const MemberProfile: React.FC = () => {
             <p>
               <strong>{member.expirationDate || '---'}</strong>
             </p>
-          </div>
-          <div className={styles.infoGroup}>
-            <label>Última Renovación</label>
-            <p>{member.lastRenewal}</p>
-          </div>
-          <div className={styles.infoGroup}>
-            <label>Fecha de Expiración</label>
-            <p>
-              <strong>{member.expirationDate}</strong>
-            </p>{' '}
           </div>
         </div>
 
