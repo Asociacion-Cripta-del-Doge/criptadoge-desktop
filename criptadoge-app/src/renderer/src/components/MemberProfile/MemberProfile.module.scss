@@ -120,50 +120,6 @@
   }
 }
 
-.modalOverlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100vw;
-  height: 100vh;
-  background-color: rgba(0, 0, 0, 0.75);
-  backdrop-filter: blur(4px);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  z-index: 1000;
-}
-
-.modalCard {
-  background-color: v.$bg-card;
-  border: 1px solid v.$color-border;
-  border-radius: 8px;
-  padding: 2.5rem;
-  width: 90%;
-  max-width: 450px;
-  text-align: center;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
-  animation: modalIn 0.2s ease-out forwards;
-
-  h3 {
-    font-family: v.$font-title;
-    color: v.$text-main;
-    font-size: 1.5rem;
-    margin-bottom: 1rem;
-  }
-
-  p {
-    color: v.$text-muted;
-    line-height: 1.6;
-    margin-bottom: 2rem;
-    font-size: 1.05rem;
-
-    strong {
-      color: v.$color-primary;
-    }
-  }
-}
-
 .modalActions {
   display: flex;
   gap: 1rem;
@@ -208,6 +164,28 @@
     opacity: 1;
     transform: scale(1) translateY(0);
   }
+}
+
+.renewSubtext {
+  display: block;
+  font-size: 0.8rem;
+  font-weight: normal;
+  margin-top: 0.5rem;
+}
+
+.modalText {
+  color: v.$text-muted;
+  line-height: 1.6;
+  margin-bottom: 2rem;
+  font-size: 1.05rem;
+}
+
+.highlight {
+  color: v.$color-primary;
+}
+
+.modalConfirmBtn {
+  padding: 1rem;
 }
 
 @media (max-width: 768px) {

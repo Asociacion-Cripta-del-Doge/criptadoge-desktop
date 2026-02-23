@@ -2,6 +2,7 @@ import React, { useState } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
 import styles from './MemberProfile.module.scss'
 import { MOCK_MEMBERS, getMemberStatus } from '../../data/members'
+import { Modal } from '../Modal/Modal'
 
 export const MemberProfile: React.FC = () => {
   const { id } = useParams<{ id: string }>()
@@ -71,16 +72,7 @@ export const MemberProfile: React.FC = () => {
         <div className={styles.actionsCard}>
           <button className={styles.renewBtn} onClick={() => setShowModal(true)}>
             Renovar Membresía
-            <span
-              style={{
-                display: 'block',
-                fontSize: '0.8rem',
-                fontWeight: 'normal',
-                marginTop: '0.5rem'
-              }}
-            >
-              Cargar 1 Mes
-            </span>
+            <span className={styles.renewSubtext}>Cargar 1 Mes</span>
           </button>
 
           <button className={styles.secondaryBtn}>Editar Datos</button>
@@ -88,30 +80,25 @@ export const MemberProfile: React.FC = () => {
         </div>
       </div>
 
-      {showModal && (
-        <div className={styles.modalOverlay}>
-          <div className={styles.modalCard}>
-            <h3>CONFIRMAR RENOVACIÓN</h3>
-            <p>
-              ¿Estás seguro de que deseas renovar la membresía de <strong>{member.name}</strong>?{' '}
-              <br />
-              Se cargará <strong>1 mes</strong> de acceso a su cuenta.
-            </p>
-            <div className={styles.modalActions}>
-              <button className={styles.secondaryBtn} onClick={() => setShowModal(false)}>
-                Cancelar
-              </button>
-              <button
-                className={styles.renewBtn}
-                style={{ padding: '1rem' }}
-                onClick={handleConfirmRenew}
-              >
-                Confirmar
-              </button>
-            </div>
-          </div>
+      <Modal isOpen={showModal} onClose={() => setShowModal(false)} title="CONFIRMAR RENOVACIÓN">
+        <p className={styles.modalText}>
+          ¿Estás seguro de que deseas renovar la membresía de{' '}
+          <strong className={styles.highlight}>{member.name}</strong>? <br />
+          Se cargará <strong>1 mes</strong> de acceso a su cuenta.
+        </p>
+
+        <div className={styles.modalActions}>
+          <button className={styles.secondaryBtn} onClick={() => setShowModal(false)}>
+            Cancelar
+          </button>
+          <button
+            className={`${styles.renewBtn} ${styles.modalConfirmBtn}`}
+            onClick={handleConfirmRenew}
+          >
+            Confirmar
+          </button>
         </div>
-      )}
+      </Modal>
     </div>
   )
 }
