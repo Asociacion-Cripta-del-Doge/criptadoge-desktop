@@ -4,8 +4,7 @@
   background-color: v.$bg-main;
   color: v.$text-main;
   font-family: v.$font-main;
-  width: 100%;
-  height: 100vh;
+  height: 100%;
   padding: 2rem;
   overflow-y: auto;
 }
@@ -208,5 +207,27 @@
   to {
     opacity: 1;
     transform: scale(1) translateY(0);
+  }
+}
+
+@media (max-width: 768px) {
+  .container {
+    padding: 1rem;
+  }
+
+  .profileLayout {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+
+  .renewBtn,
+  .secondaryBtn,
+  .dangerBtn {
+    padding: 1rem;
+    font-size: 1rem;
+  }
+
+  .dangerBtn {
+    margin-top: 0;
   }
 }
