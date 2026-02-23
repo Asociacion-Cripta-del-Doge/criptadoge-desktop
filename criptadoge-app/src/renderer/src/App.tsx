@@ -1,9 +1,9 @@
 import { HashRouter, Routes, Route } from 'react-router-dom'
 import { Layout } from './components/Layout/Layout'
 import { UsersList } from './components/UsersList/UsersList'
+import { MemberProfile } from './components/MemberProfile/MemberProfile'
 
 const DummyDashboard = () => (
-  //dashboard temporal!!
   <div style={{ padding: '3rem', color: 'white', fontFamily: 'Roboto' }}>
     <h1 style={{ fontFamily: 'Minecraft', fontSize: '2.5rem', marginBottom: '1rem' }}>
       DASHBOARD PRINCIPAL
@@ -21,6 +21,7 @@ function App() {
         <Route path="/" element={<Layout />}>
           <Route index element={<DummyDashboard />} />
           <Route path="socios" element={<UsersList />} />
+          <Route path="socios/:id" element={<MemberProfile />} />
         </Route>
       </Routes>
     </HashRouter>

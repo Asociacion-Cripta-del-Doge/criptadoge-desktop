@@ -1,37 +1,24 @@
-import React, { useState, useMemo } from 'react';
-import styles from './UsersList.module.scss';
-import { MemberRow, Member } from '../MemberRow/MemberRow';
-import { MemberProfile } from '../MemberProfile/MemberProfile';
-
-const MOCK_MEMBERS: Member[] = [
-  { id: '1', name: 'Ana García', email: 'ana@ejemplo.com', status: 'Activo', joinDate: '2025-01-15' },
-  { id: '2', name: 'Carlos López', email: 'carlos@ejemplo.com', status: 'Inactivo', joinDate: '2024-11-02' },
-  { id: '3', name: 'Lucía Pérez', email: 'lucia@ejemplo.com', status: 'Pendiente', joinDate: '2026-02-20' },
-  { id: '4', name: 'Marcos Doge', email: 'marcos@cripta.com', status: 'Activo', joinDate: '2023-08-10' },
-];
+import React, { useState, useMemo } from 'react'
+import { useNavigate } from 'react-router-dom'
+import styles from './UsersList.module.scss'
+import { MemberRow } from '../MemberRow/MemberRow'
+import { MOCK_MEMBERS } from '../../data/members'
 
 export const UsersList: React.FC = () => {
-  const [members] = useState<Member[]>(MOCK_MEMBERS);
-  const [searchTerm, setSearchTerm] = useState('');
-  const [selectedMember, setSelectedMember] = useState<Member | null>(null);
+  const navigate = useNavigate()
+  const [searchTerm, setSearchTerm] = useState('')
+
+  // Ahora filtramos por Nombre, Email o DNI
   const filteredMembers = useMemo(() => {
-    return members.filter((member) => {
-      const lowerCaseTerm = searchTerm.toLowerCase();
+    return MOCK_MEMBERS.filter((member) => {
+      const lowerCaseTerm = searchTerm.toLowerCase()
       return (
         member.name.toLowerCase().includes(lowerCaseTerm) ||
-        member.email.toLowerCase().includes(lowerCaseTerm)
-      );
-    });
-  }, [members, searchTerm]);
-
-  if (selectedMember) {
-    return (
-      <MemberProfile 
-        member={selectedMember} 
-        onBack={() => setSelectedMember(null)}
-      />
-    );
-  }
+        member.email.toLowerCase().includes(lowerCaseTerm) ||
+        member.dni.toLowerCase().includes(lowerCaseTerm) // <-- Búsqueda por DNI
+      )
+    })
+  }, [searchTerm])
 
   return (
     <div className={styles.container}>
@@ -44,16 +31,17 @@ export const UsersList: React.FC = () => {
         <div className={styles.toolbar}>
           <input
             type="text"
-            placeholder="Buscar por nombre o email..."
+            placeholder="Buscar por DNI, nombre o email..." // <-- Texto actualizado
             className={styles.searchInput}
             value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)} 
+            onChange={(e) => setSearchTerm(e.target.value)}
           />
         </div>
 
         <table className={styles.table}>
           <thead>
             <tr>
+              <th>DNI</th>
               <th>Nombre</th>
               <th>Email</th>
               <th>Estado</th>
@@ -64,11 +52,16 @@ export const UsersList: React.FC = () => {
           <tbody>
             {filteredMembers.length > 0 ? (
               filteredMembers.map((member) => (
-                <MemberRow key={member.id} member={member} onViewProfile={setSelectedMember} />
+                <MemberRow
+                  key={member.id}
+                  member={member}
+                  onViewProfile={(id) => navigate(`/socios/${id}`)}
+                />
               ))
             ) : (
               <tr>
-                <td colSpan={5} className={styles.noResults}>
+                <td colSpan={6} className={styles.noResults}>
+                  {' '}
                   No se han encontrado socios con "{searchTerm}"
                 </td>
               </tr>
@@ -77,5 +70,5 @@ export const UsersList: React.FC = () => {
         </table>
       </div>
     </div>
-  );
-};
+  )
+}

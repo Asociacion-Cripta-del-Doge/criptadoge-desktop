@@ -1,22 +1,18 @@
-import React from 'react';
-import styles from './MemberRow.module.scss';
-
-export interface Member {
-  id: string;
-  name: string;
-  email: string;
-  status: 'Activo' | 'Inactivo' | 'Pendiente';
-  joinDate: string;
-}
+import React from 'react'
+import styles from './MemberRow.module.scss'
+import { Member } from '../../data/members'
 
 interface MemberRowProps {
-  member: Member;
-  onViewProfile: (member: Member) => void;
+  member: Member
+  onViewProfile: (id: string) => void
 }
 
 export const MemberRow: React.FC<MemberRowProps> = ({ member, onViewProfile }) => {
   return (
     <tr>
+      <td>
+        <strong>{member.dni}</strong>
+      </td>{' '}
       <td>{member.name}</td>
       <td>{member.email}</td>
       <td>
@@ -26,13 +22,10 @@ export const MemberRow: React.FC<MemberRowProps> = ({ member, onViewProfile }) =
       </td>
       <td>{member.joinDate}</td>
       <td>
-        <button 
-          className={styles.actionBtn} 
-          onClick={() => onViewProfile(member)}
-        >
+        <button className={styles.actionBtn} onClick={() => onViewProfile(member.id)}>
           Ver Ficha
         </button>
       </td>
     </tr>
-  );
-};
+  )
+}
