@@ -4,7 +4,7 @@
   background-color: v.$bg-main;
   color: v.$text-main;
   font-family: v.$font-main;
-  min-height: 100vh;
+  height: 100%;
   padding: 2rem;
   overflow-y: auto;
 }
@@ -44,7 +44,7 @@
   border: 1px solid v.$color-border;
   border-radius: 8px;
   padding: 1.5rem;
-  overflow-x: auto; 
+  overflow-x: auto;
 }
 
 .table {
@@ -88,10 +88,9 @@
   letter-spacing: 0.5px;
 }
 
-
 .activo {
-  background-color: rgba(v.$color-accent, 0.15); 
-  color: v.$color-accent; 
+  background-color: rgba(v.$color-accent, 0.15);
+  color: v.$color-accent;
 }
 
 .inactivo {
@@ -101,7 +100,7 @@
 
 .pendiente {
   background-color: rgba(v.$text-muted, 0.15);
-  color: v.$text-muted; 
+  color: v.$text-muted;
 }
 
 .actionBtn {
@@ -130,7 +129,7 @@
   padding: 0.75rem 1rem;
   border-radius: 6px;
   border: 1px solid v.$color-border;
-  background-color: v.$bg-main; 
+  background-color: v.$bg-main;
   color: v.$text-main;
   font-family: v.$font-main;
   font-size: 0.95rem;
