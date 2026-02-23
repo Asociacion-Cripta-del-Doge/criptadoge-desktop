@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
 import styles from './MemberProfile.module.scss'
-import { MOCK_MEMBERS } from '../../data/members'
+import { MOCK_MEMBERS, getMemberStatus } from '../../data/members'
 
 export const MemberProfile: React.FC = () => {
   const { id } = useParams<{ id: string }>()
@@ -40,7 +40,6 @@ export const MemberProfile: React.FC = () => {
             <label>DNI / NIE</label>
             <p>{member.dni}</p>
           </div>
-
           <div className={styles.infoGroup}>
             <label>Nombre Completo</label>
             <p>{member.name}</p>
@@ -51,11 +50,29 @@ export const MemberProfile: React.FC = () => {
           </div>
           <div className={styles.infoGroup}>
             <label>Estado Actual</label>
-            <p>{member.status}</p>
+            <p>
+              <span className={`${styles.badge} ${styles[status.toLowerCase()]}`}>{status}</span>
+            </p>
           </div>
           <div className={styles.infoGroup}>
-            <label>Miembro desde</label>
-            <p>{member.joinDate}</p>
+            <label>Última Renovación</label>
+            <p>{member.lastRenewal || 'Nunca'}</p>
+          </div>
+          <div className={styles.infoGroup}>
+            <label>Fecha de Expiración</label>
+            <p>
+              <strong>{member.expirationDate || '---'}</strong>
+            </p>
+          </div>
+          <div className={styles.infoGroup}>
+            <label>Última Renovación</label>
+            <p>{member.lastRenewal}</p>
+          </div>
+          <div className={styles.infoGroup}>
+            <label>Fecha de Expiración</label>
+            <p>
+              <strong>{member.expirationDate}</strong>
+            </p>{' '}
           </div>
         </div>
 

@@ -1,6 +1,6 @@
 import React from 'react'
 import styles from './MemberRow.module.scss'
-import { Member } from '../../data/members'
+import { Member, getMemberStatus } from '../../data/members'
 
 interface MemberRowProps {
   member: Member
@@ -8,19 +8,19 @@ interface MemberRowProps {
 }
 
 export const MemberRow: React.FC<MemberRowProps> = ({ member, onViewProfile }) => {
+  const status = getMemberStatus(member.expirationDate)
+
   return (
     <tr>
       <td>
         <strong>{member.dni}</strong>
-      </td>{' '}
+      </td>
       <td>{member.name}</td>
       <td>{member.email}</td>
       <td>
-        <span className={`${styles.badge} ${styles[member.status.toLowerCase()]}`}>
-          {member.status}
-        </span>
+        <span className={`${styles.badge} ${styles[status.toLowerCase()]}`}>{status}</span>
       </td>
-      <td>{member.joinDate}</td>
+      <td>{member.expirationDate || '---'}</td>
       <td>
         <button className={styles.actionBtn} onClick={() => onViewProfile(member.id)}>
           Ver Ficha

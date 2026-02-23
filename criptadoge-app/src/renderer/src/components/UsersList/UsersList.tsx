@@ -45,7 +45,7 @@ export const UsersList: React.FC = () => {
               <th>Nombre</th>
               <th>Email</th>
               <th>Estado</th>
-              <th>Fecha de Alta</th>
+              <th>Expira el</th>
               <th>Acciones</th>
             </tr>
           </thead>

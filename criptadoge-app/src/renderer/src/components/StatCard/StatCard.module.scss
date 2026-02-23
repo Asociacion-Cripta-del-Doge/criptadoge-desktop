@@ -1,0 +1,49 @@
+@use '../../styles/variables' as v;
+
+.card {
+  background-color: v.$bg-card;
+  border: 1px solid v.$color-border;
+  border-radius: 8px;
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  transition:
+    transform 0.2s,
+    box-shadow 0.2s;
+
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  }
+}
+
+.title {
+  color: v.$text-muted;
+  font-size: 0.9rem;
+  text-transform: uppercase;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+}
+
+.value {
+  color: v.$text-main;
+  font-family: v.$font-title;
+  font-size: 2.5rem;
+  margin: 0.5rem 0;
+}
+
+.subtitle {
+  font-size: 0.85rem;
+  font-weight: 500;
+}
+
+.positive {
+  color: v.$color-accent;
+}
+.negative {
+  color: v.$color-error;
+}
+.neutral {
+  color: v.$text-muted;
+}
