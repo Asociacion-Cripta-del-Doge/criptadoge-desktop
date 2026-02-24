@@ -1,8 +1,10 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { NavLink, Outlet } from 'react-router-dom'
 import styles from './Layout.module.scss'
 
 export const Layout: React.FC = () => {
+  const [sessionActive, setSession] = useState(false)
+
   return (
     <div className={styles.layoutContainer}>
       <aside className={styles.sidebar}>
@@ -13,15 +15,25 @@ export const Layout: React.FC = () => {
 
         <nav className={styles.nav}>
           <NavLink
+            // hidden={sessionActive}
             to="/"
+            className={({ isActive }) =>
+              `${styles.navItem} ${isActive ? styles.navItemActive : ''}`
+            }
+          >
+            Login
+          </NavLink>
+          <NavLink
+            // hidden={!sessionActive}
+            to="/dashboard"
             className={({ isActive }) =>
               `${styles.navItem} ${isActive ? styles.navItemActive : ''}`
             }
           >
             Dashboard
           </NavLink>
-
           <NavLink
+            // hidden={!sessionActive}
             to="/socios"
             className={({ isActive }) =>
               `${styles.navItem} ${isActive ? styles.navItemActive : ''}`
@@ -29,6 +41,7 @@ export const Layout: React.FC = () => {
           >
             Gestión de Socios
           </NavLink>
+
         </nav>
       </aside>
 
