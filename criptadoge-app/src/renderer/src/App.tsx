@@ -31,6 +31,7 @@ function App() {
               <Route index element={<Dashboard />} />
               <Route path="socios" element={<UsersList />} />
               <Route path="socios/:id" element={<MemberProfile />} />
+              <Route path="eventos" element={<EventList />} />
               <Route path="*" element={<Navigate to="/" />} />
             </Route>
           )}
@@ -40,4 +41,3 @@ function App() {
   )
 }
 
-export default App

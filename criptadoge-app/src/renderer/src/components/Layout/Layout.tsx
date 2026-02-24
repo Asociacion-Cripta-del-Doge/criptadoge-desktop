@@ -28,6 +28,9 @@ export const Layout: React.FC = () => {
           >
             Gestión de Socios
           </NavLink>
+          <NavLink to="/eventos" className={styles.navItem}>
+            Gestión de Eventos
+          </NavLink>
         </nav>
       </aside>
 
