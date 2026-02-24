@@ -1,0 +1,45 @@
+@use '../../styles/variables' as v;
+
+.modalOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.75);
+  backdrop-filter: blur(4px);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.modalCard {
+  background-color: v.$bg-card;
+  border: 1px solid v.$color-border;
+  border-radius: 8px;
+  padding: 2.5rem;
+  width: 90%;
+  max-width: 500px;
+  text-align: center;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+  animation: modalIn 0.2s ease-out forwards;
+
+  h3 {
+    font-family: v.$font-title;
+    color: v.$text-main;
+    font-size: 1.5rem;
+    margin-bottom: 1.5rem;
+  }
+}
+
+@keyframes modalIn {
+  from {
+    opacity: 0;
+    transform: scale(0.95) translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}

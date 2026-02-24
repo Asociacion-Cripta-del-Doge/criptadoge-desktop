@@ -1,0 +1,96 @@
+@use '../../styles/variables' as v;
+
+.container {
+  padding: 2rem;
+  height: 100%;
+  overflow-y: auto;
+  color: v.$text-main;
+}
+
+.header {
+  margin-bottom: 2rem;
+
+  h1 {
+    font-family: v.$font-title;
+    font-size: 2rem;
+    margin: 0 0 0.5rem 0;
+  }
+
+  p {
+    color: v.$text-muted;
+  }
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 1.5rem;
+  margin-bottom: 2rem;
+}
+
+.recentSection {
+  background-color: v.$bg-card;
+  border: 1px solid v.$color-border;
+  border-radius: 8px;
+  padding: 1.5rem;
+  overflow-x: auto;
+
+  h2 {
+    font-family: v.$font-title;
+    font-size: 1.5rem;
+    margin-bottom: 1.5rem;
+    color: v.$text-main;
+  }
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: left;
+
+  th {
+    color: v.$text-muted;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid v.$color-border;
+    font-weight: 500;
+    text-transform: uppercase;
+    font-size: 0.85rem;
+  }
+
+  td {
+    padding: 1rem 0;
+    border-bottom: 1px solid v.$color-border;
+    color: v.$text-main;
+  }
+
+  tr:last-child td {
+    border-bottom: none;
+  }
+
+  tbody tr {
+    transition: background-color 0.2s;
+    &:hover {
+      background-color: rgba(255, 255, 255, 0.03);
+    }
+  }
+}
+
+@media (max-width: 768px) {
+  .container {
+    padding: 1rem;
+  }
+
+  .grid {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+
+  .table th:nth-child(1),
+  .table td:nth-child(1),
+  .table th:nth-child(3),
+  .table td:nth-child(3),
+  .table th:nth-child(5),
+  .table td:nth-child(5) {
+    display: none;
+  }
+}

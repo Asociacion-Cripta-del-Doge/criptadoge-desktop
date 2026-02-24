@@ -1,0 +1,40 @@
+@use '../../styles/variables' as v;
+
+.badge {
+  padding: 0.35rem 0.6rem;
+  border-radius: 4px;
+  font-size: 0.75rem;
+  font-weight: bold;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.activo {
+  background-color: rgba(v.$color-accent, 0.15);
+  color: v.$color-accent;
+}
+
+.inactivo {
+  background-color: rgba(v.$color-error, 0.15);
+  color: v.$color-error;
+}
+
+.pendiente {
+  background-color: rgba(v.$text-muted, 0.15);
+  color: v.$text-muted;
+}
+
+.actionBtn {
+  background-color: transparent;
+  border: 1px solid v.$color-border;
+  color: v.$text-main;
+  padding: 0.4rem 0.8rem;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.2s;
+
+  &:hover {
+    border-color: v.$color-primary;
+    color: v.$color-primary;
+  }
+}

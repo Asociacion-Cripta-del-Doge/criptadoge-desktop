@@ -1,0 +1,173 @@
+@use '../../styles/variables' as v;
+
+.container {
+  background-color: v.$bg-main;
+  color: v.$text-main;
+  font-family: v.$font-main;
+  height: 100%;
+  padding: 2rem;
+  overflow-y: auto;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+
+  h1 {
+    font-family: v.$font-title;
+    color: v.$text-main;
+    font-size: 2rem;
+    margin: 0;
+  }
+}
+
+.primaryBtn {
+  background-color: v.$color-primary;
+  color: v.$text-main;
+  border: none;
+  padding: 0.75rem 1.5rem;
+  border-radius: 6px;
+  font-family: v.$font-main;
+  font-weight: bold;
+  cursor: pointer;
+  transition: opacity 0.2s;
+
+  &:hover {
+    opacity: 0.9;
+  }
+}
+
+.card {
+  background-color: v.$bg-card;
+  border: 1px solid v.$color-border;
+  border-radius: 8px;
+  padding: 1.5rem;
+  overflow-x: auto;
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: left;
+
+  th {
+    color: v.$text-muted;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid v.$color-border;
+    font-weight: 500;
+    text-transform: uppercase;
+    font-size: 0.85rem;
+  }
+
+  td {
+    padding: 1rem 0;
+    border-bottom: 1px solid v.$color-border;
+    color: v.$text-main;
+  }
+
+  tr:last-child td {
+    border-bottom: none;
+  }
+
+  tbody tr {
+    transition: background-color 0.2s;
+    &:hover {
+      background-color: rgba(255, 255, 255, 0.03);
+    }
+  }
+}
+
+.badge {
+  padding: 0.35rem 0.6rem;
+  border-radius: 4px;
+  font-size: 0.75rem;
+  font-weight: bold;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.activo {
+  background-color: rgba(v.$color-accent, 0.15);
+  color: v.$color-accent;
+}
+
+.inactivo {
+  background-color: rgba(v.$color-error, 0.15);
+  color: v.$color-error;
+}
+
+.pendiente {
+  background-color: rgba(v.$text-muted, 0.15);
+  color: v.$text-muted;
+}
+
+.actionBtn {
+  background-color: transparent;
+  border: 1px solid v.$color-border;
+  color: v.$text-main;
+  padding: 0.4rem 0.8rem;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.2s;
+
+  &:hover {
+    border-color: v.$color-primary;
+    color: v.$color-primary;
+  }
+}
+
+.toolbar {
+  margin-bottom: 1.5rem;
+  display: flex;
+}
+
+.searchInput {
+  width: 100%;
+  max-width: 400px;
+  padding: 0.75rem 1rem;
+  border-radius: 6px;
+  border: 1px solid v.$color-border;
+  background-color: v.$bg-main;
+  color: v.$text-main;
+  font-family: v.$font-main;
+  font-size: 0.95rem;
+  outline: none;
+  transition: border-color 0.2s;
+
+  &:focus {
+    border-color: v.$color-primary;
+  }
+
+  &::placeholder {
+    color: v.$text-muted;
+  }
+}
+
+.noResults {
+  text-align: center;
+  padding: 3rem 0 !important;
+  color: v.$text-muted;
+  font-style: italic;
+}
+
+@media (max-width: 768px) {
+  .toolbar {
+    flex-direction: column;
+    gap: 1rem;
+
+    .searchInput {
+      max-width: 100%;
+    }
+  }
+
+  .table th:nth-child(1),
+  .table td:nth-child(1),
+  .table th:nth-child(3),
+  .table td:nth-child(3),
+  .table th:nth-child(5),
+  .table td:nth-child(5) {
+    display: none;
+  }
+}

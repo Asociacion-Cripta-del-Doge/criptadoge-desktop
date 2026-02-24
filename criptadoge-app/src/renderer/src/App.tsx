@@ -1,34 +1,31 @@
-import Versions from './components/Versions'
-import electronLogo from './assets/electron.svg'
+import React, { Suspense, lazy } from 'react'
+import { HashRouter, Routes, Route } from 'react-router-dom'
+import { LoadingScreen } from './components/LoadingScreen/LoadingScreen'
 
-function App(): React.JSX.Element {
-  const ipcHandle = (): void => window.electron.ipcRenderer.send('ping')
+const Layout = lazy(() => import('./components/Layout/Layout').then((m) => ({ default: m.Layout })))
+const Dashboard = lazy(() =>
+  import('./components/Dashboard/Dashboard').then((m) => ({ default: m.Dashboard }))
+)
+const UsersList = lazy(() =>
+  import('./components/UsersList/UsersList').then((m) => ({ default: m.UsersList }))
+)
+const MemberProfile = lazy(() =>
+  import('./components/MemberProfile/MemberProfile').then((m) => ({ default: m.MemberProfile }))
+)
 
+function App() {
   return (
-    <>
-      <img alt="logo" className="logo" src={electronLogo} />
-      <div className="creator">Powered by electron-vite</div>
-      <div className="text">
-        Build an Electron app with <span className="react">React</span>
-        &nbsp;and <span className="ts">TypeScript</span>
-      </div>
-      <p className="tip">
-        Please try pressing <code>F12</code> to open the devTool
-      </p>
-      <div className="actions">
-        <div className="action">
-          <a href="https://electron-vite.org/" target="_blank" rel="noreferrer">
-            Documentation
-          </a>
-        </div>
-        <div className="action">
-          <a target="_blank" rel="noreferrer" onClick={ipcHandle}>
-            Send IPC
-          </a>
-        </div>
-      </div>
-      <Versions></Versions>
-    </>
+    <HashRouter>
+      <Suspense fallback={<LoadingScreen />}>
+        <Routes>
+          <Route path="/" element={<Layout />}>
+            <Route index element={<Dashboard />} />
+            <Route path="socios" element={<UsersList />} />
+            <Route path="socios/:id" element={<MemberProfile />} />
+          </Route>
+        </Routes>
+      </Suspense>
+    </HashRouter>
   )
 }
 
