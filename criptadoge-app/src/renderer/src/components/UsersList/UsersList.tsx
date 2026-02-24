@@ -8,14 +8,13 @@ export const UsersList: React.FC = () => {
   const navigate = useNavigate()
   const [searchTerm, setSearchTerm] = useState('')
 
-  // Ahora filtramos por Nombre, Email o DNI
   const filteredMembers = useMemo(() => {
     return MOCK_MEMBERS.filter((member) => {
       const lowerCaseTerm = searchTerm.toLowerCase()
       return (
         member.name.toLowerCase().includes(lowerCaseTerm) ||
         member.email.toLowerCase().includes(lowerCaseTerm) ||
-        member.dni.toLowerCase().includes(lowerCaseTerm) // <-- Búsqueda por DNI
+        member.dni.toLowerCase().includes(lowerCaseTerm) //
       )
     })
   }, [searchTerm])
@@ -31,7 +30,7 @@ export const UsersList: React.FC = () => {
         <div className={styles.toolbar}>
           <input
             type="text"
-            placeholder="Buscar por DNI, nombre o email..." // <-- Texto actualizado
+            placeholder="Buscar por DNI, nombre o email..."
             className={styles.searchInput}
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
