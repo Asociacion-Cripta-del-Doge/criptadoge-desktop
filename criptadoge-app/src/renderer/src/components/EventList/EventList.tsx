@@ -1,11 +1,14 @@
 import React, { useState, useEffect } from 'react'
 import styles from './EventList.module.scss'
 import { AppEvent, MOCK_EVENTS } from '../../data/events'
+import { EventMaker } from '../EventMaker/EventMaker'
+import { useNavigate } from 'react-router-dom'
 
 export const EventList: React.FC = () => {
   const [events, setEvents] = useState<AppEvent[]>([])
   const [isLoading, setIsLoading] = useState(true)
-
+  const [isMakerOpen, setIsMakerOpen] = useState(false)
+  const navigate = useNavigate()
   useEffect(() => {
     const fetchEvents = async () => {
       setIsLoading(true)
@@ -22,14 +25,15 @@ export const EventList: React.FC = () => {
     fetchEvents()
   }, [])
 
+  const handleEventCreated = (newEvent: AppEvent) => {
+    setEvents((prev) => [...prev, newEvent])
+  }
+
   return (
     <div className={styles.container}>
       <header className={styles.header}>
         <h1>GESTIÓN DE EVENTOS</h1>
-        <button
-          className={styles.primaryBtn}
-          onClick={() => alert('¡Próximamente: Integración con EventMaker!')}
-        >
+        <button className={styles.primaryBtn} onClick={() => setIsMakerOpen(true)}>
           + Nuevo Evento
         </button>
       </header>
@@ -65,7 +69,12 @@ export const EventList: React.FC = () => {
                   <td>{evt.date}</td>
                   <td>{evt.time}</td>
                   <td>
-                    <button className={styles.actionBtn}>Ver Detalles</button>
+                    <button
+                      className={styles.actionBtn}
+                      onClick={() => navigate(`/eventos/${evt.id}`)}
+                    >
+                      Ver Detalles
+                    </button>
                   </td>
                 </tr>
               ))
@@ -79,6 +88,11 @@ export const EventList: React.FC = () => {
           </tbody>
         </table>
       </div>
+      <EventMaker
+        isOpen={isMakerOpen}
+        onClose={() => setIsMakerOpen(false)}
+        onSuccess={handleEventCreated}
+      />
     </div>
   )
 }

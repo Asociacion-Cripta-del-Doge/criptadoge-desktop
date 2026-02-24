@@ -1,0 +1,110 @@
+@use '../../styles/variables' as v;
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  text-align: left;
+}
+
+.formGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+
+  label {
+    color: v.$text-muted;
+    font-size: 0.85rem;
+    text-transform: uppercase;
+    font-weight: bold;
+    letter-spacing: 0.5px;
+  }
+
+  input,
+  select,
+  textarea {
+    background-color: v.$bg-main;
+    border: 1px solid v.$color-border;
+    color: v.$text-main;
+    padding: 0.85rem 1rem;
+    border-radius: 6px;
+    font-family: v.$font-main;
+    font-size: 1rem;
+    outline: none;
+    transition:
+      border-color 0.2s,
+      box-shadow 0.2s;
+
+    &:focus {
+      border-color: v.$color-primary;
+      box-shadow: 0 0 0 2px rgba(v.$color-primary, 0.2);
+    }
+
+    &:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+  }
+
+  textarea {
+    resize: vertical;
+    min-height: 80px;
+  }
+}
+
+.row {
+  display: flex;
+  gap: 1rem;
+
+  .formGroup {
+    flex: 1;
+  }
+}
+
+.modalActions {
+  display: flex;
+  gap: 1rem;
+  margin-top: 1rem;
+
+  button {
+    flex: 1;
+    padding: 1rem;
+    border-radius: 8px;
+    font-weight: bold;
+    cursor: pointer;
+    font-family: v.$font-main;
+    transition: opacity 0.2s;
+
+    &:disabled {
+      opacity: 0.7;
+      cursor: not-allowed;
+    }
+  }
+}
+
+.secondaryBtn {
+  background-color: transparent;
+  border: 1px solid v.$color-border;
+  color: v.$text-main;
+
+  &:hover:not(:disabled) {
+    background-color: rgba(255, 255, 255, 0.05);
+  }
+}
+
+.submitBtn {
+  background-color: v.$color-primary;
+  border: none;
+  color: v.$text-main;
+  text-transform: uppercase;
+
+  &:hover:not(:disabled) {
+    background-color: rgba(v.$color-primary, 0.8);
+  }
+}
+
+@media (max-width: 768px) {
+  .row {
+    flex-direction: column;
+  }
+}
