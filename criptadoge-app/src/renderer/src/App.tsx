@@ -13,6 +13,10 @@ const MemberProfile = lazy(() =>
   import('./components/MemberProfile/MemberProfile').then((m) => ({ default: m.MemberProfile }))
 )
 
+const EventList = lazy(() =>
+  import('./components/EventList/EventList').then((m) => ({ default: m.EventList }))
+)
+
 function App() {
   return (
     <HashRouter>
@@ -22,6 +26,7 @@ function App() {
             <Route index element={<Dashboard />} />
             <Route path="socios" element={<UsersList />} />
             <Route path="socios/:id" element={<MemberProfile />} />
+            <Route path="eventos" element={<EventList />} />
           </Route>
         </Routes>
       </Suspense>

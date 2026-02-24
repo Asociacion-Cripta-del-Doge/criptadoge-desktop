@@ -1,5 +1,5 @@
 import React from 'react'
-import { NavLink, Outlet } from 'react-router-dom'
+import { Outlet, NavLink } from 'react-router-dom'
 import styles from './Layout.module.scss'
 
 export const Layout: React.FC = () => {
@@ -7,31 +7,26 @@ export const Layout: React.FC = () => {
     <div className={styles.layoutContainer}>
       <aside className={styles.sidebar}>
         <div className={styles.brand}>
-          LA CRIPTA <br />
-          <span className={styles.brandDoge}>DE DOGE</span>
+          <h2>LA CRIPTA</h2>
+          <p>Panel de Control</p>
         </div>
 
         <nav className={styles.nav}>
-          <NavLink
-            to="/"
-            className={({ isActive }) =>
-              `${styles.navItem} ${isActive ? styles.navItemActive : ''}`
-            }
-          >
+          <NavLink to="/" className={styles.navItem}>
             Dashboard
           </NavLink>
-
-          <NavLink
-            to="/socios"
-            className={({ isActive }) =>
-              `${styles.navItem} ${isActive ? styles.navItemActive : ''}`
-            }
-          >
+          <NavLink to="/socios" className={styles.navItem}>
             Gestión de Socios
           </NavLink>
+          <NavLink to="/eventos" className={styles.navItem}>
+            Gestión de Eventos
+          </NavLink>
         </nav>
-      </aside>
 
+        <div className={styles.userMenu}>
+          <div className={styles.userInfo}></div>
+        </div>
+      </aside>
       <main className={styles.mainContent}>
         <Outlet />
       </main>
