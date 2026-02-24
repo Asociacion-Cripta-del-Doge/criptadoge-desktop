@@ -15,15 +15,6 @@ export const Layout: React.FC = () => {
 
         <nav className={styles.nav}>
           <NavLink
-            // hidden={sessionActive}
-            to="/"
-            className={({ isActive }) =>
-              `${styles.navItem} ${isActive ? styles.navItemActive : ''}`
-            }
-          >
-            Login
-          </NavLink>
-          <NavLink
             // hidden={!sessionActive}
             to="/dashboard"
             className={({ isActive }) =>
@@ -41,7 +32,6 @@ export const Layout: React.FC = () => {
           >
             Gestión de Socios
           </NavLink>
-
         </nav>
       </aside>
 
