@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { NavLink, Outlet } from 'react-router-dom'
 import styles from './Layout.module.scss'
 
@@ -13,14 +13,13 @@ export const Layout: React.FC = () => {
 
         <nav className={styles.nav}>
           <NavLink
-            to="/"
+            to="/dashboard"
             className={({ isActive }) =>
               `${styles.navItem} ${isActive ? styles.navItemActive : ''}`
             }
           >
             Dashboard
           </NavLink>
-
           <NavLink
             to="/socios"
             className={({ isActive }) =>
