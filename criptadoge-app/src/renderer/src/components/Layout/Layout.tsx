@@ -3,8 +3,6 @@ import { NavLink, Outlet } from 'react-router-dom'
 import styles from './Layout.module.scss'
 
 export const Layout: React.FC = () => {
-  const [sessionActive, setSession] = useState(false)
-
   return (
     <div className={styles.layoutContainer}>
       <aside className={styles.sidebar}>
@@ -15,7 +13,6 @@ export const Layout: React.FC = () => {
 
         <nav className={styles.nav}>
           <NavLink
-            // hidden={!sessionActive}
             to="/dashboard"
             className={({ isActive }) =>
               `${styles.navItem} ${isActive ? styles.navItemActive : ''}`
@@ -24,7 +21,6 @@ export const Layout: React.FC = () => {
             Dashboard
           </NavLink>
           <NavLink
-            // hidden={!sessionActive}
             to="/socios"
             className={({ isActive }) =>
               `${styles.navItem} ${isActive ? styles.navItemActive : ''}`
