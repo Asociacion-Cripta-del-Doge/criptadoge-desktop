@@ -2,6 +2,7 @@ import React, { Suspense, lazy, useState } from 'react'
 import { HashRouter, Routes, Route, Navigate } from 'react-router-dom'
 import { LoadingScreen } from './components/LoadingScreen/LoadingScreen'
 import { Login } from './components/Login/Login'
+import { EventList } from './components/EventList/EventList'
 const Layout = lazy(() => import('./components/Layout/Layout').then((m) => ({ default: m.Layout })))
 const Dashboard = lazy(() =>
   import('./components/Dashboard/Dashboard').then((m) => ({ default: m.Dashboard }))
@@ -41,3 +42,4 @@ function App() {
   )
 }
 
+export default App
