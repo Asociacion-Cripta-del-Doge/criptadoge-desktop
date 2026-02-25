@@ -1,12 +1,10 @@
 @use '../../styles/variables' as v;
 
 .container {
-  background-color: v.$bg-main;
-  color: v.$text-main;
-  font-family: v.$font-main;
   height: 100%;
   padding: 2rem;
   overflow-y: auto;
+  color: v.$text-main;
 }
 
 .backBtn {
@@ -44,6 +42,7 @@
     margin-bottom: 1.5rem;
     border-bottom: 1px solid v.$color-border;
     padding-bottom: 1rem;
+    margin-top: 0;
   }
 }
 
@@ -55,40 +54,34 @@
     color: v.$text-muted;
     font-size: 0.85rem;
     text-transform: uppercase;
-    margin-bottom: 0.25rem;
+    margin-bottom: 0.5rem;
+    font-weight: bold;
   }
 
   p {
     font-size: 1.1rem;
     color: v.$text-main;
     font-weight: 500;
+    line-height: 1.5;
+    margin: 0;
   }
+}
+
+.badge {
+  padding: 0.35rem 0.6rem;
+  border-radius: 4px;
+  font-size: 0.75rem;
+  font-weight: bold;
+  text-transform: uppercase;
+  background-color: rgba(v.$color-primary, 0.15);
+  color: v.$color-primary;
+  display: inline-block;
 }
 
 .actionsCard {
   display: flex;
   flex-direction: column;
   gap: 1rem;
-}
-
-.renewBtn {
-  background-color: v.$color-primary;
-  color: v.$text-main;
-  border: none;
-  padding: 1.5rem;
-  border-radius: 8px;
-  font-family: v.$font-main;
-  font-weight: bold;
-  font-size: 1.1rem;
-  cursor: pointer;
-  transition: opacity 0.2s;
-  text-transform: uppercase;
-  box-shadow: 0 4px 12px rgba(v.$color-primary, 0.3);
-
-  &:hover {
-    opacity: 0.9;
-    transform: translateY(-2px);
-  }
 }
 
 .secondaryBtn {
@@ -99,6 +92,7 @@
   border-radius: 8px;
   cursor: pointer;
   font-weight: bold;
+  font-family: v.$font-main;
 
   &:hover {
     background-color: rgba(255, 255, 255, 0.05);
@@ -113,11 +107,21 @@
   border-radius: 8px;
   cursor: pointer;
   font-weight: bold;
-  margin-top: auto;
+  font-family: v.$font-main;
 
   &:hover {
     background-color: rgba(v.$color-error, 0.1);
   }
+}
+.modalText {
+  color: v.$text-muted;
+  line-height: 1.6;
+  margin-bottom: 2rem;
+  font-size: 1.05rem;
+}
+
+.highlightError {
+  color: v.$color-error;
 }
 
 .modalActions {
@@ -129,83 +133,12 @@
   }
 }
 
-.badge {
-  padding: 0.35rem 0.6rem;
-  border-radius: 4px;
-  font-size: 0.75rem;
-  font-weight: bold;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-  display: inline-block;
-  margin-top: 0.25rem;
-}
-
-.activo {
-  background-color: rgba(v.$color-accent, 0.15);
-  color: v.$color-accent;
-}
-
-.inactivo {
-  background-color: rgba(v.$color-error, 0.15);
-  color: v.$color-error;
-}
-
-.pendiente {
-  background-color: rgba(v.$text-muted, 0.15);
-  color: v.$text-muted;
-}
-
-@keyframes modalIn {
-  from {
-    opacity: 0;
-    transform: scale(0.95) translateY(10px);
-  }
-  to {
-    opacity: 1;
-    transform: scale(1) translateY(0);
-  }
-}
-
-.renewSubtext {
-  display: block;
-  font-size: 0.8rem;
-  font-weight: normal;
-  margin-top: 0.5rem;
-}
-
-.modalText {
-  color: v.$text-muted;
-  line-height: 1.6;
-  margin-bottom: 2rem;
-  font-size: 1.05rem;
-}
-
-.highlight {
-  color: v.$color-primary;
-}
-
-.modalConfirmBtn {
-  padding: 1rem;
-}
-
 @media (max-width: 768px) {
   .container {
     padding: 1rem;
   }
-
   .profileLayout {
     grid-template-columns: 1fr;
     gap: 1rem;
-  }
-
-  .renewBtn,
-  .secondaryBtn,
-  .dangerBtn {
-    padding: 1rem;
-    font-size: 1rem;
-  }
-
-  .dangerBtn {
-    margin-top: 0;
   }
 }
