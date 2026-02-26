@@ -1,0 +1,17 @@
+import { apiClient } from './axiosClient'
+import { AppEvent } from '../data/events'
+
+export const getEvents = async (): Promise<AppEvent[]> => {
+  const { data } = await apiClient.get('/eventos')
+  return data.map((evt: any) => ({ ...evt, id: evt._id }))
+}
+
+export const getEventById = async (id: string): Promise<AppEvent> => {
+  const { data } = await apiClient.get(`/eventos/${id}`)
+  return { ...data, id: data._id }
+}
+
+export const createEvent = async (eventData: any): Promise<AppEvent> => {
+  const { data } = await apiClient.post('/eventos', eventData)
+  return { ...data, id: data._id }
+}
