@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
-import { getEventById, deleteEvent } from '../../api/eventsApi'
+import { getEventById, deleteEvent, updateEvent } from '../../api/eventsApi'
 import { AppEvent } from '../../data/events'
 import styles from './EventProfile.module.scss'
 import { Modal } from '../Modal/Modal'
+import { EventMaker } from '../EventMaker/EventMaker'
 
 export const EventProfile: React.FC = () => {
   const { id } = useParams<{ id: string }>()
@@ -12,6 +13,7 @@ export const EventProfile: React.FC = () => {
   const [isLoading, setIsLoading] = useState(true)
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [isDeleting, setIsDeleting] = useState(false)
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false)
 
   useEffect(() => {
     const fetchEventDetail = async () => {
@@ -42,6 +44,12 @@ export const EventProfile: React.FC = () => {
     }
   }
 
+  const handleEditSubmit = async (updatedData: any) => {
+    if (!id) return
+    const updatedEvent = await updateEvent(id, updatedData)
+    setEvent(updatedEvent)
+  }
+
   if (isLoading) return <div className={styles.loading}>Cargando pergamino del evento...</div>
   if (!event) return <div className={styles.error}>El evento ha sido tragado por el vacío.</div>
 
@@ -68,9 +76,15 @@ export const EventProfile: React.FC = () => {
             <div className={styles.status}>
               Estado actual: <strong>{event.status}</strong>
             </div>
-            <button className={styles.dangerBtn} onClick={() => setIsModalOpen(true)}>
-              Eliminar Evento
-            </button>
+
+            <div className={styles.actionButtons}>
+              <button className={styles.secondaryBtn} onClick={() => setIsEditModalOpen(true)}>
+                Editar Evento
+              </button>
+              <button className={styles.dangerBtn} onClick={() => setIsModalOpen(true)}>
+                Eliminar Evento
+              </button>
+            </div>
           </div>
         </div>
       </div>
@@ -96,6 +110,12 @@ export const EventProfile: React.FC = () => {
           </button>
         </div>
       </Modal>
+      <EventMaker
+        isOpen={isEditModalOpen}
+        onClose={() => setIsEditModalOpen(false)}
+        onSuccess={handleEditSubmit}
+        initialData={event}
+      />
     </div>
   )
 }
