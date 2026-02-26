@@ -56,8 +56,8 @@ export const EventProfile: React.FC = () => {
           <span className={styles.badge}>{event.label}</span>
           <h1>{event.title}</h1>
           <div className={styles.dateTime}>
-            <span>Fecha: {event.date}</span>
-            <span>Hora: {event.time}</span>
+            <span>Fecha ➡ {event.date}</span>
+            <span>Hora ➡ {event.time}</span>
           </div>
         </div>
 

@@ -1,12 +1,11 @@
 import React, { useState } from 'react'
 import styles from './EventMaker.module.scss'
 import { Modal } from '../Modal/Modal'
-import { AppEvent } from '../../data/events'
 
 interface EventMakerProps {
   isOpen: boolean
   onClose: () => void
-  onSuccess: (newEvent: AppEvent) => void
+  onSuccess: (eventData: any) => Promise<void> | void
 }
 
 export const EventMaker: React.FC<EventMakerProps> = ({ isOpen, onClose, onSuccess }) => {
@@ -19,29 +18,12 @@ export const EventMaker: React.FC<EventMakerProps> = ({ isOpen, onClose, onSucce
     label: 'Magic: The Gathering'
   })
 
-  // 👇 PETICIÓN POST REAL A NESTJS 👇
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     setIsSubmitting(true)
 
     try {
-      const response = await fetch('http://localhost:3000/eventos', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(formData)
-      })
-
-      if (!response.ok) throw new Error('Fallo al crear el evento en el backend')
-
-      const savedEvent = await response.json()
-      const newEvent: AppEvent = {
-        ...savedEvent,
-        id: savedEvent._id
-      }
-
-      onSuccess(newEvent)
+      await onSuccess(formData)
       setFormData({ title: '', description: '', date: '', time: '', label: 'Magic: The Gathering' })
       onClose()
     } catch (error) {
