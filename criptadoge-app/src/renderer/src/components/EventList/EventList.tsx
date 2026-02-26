@@ -1,22 +1,33 @@
 import React, { useState, useEffect } from 'react'
-import styles from './EventList.module.scss'
-import { AppEvent, MOCK_EVENTS } from '../../data/events'
-import { EventMaker } from '../EventMaker/EventMaker'
 import { useNavigate } from 'react-router-dom'
+import styles from './EventList.module.scss'
+import { AppEvent } from '../../data/events'
+import { EventMaker } from '../EventMaker/EventMaker'
 
 export const EventList: React.FC = () => {
   const [events, setEvents] = useState<AppEvent[]>([])
   const [isLoading, setIsLoading] = useState(true)
   const [isMakerOpen, setIsMakerOpen] = useState(false)
   const navigate = useNavigate()
+
   useEffect(() => {
     const fetchEvents = async () => {
       setIsLoading(true)
       try {
-        await new Promise((resolve) => setTimeout(resolve, 500))
-        setEvents([...MOCK_EVENTS])
+        const response = await fetch('http://localhost:3000/eventos')
+        if (!response.ok) throw new Error('Error al conectar con el servidor')
+
+        const data = await response.json()
+
+        // mapeo de id
+        const formattedData = data.map((evt: any) => ({
+          ...evt,
+          id: evt._id
+        }))
+
+        setEvents(formattedData)
       } catch (error) {
-        console.error('Error cargando eventos:', error)
+        console.error('Error cargando eventos reales:', error)
       } finally {
         setIsLoading(false)
       }
@@ -81,13 +92,14 @@ export const EventList: React.FC = () => {
             ) : (
               <tr>
                 <td colSpan={5} className={styles.messageRow}>
-                  No hay eventos programados.
+                  No hay eventos programados en la base de datos.
                 </td>
               </tr>
             )}
           </tbody>
         </table>
       </div>
+
       <EventMaker
         isOpen={isMakerOpen}
         onClose={() => setIsMakerOpen(false)}

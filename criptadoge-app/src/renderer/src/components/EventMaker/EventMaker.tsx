@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import styles from './EventMaker.module.scss'
 import { Modal } from '../Modal/Modal'
-import { AppEvent, MOCK_EVENTS } from '../../data/events'
+import { AppEvent } from '../../data/events'
 
 interface EventMakerProps {
   isOpen: boolean
@@ -19,27 +19,34 @@ export const EventMaker: React.FC<EventMakerProps> = ({ isOpen, onClose, onSucce
     label: 'Magic: The Gathering'
   })
 
+  // 👇 PETICIÓN POST REAL A NESTJS 👇
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     setIsSubmitting(true)
 
     try {
-      await new Promise((resolve) => setTimeout(resolve, 1000))
+      const response = await fetch('http://localhost:3000/eventos', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(formData)
+      })
 
+      if (!response.ok) throw new Error('Fallo al crear el evento en el backend')
+
+      const savedEvent = await response.json()
       const newEvent: AppEvent = {
-        id: Date.now().toString(),
-        ...formData
+        ...savedEvent,
+        id: savedEvent._id
       }
 
-      MOCK_EVENTS.push(newEvent)
       onSuccess(newEvent)
-
-      // Limpiamos y cerramos
       setFormData({ title: '', description: '', date: '', time: '', label: 'Magic: The Gathering' })
       onClose()
     } catch (error) {
-      console.error('Error al crear evento', error)
-      alert('Hubo un error al guardar el evento.')
+      console.error('Error al crear evento:', error)
+      alert('Hubo un error al guardar el evento en la base de datos.')
     } finally {
       setIsSubmitting(false)
     }
@@ -121,7 +128,7 @@ export const EventMaker: React.FC<EventMakerProps> = ({ isOpen, onClose, onSucce
             Cancelar
           </button>
           <button type="submit" className={styles.submitBtn} disabled={isSubmitting}>
-            {isSubmitting ? 'Guardando...' : 'Crear Evento'}
+            {isSubmitting ? 'Guardando en BD...' : 'Crear Evento'}
           </button>
         </div>
       </form>
