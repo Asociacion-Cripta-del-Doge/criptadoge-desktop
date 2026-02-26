@@ -15,3 +15,7 @@ export const createEvent = async (eventData: any): Promise<AppEvent> => {
   const { data } = await apiClient.post('/eventos', eventData)
   return { ...data, id: data._id }
 }
+
+export const deleteEvent = async (id: string): Promise<void> => {
+  await apiClient.delete(`/eventos/${id}`)
+}
