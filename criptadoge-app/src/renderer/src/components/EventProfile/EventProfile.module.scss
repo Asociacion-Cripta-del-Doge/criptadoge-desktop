@@ -12,9 +12,16 @@
   }
 }
 
+/* Nuevo contenedor que envuelve todo (botón y tarjeta) */
+.wrapper {
+  padding: 2rem;
+  max-width: 900px;
+  margin: 0 auto;
+  height: 100%;
+  overflow-y: auto;
+}
+
 .profileContainer {
-  max-width: 850px;
-  margin: 2rem auto;
   background: v.$bg-card;
   border: 1px solid v.$color-border;
   border-radius: 16px;
@@ -42,12 +49,13 @@
 .backBtn {
   background: none;
   border: none;
-  color: v.$color-primary;
+  color: v.$text-muted;
   font-size: 1rem;
   font-family: v.$font-main;
   font-weight: bold;
   cursor: pointer;
-  padding: 1.5rem 2rem 0;
+  padding: 0; /* Quitamos el padding feo */
+  margin-bottom: 1.5rem; /* Margen para separarlo de la tarjeta */
   display: inline-flex;
   align-items: center;
   transition:
@@ -55,19 +63,19 @@
     transform 0.2s;
 
   &:hover {
-    color: v.$color-secondary;
+    color: v.$text-main;
     transform: translateX(-5px);
   }
 }
 
 .header {
-  padding: 2rem 3rem;
+  padding: 3rem; /* Lo hacemos más grande y espacioso */
   border-bottom: 1px solid v.$color-border;
   background: v.$bg-main;
 
   h1 {
-    margin: 1rem 0;
-    font-size: 2.8rem;
+    margin: 1.5rem 0 1rem;
+    font-size: 3rem;
     color: v.$text-main;
     font-family: v.$font-title;
     line-height: 1.2;
@@ -91,18 +99,18 @@
 
 .dateTime {
   display: flex;
-  gap: 2rem;
+  gap: 1.5rem;
   color: v.$text-muted;
   font-size: 1.15rem;
   font-family: v.$font-mono;
-  margin-top: 1.5rem;
+  margin-top: 2rem;
 
   span {
     display: flex;
     align-items: center;
     background: v.$bg-card;
     border: 1px solid v.$color-border;
-    padding: 0.5rem 1rem;
+    padding: 0.8rem 1.2rem;
     border-radius: 8px;
   }
 }
@@ -116,7 +124,7 @@
     font-family: v.$font-title;
     font-size: 1.5rem;
     margin-top: 0;
-    margin-bottom: 1rem;
+    margin-bottom: 1.5rem;
     border-bottom: 2px solid v.$color-border;
     padding-bottom: 0.5rem;
   }
@@ -128,6 +136,15 @@
     margin-bottom: 3rem;
     white-space: pre-wrap;
   }
+}
+
+/* Agrupamos el estado y el botón de borrar abajo */
+.statusGroup {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-top: 1px dashed v.$color-border;
+  padding-top: 2rem;
 }
 
 .status {
@@ -146,5 +163,21 @@
     text-transform: uppercase;
     font-weight: 800;
     color: color.adjust(v.$color-accent, $lightness: 15%);
+  }
+}
+
+.dangerBtn {
+  background-color: transparent;
+  border: 1px solid v.$color-error;
+  color: v.$color-error;
+  padding: 1rem 1.5rem;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: bold;
+  font-family: v.$font-main;
+  transition: background-color 0.2s;
+
+  &:hover {
+    background-color: rgba(v.$color-error, 0.1);
   }
 }

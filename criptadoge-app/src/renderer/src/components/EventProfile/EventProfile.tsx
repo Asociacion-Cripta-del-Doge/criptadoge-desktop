@@ -31,25 +31,36 @@ export const EventProfile: React.FC = () => {
   if (!event) return <div className={styles.error}>El evento ha sido tragado por el vacío.</div>
 
   return (
-    <div className={styles.profileContainer}>
+    <div className={styles.wrapper}>
       <button className={styles.backBtn} onClick={() => navigate(-1)}>
         ← Volver a Eventos
       </button>
 
-      <div className={styles.header}>
-        <span className={styles.badge}>{event.label}</span>
-        <h1>{event.title}</h1>
-        <div className={styles.dateTime}>
-          <span>Fecha: {event.date}</span>
-          <span>Hora: {event.time}</span>
+      <div className={styles.profileContainer}>
+        <div className={styles.header}>
+          <span className={styles.badge}>{event.label}</span>
+          <h1>{event.title}</h1>
+          <div className={styles.dateTime}>
+            <span>Fecha: {event.date}</span>
+            <span>Hora: {event.time}</span>
+          </div>
         </div>
-      </div>
 
-      <div className={styles.content}>
-        <h2>Descripción</h2>
-        <p>{event.description}</p>
-        <div className={styles.status}>
-          Estado actual: <strong>{event.status}</strong>
+        <div className={styles.content}>
+          <h2>Descripción</h2>
+          <p>{event.description}</p>
+          <div className={styles.statusGroup}>
+            <div className={styles.status}>
+              Estado actual: <strong>{event.status}</strong>
+            </div>
+
+            <button
+              className={styles.dangerBtn}
+              onClick={() => alert('¡Pronto conectaremos esto con Mongo!')}
+            >
+              Eliminar Evento
+            </button>
+          </div>
         </div>
       </div>
     </div>
