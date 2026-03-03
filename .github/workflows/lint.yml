@@ -27,9 +27,7 @@ jobs:
 
       # ESLint and Prettier must be in `package.json`
       - name: Install Node.js dependencies
-        run: |
-          cd criptadoge-app
-          npm ci
+        run: npm ci --prefix ./criptadoge-app
 
       - name: Run linters
         uses: wearerequired/lint-action@v2
