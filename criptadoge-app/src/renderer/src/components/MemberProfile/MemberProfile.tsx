@@ -51,11 +51,12 @@ export const MemberProfile: React.FC = () => {
         <button className={styles.backBtn} onClick={() => navigate('/socios')}>
           ← Volver a la lista
         </button>
-        <h2 style={{ color: '#ef4444' }}>{error || 'Socio no encontrado'}</h2>
+        <div className={styles.errorContainer}>
+          <h2 className={styles.errorMessage}>{error || 'Socio no encontrado'}</h2>
+        </div>
       </div>
     )
   }
-
   const status = getMemberStatus(member.expirationDate)
 
   const handleConfirmRenew = async () => {

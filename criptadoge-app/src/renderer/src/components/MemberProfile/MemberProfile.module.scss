@@ -188,6 +188,25 @@
   padding: 1rem;
 }
 
+.errorContainer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 40vh;
+}
+
+.errorMessage {
+  color: v.$color-error;
+  font-family: v.$font-title;
+  background-color: rgba(v.$color-error, 0.05);
+  border: 1px solid rgba(v.$color-error, 0.3);
+  padding: 2rem;
+  border-radius: 8px;
+  text-align: center;
+  box-shadow: 0 0 15px rgba(v.$color-error, 0.1);
+  letter-spacing: 1px;
+}
+
 @media (max-width: 768px) {
   .container {
     padding: 1rem;
