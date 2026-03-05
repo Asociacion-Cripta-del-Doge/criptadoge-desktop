@@ -3,7 +3,18 @@ import { useNavigate } from 'react-router-dom'
 import styles from './UsersList.module.scss'
 import { MemberRow } from '../MemberRow/MemberRow'
 import { apiClient } from '../../api/axiosClient'
-import { User } from '@renderer/data/members'
+import { Modal } from '../Modal/Modal'
+
+interface User {
+  id: string
+  dni: string
+  name: string
+  email: string
+  role: string
+  status: string
+  lastRenewal: string | null
+  expirationDate: string | null
+}
 
 export const UsersList: React.FC = () => {
   const navigate = useNavigate()
@@ -12,6 +23,16 @@ export const UsersList: React.FC = () => {
   const [users, setUsers] = useState<User[]>([])
   const [isLoading, setIsLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
+
+  const [isCreateModalOpen, setIsCreateModalOpen] = useState(false)
+  const [newUser, setNewUser] = useState({
+    dni: '',
+    name: '',
+    email: '',
+    password: '',
+    role: 'MEMBER',
+    status: 'Activo'
+  })
 
   useEffect(() => {
     const fetchUsers = async () => {
@@ -26,7 +47,6 @@ export const UsersList: React.FC = () => {
         setIsLoading(false)
       }
     }
-
     fetchUsers()
   }, [])
 
@@ -41,11 +61,31 @@ export const UsersList: React.FC = () => {
     })
   }, [searchTerm, users])
 
+  const handleCreateSubmit = async (e: React.FormEvent) => {
+    e.preventDefault()
+    try {
+      await apiClient.post('/usuarios', newUser)
+      setIsCreateModalOpen(false)
+      setNewUser({ dni: '', name: '', email: '', password: '', role: 'MEMBER', status: 'Activo' })
+      window.location.reload()
+    } catch (err: any) {
+      console.error('Error al crear usuario:', err)
+      alert(err.response?.data?.message || 'Hubo un error al crear el socio. Revisa los datos.')
+    }
+  }
+
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+    const { name, value } = e.target
+    setNewUser((prev) => ({ ...prev, [name]: value }))
+  }
+
   return (
     <div className={styles.container}>
       <header className={styles.header}>
         <h1>GESTIÓN DE SOCIOS</h1>
-        <button className={styles.primaryBtn}>+ Nuevo Socio</button>
+        <button className={styles.primaryBtn} onClick={() => setIsCreateModalOpen(true)}>
+          + Nuevo Socio
+        </button>
       </header>
 
       <div className={styles.card}>
@@ -101,6 +141,84 @@ export const UsersList: React.FC = () => {
           </tbody>
         </table>
       </div>
+
+      <Modal
+        isOpen={isCreateModalOpen}
+        onClose={() => setIsCreateModalOpen(false)}
+        title="ALTA DE NUEVO SOCIO"
+      >
+        <form onSubmit={handleCreateSubmit} className={styles.createForm}>
+          <div className={styles.formGroup}>
+            <label>Nombre Completo</label>
+            <input
+              required
+              type="text"
+              name="name"
+              value={newUser.name}
+              onChange={handleInputChange}
+              placeholder="Ej: Alex Gutierrez"
+            />
+          </div>
+
+          <div className={styles.formGroup}>
+            <label>DNI / NIE</label>
+            <input
+              type="text"
+              name="dni"
+              value={newUser.dni}
+              onChange={handleInputChange}
+              placeholder="Ej: 12345678A"
+            />
+          </div>
+
+          <div className={`${styles.formGroup} ${styles.fullWidth}`}>
+            <label>Email</label>
+            <input
+              required
+              type="email"
+              name="email"
+              value={newUser.email}
+              onChange={handleInputChange}
+              placeholder="correo@ejemplo.com"
+            />
+          </div>
+
+          <div className={`${styles.formGroup} ${styles.fullWidth}`}>
+            <label>Contraseña Temporal</label>
+            <input
+              required
+              type="password"
+              name="password"
+              value={newUser.password}
+              onChange={handleInputChange}
+              placeholder="Mínimo 4 caracteres"
+            />
+          </div>
+
+          <div className={styles.formGroup}>
+            <label>Rol del Usuario</label>
+            <select name="role" value={newUser.role} onChange={handleInputChange}>
+              <option value="MEMBER">Socio Normal (MEMBER)</option>
+              <option value="ADMIN">Administrador (ADMIN)</option>
+            </select>
+          </div>
+
+          <div className={styles.formGroup}>
+            <label>Estado Inicial</label>
+            <select name="status" value={newUser.status} onChange={handleInputChange}>
+              <option value="Activo">Activo</option>
+              <option value="Pendiente">Pendiente de Pago</option>
+              <option value="Inactivo">Inactivo</option>
+            </select>
+          </div>
+
+          <div className={`${styles.formGroup} ${styles.fullWidth}`}>
+            <button type="submit" className={styles.submitBtn}>
+              Crear Usuario
+            </button>
+          </div>
+        </form>
+      </Modal>
     </div>
   )
 }
