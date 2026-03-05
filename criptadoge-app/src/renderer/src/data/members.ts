@@ -5,11 +5,13 @@ export interface Member {
   dni: string
   name: string
   email: string
-  lastRenewal: string
-  expirationDate: string
+  lastRenewal: string | null
+  expirationDate: string | null
 }
 
-export const getMemberStatus = (expirationDate: string): 'Activo' | 'Inactivo' | 'Pendiente' => {
+export const getMemberStatus = (
+  expirationDate: string | null
+): 'Activo' | 'Inactivo' | 'Pendiente' => {
   if (!expirationDate) return 'Pendiente'
 
   const today = new Date()
@@ -23,7 +25,7 @@ export const getMemberStatus = (expirationDate: string): 'Activo' | 'Inactivo' |
     return 'Activo'
   }
 }
-
+//Deprecated, los dejo por si queremos mockear algo
 export const MOCK_MEMBERS: Member[] = [
   {
     id: '1',
@@ -46,8 +48,8 @@ export const MOCK_MEMBERS: Member[] = [
     dni: '11223344C',
     name: 'Lucía Pérez',
     email: 'lucia@ejemplo.com',
-    lastRenewal: '',
-    expirationDate: ''
+    lastRenewal: null,
+    expirationDate: null
   },
   {
     id: '4',
