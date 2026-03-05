@@ -75,15 +75,15 @@ export const MemberProfile: React.FC = () => {
       currentExpDate.setMonth(currentExpDate.getMonth() + 1)
       const newExpirationStr = currentExpDate.toISOString().split('T')[0]
 
-      const response = await apiClient.put(`/usuarios/${member.id}`, {
+      await apiClient.put(`/usuarios/${member.id}`, {
         lastRenewal: lastRenewalStr,
         expirationDate: newExpirationStr,
         status: 'Activo'
       })
 
-      setMember(response.data)
-
       setShowModal(false)
+
+      window.location.reload()
     } catch (err) {
       console.error('Error al renovar la membresía:', err)
       alert('Hubo un error al intentar renovar al socio. ¡Revisa la consola!')
