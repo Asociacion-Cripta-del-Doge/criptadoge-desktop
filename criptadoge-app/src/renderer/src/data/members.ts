@@ -9,6 +9,17 @@ export interface Member {
   expirationDate: string | null
 }
 
+export interface User {
+  id: string
+  dni: string
+  name: string
+  email: string
+  role: string
+  status: string
+  lastRenewal: string | null
+  expirationDate: string | null
+}
+
 export const getMemberStatus = (
   expirationDate: string | null
 ): 'Activo' | 'Inactivo' | 'Pendiente' => {

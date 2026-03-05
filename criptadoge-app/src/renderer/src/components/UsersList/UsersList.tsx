@@ -3,17 +3,7 @@ import { useNavigate } from 'react-router-dom'
 import styles from './UsersList.module.scss'
 import { MemberRow } from '../MemberRow/MemberRow'
 import { apiClient } from '../../api/axiosClient'
-
-interface User {
-  id: string
-  dni: string
-  name: string
-  email: string
-  role: string
-  status: string
-  lastRenewal: string | null
-  expirationDate: string | null
-}
+import { User } from '@renderer/data/members'
 
 export const UsersList: React.FC = () => {
   const navigate = useNavigate()

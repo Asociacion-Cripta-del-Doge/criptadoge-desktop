@@ -1,23 +1,57 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
 import styles from './MemberProfile.module.scss'
-import { MOCK_MEMBERS, getMemberStatus } from '../../data/members'
+import { getMemberStatus } from '../../data/members'
 import { Modal } from '../Modal/Modal'
+import { apiClient } from '../../api/axiosClient'
+import { User } from '../../data/members'
 
 export const MemberProfile: React.FC = () => {
   const { id } = useParams<{ id: string }>()
   const navigate = useNavigate()
   const [showModal, setShowModal] = useState(false)
 
-  const member = MOCK_MEMBERS.find((m) => m.id === id)
+  const [member, setMember] = useState<User | null>(null)
+  const [isLoading, setIsLoading] = useState(true)
+  const [error, setError] = useState<string | null>(null)
 
-  if (!member) {
+  useEffect(() => {
+    const fetchMember = async () => {
+      try {
+        setIsLoading(true)
+        const response = await apiClient.get(`/usuarios/${id}`)
+        setMember(response.data)
+      } catch (err) {
+        console.error('Error al cargar la ficha:', err)
+        setError('No se pudo encontrar el socio o hubo un error de conexión.')
+      } finally {
+        setIsLoading(false)
+      }
+    }
+
+    if (id) {
+      fetchMember()
+    }
+  }, [id])
+
+  if (isLoading) {
     return (
       <div className={styles.container}>
         <button className={styles.backBtn} onClick={() => navigate('/socios')}>
           ← Volver a la lista
         </button>
-        <h2>Socio no encontrado</h2>
+        <h2>Cargando datos del socio...</h2>
+      </div>
+    )
+  }
+
+  if (error || !member) {
+    return (
+      <div className={styles.container}>
+        <button className={styles.backBtn} onClick={() => navigate('/socios')}>
+          ← Volver a la lista
+        </button>
+        <h2 style={{ color: '#ef4444' }}>{error || 'Socio no encontrado'}</h2>
       </div>
     )
   }
