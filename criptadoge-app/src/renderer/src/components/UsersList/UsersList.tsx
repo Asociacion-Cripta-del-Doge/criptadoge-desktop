@@ -64,13 +64,19 @@ export const UsersList: React.FC = () => {
   const handleCreateSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     try {
-      await apiClient.post('/usuarios', newUser)
+      const payload = {
+        ...newUser,
+        dni: newUser.dni.trim() === '' ? undefined : newUser.dni
+      }
+
+      await apiClient.post('/usuarios', payload)
+
       setIsCreateModalOpen(false)
       setNewUser({ dni: '', name: '', email: '', password: '', role: 'MEMBER', status: 'Activo' })
       window.location.reload()
     } catch (err: any) {
       console.error('Error al crear usuario:', err)
-      alert(err.response?.data?.message || 'Hubo un error al crear el socio. Revisa los datos.')
+      alert(err.response?.data?.message || 'Hubo un error al crear el socio. Revisa la consola.')
     }
   }
 
@@ -156,7 +162,7 @@ export const UsersList: React.FC = () => {
               name="name"
               value={newUser.name}
               onChange={handleInputChange}
-              placeholder="Ej: Alex Gutierrez"
+              placeholder="Ej: Alex Gamer"
             />
           </div>
 
@@ -195,20 +201,11 @@ export const UsersList: React.FC = () => {
             />
           </div>
 
-          <div className={styles.formGroup}>
+          <div className={`${styles.formGroup} ${styles.fullWidth}`}>
             <label>Rol del Usuario</label>
             <select name="role" value={newUser.role} onChange={handleInputChange}>
               <option value="MEMBER">Socio Normal (MEMBER)</option>
               <option value="ADMIN">Administrador (ADMIN)</option>
-            </select>
-          </div>
-
-          <div className={styles.formGroup}>
-            <label>Estado Inicial</label>
-            <select name="status" value={newUser.status} onChange={handleInputChange}>
-              <option value="Activo">Activo</option>
-              <option value="Pendiente">Pendiente de Pago</option>
-              <option value="Inactivo">Inactivo</option>
             </select>
           </div>
 
