@@ -118,3 +118,32 @@
     }
   }
 }
+
+.checkboxGroup {
+  margin-bottom: 1.5rem;
+
+  label {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    font-size: 0.9rem;
+    color: v.$text-muted;
+    transition: color 0.2s;
+
+    &:hover {
+      color: v.$text-main;
+    }
+
+    input[type='checkbox'] {
+      margin-right: 0.5rem;
+      cursor: pointer;
+      width: 16px;
+      height: 16px;
+      accent-color: v.$color-primary;
+    }
+
+    .checkboxLabel {
+      user-select: none;
+    }
+  }
+}
