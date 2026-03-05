@@ -19,20 +19,21 @@ const EventList = lazy(() =>
 const EventProfile = lazy(() =>
   import('./components/EventProfile/EventProfile').then((m) => ({ default: m.EventProfile }))
 )
-
 interface AppRoutesProps {
   isAuthenticated: boolean
   onLogin: () => void
+  onLogout: () => void
 }
 
-export const AppRoutes: React.FC<AppRoutesProps> = ({ isAuthenticated, onLogin }) => {
+export const AppRoutes: React.FC<AppRoutesProps> = ({ isAuthenticated, onLogin, onLogout }) => {
   return (
     <Suspense fallback={<LoadingScreen />}>
       <Routes>
         {!isAuthenticated ? (
           <Route path="*" element={<Login onLogin={onLogin} />} />
         ) : (
-          <Route path="/" element={<Layout />}>
+          // 👇 Le pasamos el onLogout a tu Layout
+          <Route path="/" element={<Layout onLogout={onLogout} />}>
             <Route index element={<Dashboard />} />
             <Route path="socios" element={<UsersList />} />
             <Route path="socios/:id" element={<MemberProfile />} />

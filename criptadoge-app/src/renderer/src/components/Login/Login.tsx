@@ -1,26 +1,42 @@
 import React, { useState } from 'react'
 import styles from './Login.module.scss'
 import { Modal } from '../Modal/Modal'
+import { apiClient } from '../../api/axiosClient' // 👈 Importamos nuestro cliente
 
 interface LoginProps {
   onLogin: () => void
 }
 
 export const Login: React.FC<LoginProps> = ({ onLogin }) => {
-  const [username, setUsername] = useState('')
+  const [email, setEmail] = useState('') // 👈 Cambiado a email
   const [password, setPassword] = useState('')
   const [showErrorModal, setShowErrorModal] = useState(false)
   const [errorMessage, setErrorMessage] = useState('')
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    if (username.trim() === '' || password.trim() === '') {
-      setErrorMessage('Por favor, introduce tu usuario y tu contraseña para poder continuar.')
+    if (email.trim() === '' || password.trim() === '') {
+      setErrorMessage('Por favor, introduce tu email y tu contraseña para poder continuar.')
       setShowErrorModal(true)
-    } else if (username === 'admin' && password === '1234') {
+      return
+    }
+
+    try {
+      const response = await apiClient.post('/auth/login', {
+        email,
+        password
+      })
+
+      localStorage.setItem('cripta_token', response.data.access_token)
+      localStorage.setItem('cripta_user', JSON.stringify(response.data.user))
+
       onLogin()
-    } else {
-      setErrorMessage('Usuario o contraseña incorrectos. Por favor, inténtalo de nuevo.')
+    } catch (error: any) {
+      console.error(error)
+      setErrorMessage(
+        error.response?.data?.message ||
+          'Email o contraseña incorrectos. Por favor, inténtalo de nuevo.'
+      )
       setShowErrorModal(true)
     }
   }
@@ -33,13 +49,13 @@ export const Login: React.FC<LoginProps> = ({ onLogin }) => {
 
         <form className={styles.form} onSubmit={handleSubmit}>
           <div className={styles.formGroup}>
-            <label htmlFor="nombre">Usuario</label>
+            <label htmlFor="email">Email</label>
             <input
-              id="nombre"
+              id="email"
               type="text"
-              placeholder="Ej: admin"
-              value={username}
-              onChange={(e) => setUsername(e.target.value)}
+              placeholder="admin@lacripta.com"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
             />
           </div>
 
