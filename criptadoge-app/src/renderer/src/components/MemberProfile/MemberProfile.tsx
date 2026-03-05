@@ -58,9 +58,35 @@ export const MemberProfile: React.FC = () => {
 
   const status = getMemberStatus(member.expirationDate)
 
-  const handleConfirmRenew = () => {
-    console.log(`Simulando llamada a API: POST /renew para el socio ${member.id}`)
-    setShowModal(false)
+  const handleConfirmRenew = async () => {
+    if (!member) return
+
+    try {
+      const today = new Date()
+      const lastRenewalStr = today.toISOString().split('T')[0]
+
+      let currentExpDate = member.expirationDate ? new Date(member.expirationDate) : new Date()
+
+      if (currentExpDate < today) {
+        currentExpDate = new Date()
+      }
+
+      currentExpDate.setMonth(currentExpDate.getMonth() + 1)
+      const newExpirationStr = currentExpDate.toISOString().split('T')[0]
+
+      const response = await apiClient.put(`/usuarios/${member.id}`, {
+        lastRenewal: lastRenewalStr,
+        expirationDate: newExpirationStr,
+        status: 'Activo'
+      })
+
+      setMember(response.data)
+
+      setShowModal(false)
+    } catch (err) {
+      console.error('Error al renovar la membresía:', err)
+      alert('Hubo un error al intentar renovar al socio. ¡Revisa la consola!')
+    }
   }
 
   return (
