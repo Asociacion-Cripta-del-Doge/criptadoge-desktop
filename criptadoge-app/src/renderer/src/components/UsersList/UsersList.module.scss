@@ -1,4 +1,5 @@
 @use '../../styles/variables' as v;
+@use 'sass:color';
 
 .container {
   background-color: v.$bg-main;
@@ -150,6 +151,81 @@
   padding: 3rem 0 !important;
   color: v.$text-muted;
   font-style: italic;
+}
+
+.createForm {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.5rem;
+  margin-top: 1rem;
+
+  .fullWidth {
+    grid-column: 1 / -1;
+  }
+
+  .formGroup {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+
+    label {
+      font-size: 0.85rem;
+      color: v.$text-muted;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    input,
+    select {
+      padding: 0.85rem;
+      border-radius: 6px;
+      border: 1px solid v.$color-border;
+      background-color: v.$bg-main;
+      color: v.$text-main;
+      font-family: v.$font-main;
+      outline: none;
+      transition: all 0.2s;
+
+      &:focus {
+        border-color: v.$color-primary;
+        box-shadow: 0 0 8px rgba(v.$color-primary, 0.3);
+      }
+
+      &::placeholder {
+        color: rgba(v.$text-muted, 0.5);
+      }
+    }
+
+    select {
+      cursor: pointer;
+    }
+  }
+
+  .submitBtn {
+    background-color: v.$color-primary;
+    color: v.$text-main;
+    border: none;
+    padding: 1rem;
+    border-radius: 6px;
+    font-family: v.$font-main;
+    font-weight: bold;
+    font-size: 1rem;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: all 0.2s;
+    margin-top: 0.5rem;
+
+    &:hover {
+      background-color: color.adjust(v.$color-primary, $lightness: 10%);
+      box-shadow: 0 0 15px rgba(v.$color-primary, 0.4);
+    }
+  }
+}
+
+@media (max-width: 600px) {
+  .createForm {
+    grid-template-columns: 1fr;
+  }
 }
 
 @media (max-width: 768px) {

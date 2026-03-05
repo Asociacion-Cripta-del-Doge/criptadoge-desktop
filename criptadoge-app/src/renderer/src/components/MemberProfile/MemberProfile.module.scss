@@ -1,5 +1,5 @@
 @use '../../styles/variables' as v;
-
+@use 'sass:color';
 .container {
   background-color: v.$bg-main;
   color: v.$text-main;
@@ -186,6 +186,103 @@
 
 .modalConfirmBtn {
   padding: 1rem;
+}
+
+.errorContainer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 40vh;
+}
+
+.errorMessage {
+  color: v.$color-error;
+  font-family: v.$font-title;
+  background-color: rgba(v.$color-error, 0.05);
+  border: 1px solid rgba(v.$color-error, 0.3);
+  padding: 2rem;
+  border-radius: 8px;
+  text-align: center;
+  box-shadow: 0 0 15px rgba(v.$color-error, 0.1);
+  letter-spacing: 1px;
+}
+
+.errorContainer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 40vh;
+}
+
+.errorMessage {
+  color: v.$color-error;
+  font-family: v.$font-title;
+  background-color: rgba(v.$color-error, 0.05);
+  border: 1px solid rgba(v.$color-error, 0.3);
+  padding: 2rem;
+  border-radius: 8px;
+  text-align: center;
+  box-shadow: 0 0 15px rgba(v.$color-error, 0.1);
+  letter-spacing: 1px;
+}
+
+.editInput {
+  width: 100%;
+  padding: 0.6rem 0.8rem;
+  margin-top: 0.3rem;
+  border-radius: 6px;
+  border: 1px solid v.$color-border;
+  background-color: rgba(v.$bg-main, 0.8);
+  color: v.$text-main;
+  font-family: v.$font-main;
+  font-size: 0.95rem;
+  outline: none;
+  transition: all 0.2s;
+
+  &:focus {
+    border-color: v.$color-primary;
+    box-shadow: 0 0 8px rgba(v.$color-primary, 0.3);
+  }
+}
+
+.roleBadge {
+  padding: 0.35rem 0.7rem;
+  border-radius: 4px;
+  font-size: 0.8rem;
+  font-weight: bold;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  display: inline-block;
+  margin-top: 0.25rem;
+  border: 1px solid transparent;
+}
+
+.roleAdmin {
+  background-color: rgba(v.$color-accent, 0.15);
+  color: v.$color-accent;
+  border-color: rgba(v.$color-accent, 0.4);
+  box-shadow: 0 0 10px rgba(v.$color-accent, 0.2);
+}
+
+.roleMember {
+  background-color: rgba(v.$color-primary, 0.2);
+  color: color.adjust(v.$color-primary, $lightness: 25%);
+  border-color: rgba(v.$color-primary, 0.3);
+}
+
+.modalDeleteBtn {
+  background-color: v.$color-error;
+  border: none;
+  color: v.$text-main;
+  padding: 1rem;
+  border-radius: 8px;
+  font-weight: bold;
+  cursor: pointer;
+  text-transform: uppercase;
+
+  &:hover {
+    background-color: color.adjust(v.$color-error, $lightness: -10%);
+  }
 }
 
 @media (max-width: 768px) {
