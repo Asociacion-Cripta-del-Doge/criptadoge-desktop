@@ -2,106 +2,125 @@
 
 .layoutContainer {
   display: flex;
-  width: 100vw;
-  height: 100vh;
+  min-height: 100vh;
   background-color: v.$bg-main;
-  overflow: hidden;
+  color: v.$text-main;
+  font-family: v.$font-main;
 }
 
 .sidebar {
   width: 260px;
   background-color: v.$bg-card;
-  border-right: 1px solid v.$color-border;
   display: flex;
   flex-direction: column;
+  border-right: 1px solid v.$color-border;
+  padding: 2rem 0;
+  box-shadow: 4px 0 15px rgba(0, 0, 0, 0.3);
+  z-index: 10;
 }
 
-.brand {
-  padding: 2rem 1.5rem;
-  font-family: v.$font-title;
-  font-size: 1.5rem;
-  color: v.$text-main;
+.logoContainer {
   text-align: center;
-  border-bottom: 1px solid v.$color-border;
-  letter-spacing: 2px;
-}
+  margin-bottom: 3rem;
 
-.brandDoge {
-  color: v.$color-accent;
+  .logo {
+    color: v.$text-main;
+    font-size: 2.2rem;
+    margin: 0;
+    letter-spacing: 2px;
+    font-family: v.$font-title;
+    text-shadow: 0 0 10px rgba(248, 250, 252, 0.2);
+  }
+
+  .subtitle {
+    color: v.$text-muted;
+    font-size: 0.85rem;
+    margin-top: 0.5rem;
+    text-transform: uppercase;
+    letter-spacing: 3px;
+    font-family: v.$font-mono;
+  }
 }
 
 .nav {
   display: flex;
   flex-direction: column;
-  padding: 1.5rem 1rem;
-  gap: 0.5rem;
+  flex-grow: 1;
+  padding: 0 1.5rem;
+  gap: 1rem;
 }
 
-.navItem {
-  background-color: transparent;
+.navLink {
+  text-decoration: none;
   color: v.$text-muted;
-  border: none;
   padding: 1rem;
-  border-radius: 8px;
-  text-align: left;
-  font-family: v.$font-main;
-  font-size: 1rem;
-  font-weight: 500;
-  cursor: pointer;
-  transition: all 0.2s;
+  border: 1px solid transparent;
+  border-radius: 6px;
+  transition: all 0.2s ease-in-out;
+  font-size: 1.1rem;
+  text-transform: uppercase;
+  letter-spacing: 1px;
 
   &:hover {
+    color: v.$text-main;
     background-color: rgba(255, 255, 255, 0.05);
+  }
+
+  &.active {
+    color: v.$text-main;
+    background-color: v.$color-primary;
+    border-color: v.$color-primary;
+    font-weight: bold;
+    box-shadow: 0 0 10px rgba(23, 61, 141, 0.5);
+  }
+}
+
+.logoutWrapper {
+  padding: 0 1.5rem;
+  margin-top: auto;
+}
+
+.logoutBtn {
+  width: 100%;
+  padding: 1rem;
+  background-color: transparent;
+  color: v.$color-error;
+  border: 1px solid v.$color-error;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 1rem;
+  font-weight: bold;
+  font-family: v.$font-main;
+  transition: all 0.2s ease-in-out;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+
+  &:hover {
+    background-color: rgba(239, 68, 68, 0.1);
+    box-shadow: 0 0 15px rgba(239, 68, 68, 0.4);
+  }
+
+  &:active {
+    background-color: v.$color-error;
     color: v.$text-main;
   }
 }
 
-.navItemActive {
-  background-color: v.$color-primary;
-  color: v.$text-main;
-
-  &:hover {
-    background-color: v.$color-primary;
-  }
-}
-
 .mainContent {
-  flex: 1;
-  position: relative;
-  overflow: hidden;
-}
+  flex-grow: 1;
+  padding: 2.5rem;
+  height: 100vh;
+  overflow-y: auto;
+  background-color: v.$bg-main;
 
-@media (max-width: 768px) {
-  .layoutContainer {
-    flex-direction: column;
+  &::-webkit-scrollbar {
+    width: 8px;
   }
-
-  .sidebar {
-    width: 100%;
-    height: auto;
-    border-right: none;
-    border-bottom: 1px solid v.$color-border;
+  &::-webkit-scrollbar-track {
+    background: v.$bg-main;
   }
-
-  .nav {
-    flex-direction: row;
-    justify-content: space-around;
-    padding: 0.5rem;
-  }
-
-  .navItem {
-    flex: 1;
-    text-align: center;
-    padding: 0.75rem;
-    font-size: 0.9rem;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 0.25rem;
-  }
-
-  .brand,
-  .userMenu {
-    display: none;
+  &::-webkit-scrollbar-thumb {
+    background-color: v.$color-border;
+    border-radius: 10px;
   }
 }

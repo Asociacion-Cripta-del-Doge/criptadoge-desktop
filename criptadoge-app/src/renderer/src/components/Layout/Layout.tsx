@@ -1,21 +1,26 @@
-import React, { useState } from 'react'
-import { NavLink, Outlet } from 'react-router-dom'
+import React from 'react'
+import { Outlet, NavLink } from 'react-router-dom'
 import styles from './Layout.module.scss'
 
-export const Layout: React.FC = () => {
+interface LayoutProps {
+  onLogout?: () => void
+}
+
+export const Layout: React.FC<LayoutProps> = ({ onLogout }) => {
   return (
     <div className={styles.layoutContainer}>
       <aside className={styles.sidebar}>
-        <div className={styles.brand}>
-          LA CRIPTA <br />
-          <span className={styles.brandDoge}>DE DOGE</span>
+        <div className={styles.logoContainer}>
+          <h1 className={styles.logo}>LA CRIPTA</h1>
+          <p className={styles.subtitle}>Panel de Control</p>
         </div>
 
         <nav className={styles.nav}>
           <NavLink
-            to="/dashboard"
+            to="/"
+            end
             className={({ isActive }) =>
-              `${styles.navItem} ${isActive ? styles.navItemActive : ''}`
+              isActive ? `${styles.navLink} ${styles.active}` : styles.navLink
             }
           >
             Dashboard
@@ -23,15 +28,26 @@ export const Layout: React.FC = () => {
           <NavLink
             to="/socios"
             className={({ isActive }) =>
-              `${styles.navItem} ${isActive ? styles.navItemActive : ''}`
+              isActive ? `${styles.navLink} ${styles.active}` : styles.navLink
             }
           >
-            Gestión de Socios
+            Socios
           </NavLink>
-          <NavLink to="/eventos" className={styles.navItem}>
-            Gestión de Eventos
+          <NavLink
+            to="/eventos"
+            className={({ isActive }) =>
+              isActive ? `${styles.navLink} ${styles.active}` : styles.navLink
+            }
+          >
+            Eventos
           </NavLink>
         </nav>
+
+        <div className={styles.logoutWrapper}>
+          <button onClick={onLogout} className={styles.logoutBtn}>
+            CERRAR SESIÓN
+          </button>
+        </div>
       </aside>
 
       <main className={styles.mainContent}>
