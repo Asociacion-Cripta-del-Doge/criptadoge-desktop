@@ -1,17 +1,26 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import styles from './Login.module.scss'
 import { Modal } from '../Modal/Modal'
-import { apiClient } from '../../api/axiosClient' // 👈 Importamos nuestro cliente
+import { apiClient } from '../../api/axiosClient'
 
 interface LoginProps {
   onLogin: () => void
 }
 
 export const Login: React.FC<LoginProps> = ({ onLogin }) => {
-  const [email, setEmail] = useState('') // 👈 Cambiado a email
+  const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
+  const [rememberMe, setRememberMe] = useState(false)
+
   const [showErrorModal, setShowErrorModal] = useState(false)
   const [errorMessage, setErrorMessage] = useState('')
+  useEffect(() => {
+    const savedEmail = localStorage.getItem('cripta_remembered_email')
+    if (savedEmail) {
+      setEmail(savedEmail)
+      setRememberMe(true)
+    }
+  }, [])
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -29,6 +38,12 @@ export const Login: React.FC<LoginProps> = ({ onLogin }) => {
 
       localStorage.setItem('cripta_token', response.data.access_token)
       localStorage.setItem('cripta_user', JSON.stringify(response.data.user))
+
+      if (rememberMe) {
+        localStorage.setItem('cripta_remembered_email', email)
+      } else {
+        localStorage.removeItem('cripta_remembered_email')
+      }
 
       onLogin()
     } catch (error: any) {
@@ -68,6 +83,17 @@ export const Login: React.FC<LoginProps> = ({ onLogin }) => {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
             />
+          </div>
+
+          <div className={styles.checkboxGroup}>
+            <label>
+              <input
+                type="checkbox"
+                checked={rememberMe}
+                onChange={(e) => setRememberMe(e.target.checked)}
+              />
+              <span className={styles.checkboxLabel}>Recordar mi email</span>
+            </label>
           </div>
 
           <button type="submit" className={styles.submitBtn}>
