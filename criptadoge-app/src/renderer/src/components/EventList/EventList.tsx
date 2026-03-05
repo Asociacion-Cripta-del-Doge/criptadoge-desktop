@@ -1,33 +1,13 @@
-import React, { useState, useEffect } from 'react'
-import styles from './EventList.module.scss'
-import { AppEvent, MOCK_EVENTS } from '../../data/events'
-import { EventMaker } from '../EventMaker/EventMaker'
+import React, { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
+import styles from './EventList.module.scss'
+import { EventMaker } from '../EventMaker/EventMaker'
+import { useEvents } from '../../hooks/useEvents'
 
 export const EventList: React.FC = () => {
-  const [events, setEvents] = useState<AppEvent[]>([])
-  const [isLoading, setIsLoading] = useState(true)
+  const { events, isLoading, addEvent } = useEvents()
   const [isMakerOpen, setIsMakerOpen] = useState(false)
   const navigate = useNavigate()
-  useEffect(() => {
-    const fetchEvents = async () => {
-      setIsLoading(true)
-      try {
-        await new Promise((resolve) => setTimeout(resolve, 500))
-        setEvents([...MOCK_EVENTS])
-      } catch (error) {
-        console.error('Error cargando eventos:', error)
-      } finally {
-        setIsLoading(false)
-      }
-    }
-
-    fetchEvents()
-  }, [])
-
-  const handleEventCreated = (newEvent: AppEvent) => {
-    setEvents((prev) => [...prev, newEvent])
-  }
 
   return (
     <div className={styles.container}>
@@ -81,18 +61,15 @@ export const EventList: React.FC = () => {
             ) : (
               <tr>
                 <td colSpan={5} className={styles.messageRow}>
-                  No hay eventos programados.
+                  No hay eventos programados en la base de datos.
                 </td>
               </tr>
             )}
           </tbody>
         </table>
       </div>
-      <EventMaker
-        isOpen={isMakerOpen}
-        onClose={() => setIsMakerOpen(false)}
-        onSuccess={handleEventCreated}
-      />
+
+      <EventMaker isOpen={isMakerOpen} onClose={() => setIsMakerOpen(false)} onSuccess={addEvent} />
     </div>
   )
 }

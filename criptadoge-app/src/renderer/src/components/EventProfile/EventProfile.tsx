@@ -1,93 +1,121 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
+import { getEventById, deleteEvent, updateEvent } from '../../api/eventsApi'
+import { AppEvent } from '../../data/events'
 import styles from './EventProfile.module.scss'
-import { MOCK_EVENTS } from '../../data/events'
 import { Modal } from '../Modal/Modal'
+import { EventMaker } from '../EventMaker/EventMaker'
 
 export const EventProfile: React.FC = () => {
   const { id } = useParams<{ id: string }>()
   const navigate = useNavigate()
-  const [showDeleteModal, setShowDeleteModal] = useState(false)
-  const event = MOCK_EVENTS.find((e) => e.id === id)
+  const [event, setEvent] = useState<AppEvent | null>(null)
+  const [isLoading, setIsLoading] = useState(true)
+  const [isModalOpen, setIsModalOpen] = useState(false)
+  const [isDeleting, setIsDeleting] = useState(false)
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false)
 
-  if (!event) {
-    return (
-      <div className={styles.container}>
-        <button className={styles.backBtn} onClick={() => navigate('/eventos')}>
-          ← Volver a Eventos
-        </button>
-        <h2>Evento no encontrado</h2>
-      </div>
-    )
-  }
-  const handleDelete = async () => {
-    const index = MOCK_EVENTS.findIndex((e) => e.id === id)
-    if (index > -1) {
-      MOCK_EVENTS.splice(index, 1)
+  useEffect(() => {
+    const fetchEventDetail = async () => {
+      try {
+        if (id) {
+          const data = await getEventById(id)
+          setEvent(data)
+        }
+      } catch (error) {
+        console.error('Error al cargar el detalle del evento:', error)
+      } finally {
+        setIsLoading(false)
+      }
     }
-    setShowDeleteModal(false)
-    navigate('/eventos')
+    fetchEventDetail()
+  }, [id])
+  const handleDelete = async () => {
+    if (!id) return
+    setIsDeleting(true)
+    try {
+      await deleteEvent(id)
+      navigate('/eventos')
+    } catch (error) {
+      console.error('Error al borrar el evento:', error)
+      alert('Hubo un problema al intentar borrar el evento.')
+      setIsDeleting(false)
+      setIsModalOpen(false)
+    }
   }
+
+  const handleEditSubmit = async (updatedData: any) => {
+    if (!id) return
+    const updatedEvent = await updateEvent(id, updatedData)
+    setEvent(updatedEvent)
+  }
+
+  if (isLoading) return <div className={styles.loading}>Cargando pergamino del evento...</div>
+  if (!event) return <div className={styles.error}>El evento ha sido tragado por el vacío.</div>
 
   return (
-    <div className={styles.container}>
-      <button className={styles.backBtn} onClick={() => navigate('/eventos')}>
-        ← Volver a la lista
+    <div className={styles.wrapper}>
+      <button className={styles.backBtn} onClick={() => navigate(-1)}>
+        ← Volver a Eventos
       </button>
 
-      <div className={styles.profileLayout}>
-        <div className={styles.card}>
-          <h2>DETALLES DEL EVENTO</h2>
-
-          <div className={styles.infoGroup}>
-            <label>Título del Evento</label>
-            <p>{event.title}</p>
-          </div>
-          <div className={styles.infoGroup}>
-            <label>Etiqueta / Categoría</label>
-            <p>
-              <span className={styles.badge}>{event.label}</span>
-            </p>
-          </div>
-          <div className={styles.infoGroup}>
-            <label>Fecha y Hora</label>
-            <p>
-              {event.date} a las {event.time}
-            </p>
-          </div>
-          <div className={styles.infoGroup}>
-            <label>Descripción y Detalles</label>
-            <p style={{ whiteSpace: 'pre-wrap' }}>{event.description}</p>
+      <div className={styles.profileContainer}>
+        <div className={styles.header}>
+          <span className={styles.badge}>{event.label}</span>
+          <h1>{event.title}</h1>
+          <div className={styles.dateTime}>
+            <span>Fecha ➡ {event.date}</span>
+            <span>Hora ➡ {event.time}</span>
           </div>
         </div>
 
-        <div className={styles.actionsCard}>
-          <button className={styles.secondaryBtn}>Editar Evento</button>
-          <button className={styles.dangerBtn} onClick={() => setShowDeleteModal(true)}>
-            Borrar Evento
-          </button>
+        <div className={styles.content}>
+          <h2>Descripción</h2>
+          <p>{event.description}</p>
+          <div className={styles.statusGroup}>
+            <div className={styles.status}>
+              Estado actual: <strong>{event.status}</strong>
+            </div>
+
+            <div className={styles.actionButtons}>
+              <button className={styles.secondaryBtn} onClick={() => setIsEditModalOpen(true)}>
+                Editar Evento
+              </button>
+              <button className={styles.dangerBtn} onClick={() => setIsModalOpen(true)}>
+                Eliminar Evento
+              </button>
+            </div>
+          </div>
         </div>
       </div>
       <Modal
-        isOpen={showDeleteModal}
-        onClose={() => setShowDeleteModal(false)}
+        isOpen={isModalOpen}
+        onClose={() => !isDeleting && setIsModalOpen(false)}
         title="ELIMINAR EVENTO"
       >
         <p className={styles.modalText}>
-          ¿Estás seguro de que deseas eliminar el evento{' '}
-          <strong className={styles.highlightError}>{event.title}</strong>?<br />
+          ¿Estás seguro de que deseas eliminar el evento <strong>{event.title}</strong>?<br />
           Esta acción no se puede deshacer.
         </p>
-
         <div className={styles.modalActions}>
-          <button className={styles.secondaryBtn} onClick={() => setShowDeleteModal(false)}>
+          <button
+            className={styles.secondaryBtn}
+            onClick={() => setIsModalOpen(false)}
+            disabled={isDeleting}
+          >
             Cancelar
           </button>
-          <button className={styles.dangerBtn} onClick={handleDelete}>
-            Sí, Eliminar
+          <button className={styles.dangerBtn} onClick={handleDelete} disabled={isDeleting}>
+            {isDeleting ? 'Borrando...' : 'Sí, eliminar'}
           </button>
         </div>
       </Modal>
+      <EventMaker
+        isOpen={isEditModalOpen}
+        onClose={() => setIsEditModalOpen(false)}
+        onSuccess={handleEditSubmit}
+        initialData={event}
+      />
     </div>
   )
 }

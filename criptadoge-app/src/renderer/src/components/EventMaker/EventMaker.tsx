@@ -1,15 +1,20 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import styles from './EventMaker.module.scss'
 import { Modal } from '../Modal/Modal'
-import { AppEvent, MOCK_EVENTS } from '../../data/events'
 
 interface EventMakerProps {
   isOpen: boolean
   onClose: () => void
-  onSuccess: (newEvent: AppEvent) => void
+  onSuccess: (eventData: any) => Promise<void> | void
+  initialData?: any
 }
 
-export const EventMaker: React.FC<EventMakerProps> = ({ isOpen, onClose, onSuccess }) => {
+export const EventMaker: React.FC<EventMakerProps> = ({
+  isOpen,
+  onClose,
+  onSuccess,
+  initialData
+}) => {
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [formData, setFormData] = useState({
     title: '',
@@ -19,34 +24,40 @@ export const EventMaker: React.FC<EventMakerProps> = ({ isOpen, onClose, onSucce
     label: 'Magic: The Gathering'
   })
 
+  useEffect(() => {
+    if (isOpen && initialData) {
+      setFormData({
+        title: initialData.title || '',
+        description: initialData.description || '',
+        date: initialData.date || '',
+        time: initialData.time || '',
+        label: initialData.label || 'Magic: The Gathering'
+      })
+    } else if (isOpen && !initialData) {
+      setFormData({ title: '', description: '', date: '', time: '', label: 'Magic: The Gathering' })
+    }
+  }, [isOpen, initialData])
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     setIsSubmitting(true)
 
     try {
-      await new Promise((resolve) => setTimeout(resolve, 1000))
-
-      const newEvent: AppEvent = {
-        id: Date.now().toString(),
-        ...formData
-      }
-
-      MOCK_EVENTS.push(newEvent)
-      onSuccess(newEvent)
-
-      // Limpiamos y cerramos
+      await onSuccess(formData)
       setFormData({ title: '', description: '', date: '', time: '', label: 'Magic: The Gathering' })
       onClose()
     } catch (error) {
-      console.error('Error al crear evento', error)
-      alert('Hubo un error al guardar el evento.')
+      console.error('Error al crear/editar evento:', error)
+      alert('Hubo un error al guardar el evento en la base de datos.')
     } finally {
       setIsSubmitting(false)
     }
   }
 
+  const modalTitle = initialData ? 'EDITAR EVENTO' : 'NUEVO EVENTO'
+
   return (
-    <Modal isOpen={isOpen} onClose={() => !isSubmitting && onClose()} title="NUEVO EVENTO">
+    <Modal isOpen={isOpen} onClose={() => !isSubmitting && onClose()} title={modalTitle}>
       <form className={styles.form} onSubmit={handleSubmit}>
         <div className={styles.formGroup}>
           <label>Título del Evento</label>
@@ -121,7 +132,7 @@ export const EventMaker: React.FC<EventMakerProps> = ({ isOpen, onClose, onSucce
             Cancelar
           </button>
           <button type="submit" className={styles.submitBtn} disabled={isSubmitting}>
-            {isSubmitting ? 'Guardando...' : 'Crear Evento'}
+            {isSubmitting ? 'Guardando...' : initialData ? 'Actualizar Evento' : 'Crear Evento'}
           </button>
         </div>
       </form>

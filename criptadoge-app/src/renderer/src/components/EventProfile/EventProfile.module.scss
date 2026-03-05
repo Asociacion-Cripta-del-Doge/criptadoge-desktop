@@ -1,101 +1,191 @@
 @use '../../styles/variables' as v;
+@use 'sass:color';
 
-.container {
-  height: 100%;
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.wrapper {
   padding: 2rem;
+  max-width: 900px;
+  margin: 0 auto;
+  height: 100%;
   overflow-y: auto;
+}
+
+.profileContainer {
+  background: v.$bg-card;
+  border: 1px solid v.$color-border;
+  border-radius: 16px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+  overflow: hidden;
+  animation: fadeIn 0.4s ease-out;
   color: v.$text-main;
+  font-family: v.$font-main;
+}
+
+.loading,
+.error {
+  text-align: center;
+  padding: 5rem;
+  font-size: 1.3rem;
+  color: v.$color-primary;
+  font-family: v.$font-main;
+  font-weight: 500;
+}
+
+.error {
+  color: v.$color-error;
 }
 
 .backBtn {
-  background-color: transparent;
-  color: v.$text-muted;
+  background: none;
   border: none;
+  color: v.$text-muted;
   font-size: 1rem;
-  cursor: pointer;
-  margin-bottom: 2rem;
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
   font-family: v.$font-main;
+  font-weight: bold;
+  cursor: pointer;
+  padding: 0;
+  margin-bottom: 1.5rem;
+  display: inline-flex;
+  align-items: center;
+  transition:
+    color 0.2s,
+    transform 0.2s;
 
   &:hover {
     color: v.$text-main;
+    transform: translateX(-5px);
   }
 }
 
-.profileLayout {
-  display: grid;
-  grid-template-columns: 2fr 1fr;
-  gap: 2rem;
-}
+.header {
+  padding: 3rem;
+  border-bottom: 1px solid v.$color-border;
+  background: v.$bg-main;
 
-.card {
-  background-color: v.$bg-card;
-  border: 1px solid v.$color-border;
-  border-radius: 8px;
-  padding: 2rem;
-
-  h2 {
-    font-family: v.$font-title;
-    font-size: 2rem;
-    margin-bottom: 1.5rem;
-    border-bottom: 1px solid v.$color-border;
-    padding-bottom: 1rem;
-    margin-top: 0;
-  }
-}
-
-.infoGroup {
-  margin-bottom: 1.5rem;
-
-  label {
-    display: block;
-    color: v.$text-muted;
-    font-size: 0.85rem;
-    text-transform: uppercase;
-    margin-bottom: 0.5rem;
-    font-weight: bold;
-  }
-
-  p {
-    font-size: 1.1rem;
+  h1 {
+    margin: 1.5rem 0 1rem;
+    font-size: 3rem;
     color: v.$text-main;
-    font-weight: 500;
-    line-height: 1.5;
-    margin: 0;
+    font-family: v.$font-title;
+    line-height: 1.2;
+    letter-spacing: 1px;
   }
 }
 
 .badge {
-  padding: 0.35rem 0.6rem;
-  border-radius: 4px;
-  font-size: 0.75rem;
-  font-weight: bold;
-  text-transform: uppercase;
-  background-color: rgba(v.$color-primary, 0.15);
-  color: v.$color-primary;
   display: inline-block;
+  padding: 0.4rem 1.2rem;
+  border-radius: 20px;
+  font-size: 0.85rem;
+  font-family: v.$font-mono;
+  font-weight: bold;
+  background: rgba(v.$color-primary, 0.2);
+  color: color.adjust(v.$color-primary, $lightness: 30%);
+  border: 1px solid v.$color-primary;
+  text-transform: uppercase;
+  letter-spacing: 1px;
 }
 
-.actionsCard {
+.dateTime {
   display: flex;
-  flex-direction: column;
+  gap: 1.5rem;
+  color: v.$text-muted;
+  font-size: 1.15rem;
+  font-family: v.$font-mono;
+  margin-top: 2rem;
+
+  span {
+    display: flex;
+    align-items: center;
+    background: v.$bg-card;
+    border: 1px solid v.$color-border;
+    padding: 0.8rem 1.2rem;
+    border-radius: 8px;
+  }
+}
+
+.content {
+  padding: 3rem;
+  background: v.$bg-card;
+
+  h2 {
+    color: v.$text-main;
+    font-family: v.$font-title;
+    font-size: 1.5rem;
+    margin-top: 0;
+    margin-bottom: 1.5rem;
+    border-bottom: 2px solid v.$color-border;
+    padding-bottom: 0.5rem;
+  }
+
+  p {
+    color: v.$text-muted;
+    line-height: 1.8;
+    font-size: 1.15rem;
+    margin-bottom: 3rem;
+    white-space: pre-wrap;
+  }
+}
+
+.statusGroup {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-top: 1px dashed v.$color-border;
+  padding-top: 2rem;
   gap: 1rem;
+}
+
+.actionButtons {
+  display: flex;
+  gap: 1rem;
+}
+
+.status {
+  display: inline-flex;
+  align-items: center;
+  padding: 1rem 1.5rem;
+  background: rgba(v.$color-accent, 0.1);
+  color: v.$color-accent;
+  border-radius: 12px;
+  font-size: 1.1rem;
+  border: 1px solid rgba(v.$color-accent, 0.3);
+  font-family: v.$font-mono;
+
+  strong {
+    margin-left: 0.5rem;
+    text-transform: uppercase;
+    font-weight: 800;
+    color: color.adjust(v.$color-accent, $lightness: 15%);
+  }
 }
 
 .secondaryBtn {
   background-color: transparent;
-  border: 1px solid v.$color-border;
-  color: v.$text-main;
-  padding: 1rem;
+  border: 1px solid v.$color-primary;
+  color: v.$color-primary;
+  padding: 1rem 1.5rem;
   border-radius: 8px;
   cursor: pointer;
   font-weight: bold;
   font-family: v.$font-main;
+  transition:
+    background-color 0.2s,
+    color 0.2s;
 
   &:hover {
-    background-color: rgba(255, 255, 255, 0.05);
+    background-color: rgba(v.$color-primary, 0.1);
+    color: color.adjust(v.$color-primary, $lightness: 50%);
   }
 }
 
@@ -103,25 +193,26 @@
   background-color: transparent;
   border: 1px solid v.$color-error;
   color: v.$color-error;
-  padding: 1rem;
+  padding: 1rem 1.5rem;
   border-radius: 8px;
   cursor: pointer;
   font-weight: bold;
   font-family: v.$font-main;
+  transition: background-color 0.2s;
 
   &:hover {
     background-color: rgba(v.$color-error, 0.1);
+    color: color.adjust(v.$color-error, $lightness: 30%);
   }
 }
+
 .modalText {
   color: v.$text-muted;
   line-height: 1.6;
   margin-bottom: 2rem;
   font-size: 1.05rem;
-}
-
-.highlightError {
-  color: v.$color-error;
+  text-align: center;
+  font-family: v.$font-main;
 }
 
 .modalActions {
@@ -130,15 +221,16 @@
 
   button {
     flex: 1;
-  }
-}
-
-@media (max-width: 768px) {
-  .container {
     padding: 1rem;
-  }
-  .profileLayout {
-    grid-template-columns: 1fr;
-    gap: 1rem;
+    border-radius: 8px;
+    font-weight: bold;
+    font-family: v.$font-main;
+    cursor: pointer;
+    transition: all 0.2s;
+
+    &:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
   }
 }

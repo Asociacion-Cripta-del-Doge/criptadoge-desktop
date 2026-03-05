@@ -7,6 +7,7 @@ export interface AppEvent {
   date: string
   time: string
   label: string
+  status?: string
 }
 
 export const MOCK_EVENTS: AppEvent[] = [
