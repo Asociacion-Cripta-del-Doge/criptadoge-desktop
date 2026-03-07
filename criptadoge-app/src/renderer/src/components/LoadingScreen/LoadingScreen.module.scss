@@ -1,13 +1,9 @@
 @use '../../styles/variables' as v;
+@use '../../styles/mixins' as m;
 
 .container {
-  width: 100vw;
-  height: 100vh;
-  display: flex;
+  @include m.fullpage-center;
   flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  background-color: v.$bg-main;
   color: v.$color-primary;
 }
 

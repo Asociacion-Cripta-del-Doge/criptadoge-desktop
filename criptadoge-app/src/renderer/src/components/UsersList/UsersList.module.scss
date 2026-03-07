@@ -1,5 +1,6 @@
 @use '../../styles/variables' as v;
 @use 'sass:color';
+@use '../../styles/mixins' as m;
 
 .container {
   background-color: v.$bg-main;
@@ -25,68 +26,35 @@
 }
 
 .primaryBtn {
-  background-color: v.$color-primary;
-  color: v.$text-main;
-  border: none;
+  @include m.btn-primary;
   padding: 0.75rem 1.5rem;
   border-radius: 6px;
-  font-family: v.$font-main;
-  font-weight: bold;
-  cursor: pointer;
-  transition: opacity 0.2s;
+  transition: opacity 0.2s, box-shadow 0.2s;
 
   &:hover {
-    opacity: 0.9;
+    @include m.btn-primary-hover;
   }
 }
 
 .card {
-  background-color: v.$bg-card;
-  border: 1px solid v.$color-border;
-  border-radius: 8px;
-  padding: 1.5rem;
+  @include m.card-base;
   overflow-x: auto;
 }
 
 .table {
-  width: 100%;
-  border-collapse: collapse;
-  text-align: left;
-
-  th {
-    color: v.$text-muted;
-    padding-bottom: 1rem;
-    border-bottom: 1px solid v.$color-border;
-    font-weight: 500;
-    text-transform: uppercase;
-    font-size: 0.85rem;
-  }
+  @include m.table-base;
 
   td {
-    padding: 1rem 0;
-    border-bottom: 1px solid v.$color-border;
     color: v.$text-main;
   }
 
   tr:last-child td {
     border-bottom: none;
   }
-
-  tbody tr {
-    transition: background-color 0.2s;
-    &:hover {
-      background-color: rgba(255, 255, 255, 0.03);
-    }
-  }
 }
 
 .badge {
-  padding: 0.35rem 0.6rem;
-  border-radius: 4px;
-  font-size: 0.75rem;
-  font-weight: bold;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
+  @include m.badge-base;
 }
 
 .activo {
@@ -105,18 +73,8 @@
 }
 
 .actionBtn {
-  background-color: transparent;
-  border: 1px solid v.$color-border;
-  color: v.$text-main;
+  @include m.action-btn;
   padding: 0.4rem 0.8rem;
-  border-radius: 4px;
-  cursor: pointer;
-  transition: all 0.2s;
-
-  &:hover {
-    border-color: v.$color-primary;
-    color: v.$color-primary;
-  }
 }
 
 .toolbar {
@@ -164,30 +122,19 @@
   }
 
   .formGroup {
-    display: flex;
-    flex-direction: column;
-    gap: 0.5rem;
+    @include m.form-group;
 
     label {
-      font-size: 0.85rem;
-      color: v.$text-muted;
-      text-transform: uppercase;
       letter-spacing: 1px;
     }
 
     input,
     select {
+      @include m.form-input;
       padding: 0.85rem;
-      border-radius: 6px;
-      border: 1px solid v.$color-border;
-      background-color: v.$bg-main;
-      color: v.$text-main;
-      font-family: v.$font-main;
-      outline: none;
       transition: all 0.2s;
 
       &:focus {
-        border-color: v.$color-primary;
         box-shadow: 0 0 8px rgba(v.$color-primary, 0.3);
       }
 
@@ -202,16 +149,10 @@
   }
 
   .submitBtn {
-    background-color: v.$color-primary;
-    color: v.$text-main;
-    border: none;
+    @include m.btn-primary;
     padding: 1rem;
     border-radius: 6px;
-    font-family: v.$font-main;
-    font-weight: bold;
     font-size: 1rem;
-    text-transform: uppercase;
-    cursor: pointer;
     transition: all 0.2s;
     margin-top: 0.5rem;
 
@@ -222,13 +163,15 @@
   }
 }
 
-@media (max-width: 600px) {
-  .createForm {
-    grid-template-columns: 1fr;
-  }
-}
-
 @media (max-width: 768px) {
+  .container {
+    padding: 1rem;
+  }
+
+  .header h1 {
+    font-size: 1.5rem;
+  }
+
   .toolbar {
     flex-direction: column;
     gap: 1rem;
@@ -245,5 +188,61 @@
   .table th:nth-child(5),
   .table td:nth-child(5) {
     display: none;
+  }
+}
+
+@media (max-width: 600px) {
+  .createForm {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 480px) {
+  .card {
+    padding: 0.75rem;
+  }
+
+  .table,
+  .table thead,
+  .table tbody,
+  .table tr,
+  .table th,
+  .table td {
+    display: block;
+    width: 100%;
+  }
+
+  .table thead {
+    display: none;
+  }
+
+  .table tbody tr {
+    border: 1px solid v.$color-border;
+    border-radius: 8px;
+    margin-bottom: 0.75rem;
+    padding: 1rem;
+    background-color: v.$bg-card;
+
+    &:hover {
+      background-color: rgba(23, 61, 141, 0.08);
+    }
+  }
+
+  .table tbody td {
+    border: none;
+    padding: 0.5rem 0;
+    font-size: 0.9rem;
+    border-bottom: 1px solid rgba(51, 65, 85, 0.4);
+
+    &:first-child {
+      padding-top: 0;
+    }
+
+    &:last-child {
+      border-bottom: none;
+      padding-top: 0.75rem;
+      margin-top: 0.25rem;
+      border-top: 1px solid v.$color-border;
+    }
   }
 }

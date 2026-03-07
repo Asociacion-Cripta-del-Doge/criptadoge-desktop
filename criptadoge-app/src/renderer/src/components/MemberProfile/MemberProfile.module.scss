@@ -1,5 +1,7 @@
 @use '../../styles/variables' as v;
 @use 'sass:color';
+@use '../../styles/mixins' as m;
+
 .container {
   background-color: v.$bg-main;
   color: v.$text-main;
@@ -33,10 +35,7 @@
 }
 
 .card {
-  background-color: v.$bg-card;
-  border: 1px solid v.$color-border;
-  border-radius: 8px;
-  padding: 2rem;
+  @include m.card-base(2rem);
 
   h2 {
     font-family: v.$font-title;
@@ -72,17 +71,10 @@
 }
 
 .renewBtn {
-  background-color: v.$color-primary;
-  color: v.$text-main;
-  border: none;
+  @include m.btn-primary;
   padding: 1.5rem;
-  border-radius: 8px;
-  font-family: v.$font-main;
-  font-weight: bold;
   font-size: 1.1rem;
-  cursor: pointer;
   transition: opacity 0.2s;
-  text-transform: uppercase;
   box-shadow: 0 4px 12px rgba(v.$color-primary, 0.3);
 
   &:hover {
@@ -106,18 +98,9 @@
 }
 
 .dangerBtn {
-  background-color: transparent;
-  border: 1px solid v.$color-error;
-  color: v.$color-error;
+  @include m.btn-danger;
   padding: 1rem;
-  border-radius: 8px;
-  cursor: pointer;
-  font-weight: bold;
   margin-top: auto;
-
-  &:hover {
-    background-color: rgba(v.$color-error, 0.1);
-  }
 }
 
 .modalActions {
@@ -130,12 +113,7 @@
 }
 
 .badge {
-  padding: 0.35rem 0.6rem;
-  border-radius: 4px;
-  font-size: 0.75rem;
-  font-weight: bold;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
+  @include m.badge-base;
   display: inline-block;
   margin-top: 0.25rem;
 }
@@ -153,17 +131,6 @@
 .pendiente {
   background-color: rgba(v.$text-muted, 0.15);
   color: v.$text-muted;
-}
-
-@keyframes modalIn {
-  from {
-    opacity: 0;
-    transform: scale(0.95) translateY(10px);
-  }
-  to {
-    opacity: 1;
-    transform: scale(1) translateY(0);
-  }
 }
 
 .renewSubtext {
@@ -186,25 +153,6 @@
 
 .modalConfirmBtn {
   padding: 1rem;
-}
-
-.errorContainer {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  min-height: 40vh;
-}
-
-.errorMessage {
-  color: v.$color-error;
-  font-family: v.$font-title;
-  background-color: rgba(v.$color-error, 0.05);
-  border: 1px solid rgba(v.$color-error, 0.3);
-  padding: 2rem;
-  border-radius: 8px;
-  text-align: center;
-  box-shadow: 0 0 15px rgba(v.$color-error, 0.1);
-  letter-spacing: 1px;
 }
 
 .errorContainer {

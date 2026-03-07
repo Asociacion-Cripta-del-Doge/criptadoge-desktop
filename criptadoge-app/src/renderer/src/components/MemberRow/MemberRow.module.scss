@@ -1,12 +1,8 @@
 @use '../../styles/variables' as v;
+@use '../../styles/mixins' as m;
 
 .badge {
-  padding: 0.35rem 0.6rem;
-  border-radius: 4px;
-  font-size: 0.75rem;
-  font-weight: bold;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
+  @include m.badge-base;
 }
 
 .activo {
@@ -25,16 +21,6 @@
 }
 
 .actionBtn {
-  background-color: transparent;
-  border: 1px solid v.$color-border;
-  color: v.$text-main;
+  @include m.action-btn;
   padding: 0.4rem 0.8rem;
-  border-radius: 4px;
-  cursor: pointer;
-  transition: all 0.2s;
-
-  &:hover {
-    border-color: v.$color-primary;
-    color: v.$color-primary;
-  }
 }

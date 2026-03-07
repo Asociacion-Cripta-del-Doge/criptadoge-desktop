@@ -1,5 +1,6 @@
 @use '../../styles/variables' as v;
 @use 'sass:color';
+@use '../../styles/mixins' as m;
 
 @keyframes fadeIn {
   from {
@@ -190,18 +191,11 @@
 }
 
 .dangerBtn {
-  background-color: transparent;
-  border: 1px solid v.$color-error;
-  color: v.$color-error;
+  @include m.btn-danger;
   padding: 1rem 1.5rem;
-  border-radius: 8px;
-  cursor: pointer;
-  font-weight: bold;
   font-family: v.$font-main;
-  transition: background-color 0.2s;
 
   &:hover {
-    background-color: rgba(v.$color-error, 0.1);
     color: color.adjust(v.$color-error, $lightness: 30%);
   }
 }
@@ -216,21 +210,63 @@
 }
 
 .modalActions {
-  display: flex;
-  gap: 1rem;
+  @include m.modal-actions-row;
 
   button {
-    flex: 1;
-    padding: 1rem;
-    border-radius: 8px;
-    font-weight: bold;
-    font-family: v.$font-main;
-    cursor: pointer;
     transition: all 0.2s;
 
     &:disabled {
       opacity: 0.6;
       cursor: not-allowed;
     }
+  }
+}
+
+@media (max-width: 768px) {
+  .wrapper {
+    padding: 1rem;
+  }
+
+  .header {
+    padding: 1.5rem;
+
+    h1 {
+      font-size: 1.8rem;
+      margin: 1rem 0 0.75rem;
+    }
+  }
+
+  .dateTime {
+    flex-direction: column;
+    gap: 0.75rem;
+    margin-top: 1.25rem;
+    font-size: 1rem;
+  }
+
+  .content {
+    padding: 1.5rem;
+
+    p {
+      font-size: 1rem;
+      margin-bottom: 2rem;
+    }
+  }
+
+  .statusGroup {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .actionButtons {
+    width: 100%;
+    flex-direction: column;
+
+    button {
+      width: 100%;
+    }
+  }
+
+  .modalActions {
+    flex-direction: column;
   }
 }
