@@ -1,25 +1,13 @@
-import React, { useState } from 'react'
 import { HashRouter } from 'react-router-dom'
 import { AppRoutes } from './App.routes'
+import { AuthProvider } from './context/AuthContext'
 
 function App() {
-  const [isAuthenticated, setIsAuthenticated] = useState<boolean>(
-    !!localStorage.getItem('cripta_token')
-  )
-
-  const handleLogin = () => {
-    setIsAuthenticated(true)
-  }
-
-  const handleLogout = () => {
-    localStorage.removeItem('cripta_token')
-    localStorage.removeItem('cripta_user')
-    setIsAuthenticated(false)
-  }
-
   return (
     <HashRouter>
-      <AppRoutes isAuthenticated={isAuthenticated} onLogin={handleLogin} onLogout={handleLogout} />
+      <AuthProvider>
+        <AppRoutes />
+      </AuthProvider>
     </HashRouter>
   )
 }

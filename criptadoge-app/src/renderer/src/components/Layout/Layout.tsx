@@ -1,12 +1,10 @@
 import React, { useState } from 'react'
 import { Outlet, NavLink } from 'react-router-dom'
 import styles from './Layout.module.scss'
+import { useAuth } from '../../context/AuthContext'
 
-interface LayoutProps {
-  onLogout?: () => void
-}
-
-export const Layout: React.FC<LayoutProps> = ({ onLogout }) => {
+export const Layout: React.FC = () => {
+  const { logout } = useAuth()
   const [isMenuOpen, setIsMenuOpen] = useState(false)
 
   const closeMenu = () => setIsMenuOpen(false)
@@ -66,7 +64,7 @@ export const Layout: React.FC<LayoutProps> = ({ onLogout }) => {
         </nav>
 
         <div className={styles.logoutWrapper}>
-          <button onClick={onLogout} className={styles.logoutBtn}>
+          <button onClick={logout} className={styles.logoutBtn}>
             CERRAR SESIÓN
           </button>
         </div>
