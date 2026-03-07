@@ -7,23 +7,49 @@
   color: v.$text-main;
 }
 
+.statusMessage {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  color: v.$text-muted;
+  font-family: v.$font-mono;
+  font-size: 0.9rem;
+}
+
 .header {
   margin-bottom: 2rem;
+  padding-bottom: 1.5rem;
+  border-bottom: 1px solid v.$color-border;
+  position: relative;
+
+  &::after {
+    content: '';
+    position: absolute;
+    bottom: -1px;
+    left: 0;
+    width: 60px;
+    height: 2px;
+    background: v.$color-accent;
+  }
 
   h1 {
     font-family: v.$font-title;
     font-size: 2rem;
     margin: 0 0 0.5rem 0;
+    color: v.$text-main;
   }
 
   p {
     color: v.$text-muted;
+    font-size: 0.9rem;
+    margin: 0;
   }
 }
 
 .grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
   gap: 1.5rem;
   margin-bottom: 2rem;
 }
@@ -31,15 +57,17 @@
 .recentSection {
   background-color: v.$bg-card;
   border: 1px solid v.$color-border;
+  border-top: 2px solid v.$color-primary;
   border-radius: 8px;
   padding: 1.5rem;
   overflow-x: auto;
 
   h2 {
     font-family: v.$font-title;
-    font-size: 1.5rem;
-    margin-bottom: 1.5rem;
+    font-size: 1.2rem;
+    margin: 0 0 1.5rem 0;
     color: v.$text-main;
+    letter-spacing: 1px;
   }
 }
 
@@ -54,13 +82,15 @@
     border-bottom: 1px solid v.$color-border;
     font-weight: 500;
     text-transform: uppercase;
-    font-size: 0.85rem;
+    font-size: 0.8rem;
+    letter-spacing: 0.5px;
   }
 
   td {
-    padding: 1rem 0;
-    border-bottom: 1px solid v.$color-border;
+    padding: 0.9rem 0;
+    border-bottom: 1px solid rgba(51, 65, 85, 0.5);
     color: v.$text-main;
+    font-size: 0.9rem;
   }
 
   tr:last-child td {
@@ -70,7 +100,7 @@
   tbody tr {
     transition: background-color 0.2s;
     &:hover {
-      background-color: rgba(255, 255, 255, 0.03);
+      background-color: rgba(23, 61, 141, 0.08);
     }
   }
 }

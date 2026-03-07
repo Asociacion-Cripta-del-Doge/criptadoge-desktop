@@ -57,8 +57,8 @@ export const Dashboard: React.FC = () => {
     .sort((a, b) => new Date(b.lastRenewal).getTime() - new Date(a.lastRenewal).getTime())
     .slice(0, 3)
 
-  if (isLoading) return <div className={styles.container}>Cargando datos del servidor...</div>
-  if (error) return <div className={styles.container}>{error}</div>
+  if (isLoading) return <div className={styles.statusMessage}>Cargando datos del servidor...</div>
+  if (error) return <div className={styles.statusMessage}>{error}</div>
 
   return (
     <div className={styles.container}>

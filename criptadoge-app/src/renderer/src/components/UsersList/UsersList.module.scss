@@ -33,10 +33,11 @@
   font-family: v.$font-main;
   font-weight: bold;
   cursor: pointer;
-  transition: opacity 0.2s;
+  transition: opacity 0.2s, box-shadow 0.2s;
 
   &:hover {
     opacity: 0.9;
+    box-shadow: 0 0 15px rgba(23, 61, 141, 0.45);
   }
 }
 
@@ -75,7 +76,7 @@
   tbody tr {
     transition: background-color 0.2s;
     &:hover {
-      background-color: rgba(255, 255, 255, 0.03);
+      background-color: rgba(23, 61, 141, 0.08);
     }
   }
 }

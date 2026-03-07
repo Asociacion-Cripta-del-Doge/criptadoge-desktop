@@ -17,12 +17,13 @@
 .modalCard {
   background-color: v.$bg-card;
   border: 1px solid v.$color-border;
+  border-top: 2px solid v.$color-accent;
   border-radius: 8px;
   padding: 2.5rem;
   width: 90%;
   max-width: 500px;
   text-align: center;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.6), 0 0 0 1px rgba(23, 61, 141, 0.1);
   animation: modalIn 0.2s ease-out forwards;
 
   h3 {
