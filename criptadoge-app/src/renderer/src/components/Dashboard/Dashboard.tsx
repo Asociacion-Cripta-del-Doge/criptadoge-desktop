@@ -1,26 +1,64 @@
-import React from 'react'
+import React, { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import styles from './Dashboard.module.scss'
 import { StatCard } from '../StatCard/StatCard'
-import { MOCK_MEMBERS, getMemberStatus } from '../../data/members'
+import { Member, getMemberStatus } from '../../data/members'
 import { MemberRow } from '../MemberRow/MemberRow'
+import { apiClient } from '../../api/axiosClient'
 
 export const Dashboard: React.FC = () => {
   const navigate = useNavigate()
+  const [members, setMembers] = useState<Member[]>([])
+  const [totalEvents, setTotalEvents] = useState(0)
+  const [isLoading, setIsLoading] = useState(true)
+  const [error, setError] = useState<string | null>(null)
 
-  const totalMembers = MOCK_MEMBERS.length
-  const activeMembers = MOCK_MEMBERS.filter(
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const [usersRes, eventsRes] = await Promise.all([
+          apiClient.get('/usuarios'),
+          apiClient.get('/eventos')
+        ])
+        setMembers(usersRes.data)
+        setTotalEvents(eventsRes.data.length)
+      } catch (err) {
+        console.error('Error cargando datos del dashboard:', err)
+        setError('No se pudieron cargar los datos del servidor.')
+      } finally {
+        setIsLoading(false)
+      }
+    }
+    fetchData()
+  }, [])
+
+  const totalMembers = members.length
+  const activeMembers = members.filter(
     (m) => getMemberStatus(m.expirationDate) === 'Activo'
   ).length
-  const pendingMembers = MOCK_MEMBERS.filter(
+  const pendingMembers = members.filter(
     (m) => getMemberStatus(m.expirationDate) === 'Pendiente'
   ).length
-  const inactiveMembers = MOCK_MEMBERS.filter(
+  const inactiveMembers = members.filter(
     (m) => getMemberStatus(m.expirationDate) === 'Inactivo'
   ).length
-  const latestRenewals = [...MOCK_MEMBERS]
+
+  const today = new Date()
+  today.setHours(0, 0, 0, 0)
+  const in7Days = new Date(today)
+  in7Days.setDate(today.getDate() + 7)
+  const upcomingRenewals = members.filter((m) => {
+    if (!m.expirationDate) return false
+    const exp = new Date(m.expirationDate)
+    return exp >= today && exp <= in7Days
+  }).length
+
+  const latestRenewals = [...members]
     .sort((a, b) => new Date(b.lastRenewal).getTime() - new Date(a.lastRenewal).getTime())
     .slice(0, 3)
+
+  if (isLoading) return <div className={styles.container}>Cargando datos del servidor...</div>
+  if (error) return <div className={styles.container}>{error}</div>
 
   return (
     <div className={styles.container}>
@@ -50,9 +88,15 @@ export const Dashboard: React.FC = () => {
         />
         <StatCard
           title="Próximas Renovaciones"
-          value="3"
+          value={upcomingRenewals}
           subtitle="Expiran en los próximos 7 días"
           trend="neutral"
+        />
+        <StatCard
+          title="Eventos Próximos"
+          value={totalEvents}
+          subtitle="Programados en el sistema"
+          trend="positive"
         />
       </div>
       <div className={styles.recentSection}>

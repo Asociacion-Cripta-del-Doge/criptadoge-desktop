@@ -34,7 +34,13 @@ export const EventMaker: React.FC<EventMakerProps> = ({
         label: initialData.label || 'Magic: The Gathering'
       })
     } else if (isOpen && !initialData) {
-      setFormData({ title: '', description: '', date: '', time: '', label: 'Magic: The Gathering' })
+      setFormData({
+        title: '',
+        description: '',
+        date: '',
+        time: '',
+        label: 'Magic: The Gathering'
+      })
     }
   }, [isOpen, initialData])
 
@@ -44,7 +50,13 @@ export const EventMaker: React.FC<EventMakerProps> = ({
 
     try {
       await onSuccess(formData)
-      setFormData({ title: '', description: '', date: '', time: '', label: 'Magic: The Gathering' })
+      setFormData({
+        title: '',
+        description: '',
+        date: '',
+        time: '',
+        label: 'Magic: The Gathering'
+      })
       onClose()
     } catch (error) {
       console.error('Error al crear/editar evento:', error)
