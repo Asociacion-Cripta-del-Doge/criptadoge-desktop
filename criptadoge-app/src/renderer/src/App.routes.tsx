@@ -32,7 +32,6 @@ export const AppRoutes: React.FC<AppRoutesProps> = ({ isAuthenticated, onLogin, 
         {!isAuthenticated ? (
           <Route path="*" element={<Login onLogin={onLogin} />} />
         ) : (
-          // 👇 Le pasamos el onLogout a tu Layout
           <Route path="/" element={<Layout onLogout={onLogout} />}>
             <Route index element={<Dashboard />} />
             <Route path="socios" element={<UsersList />} />
