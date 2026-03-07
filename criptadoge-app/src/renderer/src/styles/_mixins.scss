@@ -1,0 +1,140 @@
+@use './variables' as v;
+
+@mixin card-base($padding: 1.5rem, $radius: 8px) {
+  background-color: v.$bg-card;
+  border: 1px solid v.$color-border;
+  border-radius: $radius;
+  padding: $padding;
+}
+
+@mixin btn-primary {
+  background-color: v.$color-primary;
+  color: v.$text-main;
+  border: none;
+  border-radius: 8px;
+  font-family: v.$font-main;
+  font-weight: bold;
+  cursor: pointer;
+  text-transform: uppercase;
+}
+
+@mixin btn-primary-hover {
+  opacity: 0.9;
+  box-shadow: 0 0 15px rgba(23, 61, 141, 0.45);
+}
+
+@mixin btn-danger {
+  background-color: transparent;
+  border: 1px solid v.$color-error;
+  color: v.$color-error;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: bold;
+  transition: background-color 0.2s;
+
+  &:hover {
+    background-color: rgba(v.$color-error, 0.1);
+  }
+}
+
+@mixin action-btn {
+  background-color: transparent;
+  border: 1px solid v.$color-border;
+  color: v.$text-main;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.2s;
+
+  &:hover {
+    border-color: v.$color-primary;
+    color: v.$color-primary;
+  }
+}
+
+@mixin form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+
+  label {
+    font-size: 0.85rem;
+    text-transform: uppercase;
+    color: v.$text-muted;
+    font-weight: bold;
+  }
+}
+
+@mixin form-input {
+  background-color: v.$bg-main;
+  border: 1px solid v.$color-border;
+  color: v.$text-main;
+  padding: 0.85rem 1rem;
+  border-radius: 6px;
+  font-family: v.$font-main;
+  font-size: 1rem;
+  outline: none;
+  transition: border-color 0.2s, box-shadow 0.2s;
+
+  &:focus {
+    border-color: v.$color-primary;
+  }
+}
+
+@mixin table-base {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: left;
+
+  th {
+    color: v.$text-muted;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid v.$color-border;
+    font-weight: 500;
+    text-transform: uppercase;
+    font-size: 0.85rem;
+  }
+
+  td {
+    padding: 1rem 0;
+    border-bottom: 1px solid v.$color-border;
+  }
+
+  tbody tr {
+    transition: background-color 0.2s;
+    &:hover {
+      background-color: rgba(23, 61, 141, 0.08);
+    }
+  }
+}
+
+@mixin badge-base {
+  padding: 0.35rem 0.6rem;
+  border-radius: 4px;
+  font-size: 0.75rem;
+  font-weight: bold;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+@mixin modal-actions-row {
+  display: flex;
+  gap: 1rem;
+
+  button {
+    flex: 1;
+    padding: 1rem;
+    border-radius: 8px;
+    font-weight: bold;
+    font-family: v.$font-main;
+    cursor: pointer;
+  }
+}
+
+@mixin fullpage-center {
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: v.$bg-main;
+}

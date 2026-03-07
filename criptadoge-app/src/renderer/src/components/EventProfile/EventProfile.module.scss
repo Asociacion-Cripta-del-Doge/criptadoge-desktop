@@ -1,5 +1,6 @@
 @use '../../styles/variables' as v;
 @use 'sass:color';
+@use '../../styles/mixins' as m;
 
 @keyframes fadeIn {
   from {
@@ -190,18 +191,11 @@
 }
 
 .dangerBtn {
-  background-color: transparent;
-  border: 1px solid v.$color-error;
-  color: v.$color-error;
+  @include m.btn-danger;
   padding: 1rem 1.5rem;
-  border-radius: 8px;
-  cursor: pointer;
-  font-weight: bold;
   font-family: v.$font-main;
-  transition: background-color 0.2s;
 
   &:hover {
-    background-color: rgba(v.$color-error, 0.1);
     color: color.adjust(v.$color-error, $lightness: 30%);
   }
 }
@@ -216,16 +210,9 @@
 }
 
 .modalActions {
-  display: flex;
-  gap: 1rem;
+  @include m.modal-actions-row;
 
   button {
-    flex: 1;
-    padding: 1rem;
-    border-radius: 8px;
-    font-weight: bold;
-    font-family: v.$font-main;
-    cursor: pointer;
     transition: all 0.2s;
 
     &:disabled {

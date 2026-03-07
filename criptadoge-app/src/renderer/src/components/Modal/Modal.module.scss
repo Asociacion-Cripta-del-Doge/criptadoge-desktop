@@ -1,4 +1,5 @@
 @use '../../styles/variables' as v;
+@use '../../styles/mixins' as m;
 
 .modalOverlay {
   position: fixed;
@@ -15,11 +16,8 @@
 }
 
 .modalCard {
-  background-color: v.$bg-card;
-  border: 1px solid v.$color-border;
+  @include m.card-base(2.5rem);
   border-top: 2px solid v.$color-accent;
-  border-radius: 8px;
-  padding: 2.5rem;
   width: 90%;
   max-width: 500px;
   max-height: 90vh;

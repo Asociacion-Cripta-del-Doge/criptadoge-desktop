@@ -1,4 +1,5 @@
 @use '../../styles/variables' as v;
+@use '../../styles/mixins' as m;
 
 .container {
   padding: 2rem;
@@ -21,63 +22,27 @@
 }
 
 .primaryBtn {
-  background-color: v.$color-primary;
-  color: v.$text-main;
-  border: none;
+  @include m.btn-primary;
   padding: 0.85rem 1.5rem;
-  border-radius: 8px;
-  font-family: v.$font-main;
-  font-weight: bold;
   font-size: 1rem;
-  cursor: pointer;
   transition: opacity 0.2s, box-shadow 0.2s;
 
   &:hover {
-    opacity: 0.9;
-    box-shadow: 0 0 15px rgba(23, 61, 141, 0.45);
+    @include m.btn-primary-hover;
   }
 }
 
 .card {
-  background-color: v.$bg-card;
-  border: 1px solid v.$color-border;
-  border-radius: 8px;
-  padding: 1.5rem;
+  @include m.card-base;
   overflow-x: auto;
 }
 
 .table {
-  width: 100%;
-  border-collapse: collapse;
-  text-align: left;
-
-  th {
-    color: v.$text-muted;
-    padding-bottom: 1rem;
-    border-bottom: 1px solid v.$color-border;
-    text-transform: uppercase;
-    font-size: 0.85rem;
-  }
-
-  td {
-    padding: 1rem 0;
-    border-bottom: 1px solid v.$color-border;
-  }
-
-  tbody tr {
-    transition: background-color 0.2s;
-    &:hover {
-      background-color: rgba(23, 61, 141, 0.08);
-    }
-  }
+  @include m.table-base;
 }
 
 .badge {
-  padding: 0.35rem 0.6rem;
-  border-radius: 4px;
-  font-size: 0.75rem;
-  font-weight: bold;
-  text-transform: uppercase;
+  @include m.badge-base;
   background-color: rgba(v.$color-primary, 0.15);
   color: v.$color-primary;
   display: inline-block;
@@ -94,18 +59,8 @@
 }
 
 .actionBtn {
-  background-color: transparent;
-  border: 1px solid v.$color-border;
-  color: v.$text-main;
+  @include m.action-btn;
   padding: 0.5rem 1rem;
-  border-radius: 4px;
-  cursor: pointer;
-  transition: all 0.2s;
-
-  &:hover {
-    border-color: v.$color-primary;
-    color: v.$color-primary;
-  }
 }
 
 .messageRow {
