@@ -22,6 +22,8 @@
   padding: 2.5rem;
   width: 90%;
   max-width: 500px;
+  max-height: 90vh;
+  overflow-y: auto;
   text-align: center;
   box-shadow: 0 10px 40px rgba(0, 0, 0, 0.6), 0 0 0 1px rgba(23, 61, 141, 0.1);
   animation: modalIn 0.2s ease-out forwards;
@@ -31,6 +33,17 @@
     color: v.$text-main;
     font-size: 1.5rem;
     margin-bottom: 1.5rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .modalCard {
+    padding: 1.5rem;
+    width: 95%;
+
+    h3 {
+      font-size: 1.2rem;
+    }
   }
 }
 

@@ -223,13 +223,15 @@
   }
 }
 
-@media (max-width: 600px) {
-  .createForm {
-    grid-template-columns: 1fr;
-  }
-}
-
 @media (max-width: 768px) {
+  .container {
+    padding: 1rem;
+  }
+
+  .header h1 {
+    font-size: 1.5rem;
+  }
+
   .toolbar {
     flex-direction: column;
     gap: 1rem;
@@ -246,5 +248,61 @@
   .table th:nth-child(5),
   .table td:nth-child(5) {
     display: none;
+  }
+}
+
+@media (max-width: 600px) {
+  .createForm {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 480px) {
+  .card {
+    padding: 0.75rem;
+  }
+
+  .table,
+  .table thead,
+  .table tbody,
+  .table tr,
+  .table th,
+  .table td {
+    display: block;
+    width: 100%;
+  }
+
+  .table thead {
+    display: none;
+  }
+
+  .table tbody tr {
+    border: 1px solid v.$color-border;
+    border-radius: 8px;
+    margin-bottom: 0.75rem;
+    padding: 1rem;
+    background-color: v.$bg-card;
+
+    &:hover {
+      background-color: rgba(23, 61, 141, 0.08);
+    }
+  }
+
+  .table tbody td {
+    border: none;
+    padding: 0.5rem 0;
+    font-size: 0.9rem;
+    border-bottom: 1px solid rgba(51, 65, 85, 0.4);
+
+    &:first-child {
+      padding-top: 0;
+    }
+
+    &:last-child {
+      border-bottom: none;
+      padding-top: 0.75rem;
+      margin-top: 0.25rem;
+      border-top: 1px solid v.$color-border;
+    }
   }
 }

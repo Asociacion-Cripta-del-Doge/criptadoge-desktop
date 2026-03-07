@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { Outlet, NavLink } from 'react-router-dom'
 import styles from './Layout.module.scss'
 
@@ -7,9 +7,28 @@ interface LayoutProps {
 }
 
 export const Layout: React.FC<LayoutProps> = ({ onLogout }) => {
+  const [isMenuOpen, setIsMenuOpen] = useState(false)
+
+  const closeMenu = () => setIsMenuOpen(false)
+
   return (
     <div className={styles.layoutContainer}>
-      <aside className={styles.sidebar}>
+      <div className={styles.topBar}>
+        <span className={styles.topBarLogo}>LA CRIPTA</span>
+        <button
+          className={styles.hamburger}
+          onClick={() => setIsMenuOpen((prev) => !prev)}
+          aria-label="Abrir menú"
+        >
+          <span />
+          <span />
+          <span />
+        </button>
+      </div>
+
+      {isMenuOpen && <div className={styles.overlay} onClick={closeMenu} />}
+
+      <aside className={`${styles.sidebar} ${isMenuOpen ? styles.sidebarOpen : ''}`}>
         <div className={styles.logoContainer}>
           <h1 className={styles.logo}>LA CRIPTA</h1>
           <p className={styles.subtitle}>Panel de Control</p>
@@ -19,6 +38,7 @@ export const Layout: React.FC<LayoutProps> = ({ onLogout }) => {
           <NavLink
             to="/"
             end
+            onClick={closeMenu}
             className={({ isActive }) =>
               isActive ? `${styles.navLink} ${styles.active}` : styles.navLink
             }
@@ -27,6 +47,7 @@ export const Layout: React.FC<LayoutProps> = ({ onLogout }) => {
           </NavLink>
           <NavLink
             to="/socios"
+            onClick={closeMenu}
             className={({ isActive }) =>
               isActive ? `${styles.navLink} ${styles.active}` : styles.navLink
             }
@@ -35,6 +56,7 @@ export const Layout: React.FC<LayoutProps> = ({ onLogout }) => {
           </NavLink>
           <NavLink
             to="/eventos"
+            onClick={closeMenu}
             className={({ isActive }) =>
               isActive ? `${styles.navLink} ${styles.active}` : styles.navLink
             }
