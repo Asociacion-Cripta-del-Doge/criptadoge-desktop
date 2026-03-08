@@ -1,19 +1,21 @@
 import React, { useState, useEffect } from 'react'
+import { useNavigate } from 'react-router-dom'
 import styles from './Login.module.scss'
 import { Modal } from '../Modal/Modal'
 import { apiClient } from '../../api/axiosClient'
+import { useAuth } from '../../context/AuthContext'
 
-interface LoginProps {
-  onLogin: () => void
-}
+export const Login: React.FC = () => {
+  const { login } = useAuth()
+  const navigate = useNavigate()
 
-export const Login: React.FC<LoginProps> = ({ onLogin }) => {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [rememberMe, setRememberMe] = useState(false)
 
   const [showErrorModal, setShowErrorModal] = useState(false)
   const [errorMessage, setErrorMessage] = useState('')
+
   useEffect(() => {
     const savedEmail = localStorage.getItem('cripta_remembered_email')
     if (savedEmail) {
@@ -22,7 +24,7 @@ export const Login: React.FC<LoginProps> = ({ onLogin }) => {
     }
   }, [])
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
     if (email.trim() === '' || password.trim() === '') {
       setErrorMessage('Por favor, introduce tu email y tu contraseña para poder continuar.')
@@ -36,16 +38,14 @@ export const Login: React.FC<LoginProps> = ({ onLogin }) => {
         password
       })
 
-      localStorage.setItem('cripta_token', response.data.access_token)
-      localStorage.setItem('cripta_user', JSON.stringify(response.data.user))
-
       if (rememberMe) {
         localStorage.setItem('cripta_remembered_email', email)
       } else {
         localStorage.removeItem('cripta_remembered_email')
       }
 
-      onLogin()
+      login(response.data.access_token, response.data.user)
+      navigate('/')
     } catch (error: any) {
       console.error(error)
       setErrorMessage(
