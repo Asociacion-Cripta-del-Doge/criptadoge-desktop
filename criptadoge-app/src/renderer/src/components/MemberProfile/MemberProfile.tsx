@@ -88,22 +88,9 @@ export const MemberProfile: React.FC = () => {
   const handleConfirmRenew = async () => {
     if (!member) return
     try {
-      const today = new Date()
-      const lastRenewalStr = today.toISOString().split('T')[0]
-      let currentExpDate = member.expirationDate ? new Date(member.expirationDate) : new Date()
-      if (currentExpDate < today) currentExpDate = new Date()
-
-      currentExpDate.setMonth(currentExpDate.getMonth() + 1)
-      const newExpirationStr = currentExpDate.toISOString().split('T')[0]
-
-      await apiClient.put(`/usuarios/${member.id}`, {
-        lastRenewal: lastRenewalStr,
-        expirationDate: newExpirationStr,
-        status: 'Activo'
-      })
-
+      const { data } = await apiClient.put(`/usuarios/${member.id}/membresia`)
+      setMember(data)
       setShowRenewModal(false)
-      window.location.reload()
     } catch (err) {
       alert('Error al intentar renovar al socio.')
     }
