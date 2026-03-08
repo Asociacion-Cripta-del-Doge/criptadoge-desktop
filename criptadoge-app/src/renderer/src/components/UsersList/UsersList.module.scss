@@ -111,6 +111,13 @@
   font-style: italic;
 }
 
+.fieldError {
+  display: block;
+  color: v.$color-error;
+  font-size: 0.8rem;
+  margin-top: 0.3rem;
+}
+
 .createForm {
   display: grid;
   grid-template-columns: 1fr 1fr;

@@ -33,6 +33,8 @@ export const UsersList: React.FC = () => {
     role: 'MEMBER',
     status: 'Activo'
   })
+  const [dniError, setDniError] = useState('')
+  const DNI_NIE_REGEX = /^(\d{8}[A-Za-z]|[XYZxyz]\d{7}[A-Za-z])$/
 
   useEffect(() => {
     const fetchUsers = async () => {
@@ -63,6 +65,11 @@ export const UsersList: React.FC = () => {
 
   const handleCreateSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
+    if (newUser.dni.trim() !== '' && !DNI_NIE_REGEX.test(newUser.dni.trim())) {
+      setDniError('Formato de DNI/NIE inválido')
+      return
+    }
+    setDniError('')
     try {
       const payload = {
         ...newUser,
@@ -82,7 +89,8 @@ export const UsersList: React.FC = () => {
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value } = e.target
-    setNewUser((prev) => ({ ...prev, [name]: value }))
+    if (name === 'dni') setDniError('')
+    setNewUser((prev) => ({ ...prev, [name]: name === 'dni' ? value.toUpperCase() : value }))
   }
 
   return (
@@ -175,6 +183,7 @@ export const UsersList: React.FC = () => {
               onChange={handleInputChange}
               placeholder="Ej: 12345678A"
             />
+            {dniError && <span className={styles.fieldError}>{dniError}</span>}
           </div>
 
           <div className={`${styles.formGroup} ${styles.fullWidth}`}>
