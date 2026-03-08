@@ -101,6 +101,7 @@ export const EventMaker: React.FC<EventMakerProps> = ({
               type="date"
               required
               disabled={isSubmitting}
+              min={(() => { const d = new Date(); d.setHours(d.getHours() + 1); return d.toISOString().split('T')[0] })()}
               value={formData.date}
               onChange={(e) => setFormData({ ...formData, date: e.target.value })}
             />
@@ -111,6 +112,11 @@ export const EventMaker: React.FC<EventMakerProps> = ({
               type="time"
               required
               disabled={isSubmitting}
+              min={(() => {
+                const d = new Date(); d.setHours(d.getHours() + 1)
+                const minDate = d.toISOString().split('T')[0]
+                return formData.date === minDate ? d.toTimeString().slice(0, 5) : undefined
+              })()}
               value={formData.time}
               onChange={(e) => setFormData({ ...formData, time: e.target.value })}
             />
