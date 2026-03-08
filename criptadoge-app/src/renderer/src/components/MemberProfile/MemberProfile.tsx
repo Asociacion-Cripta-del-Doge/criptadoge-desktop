@@ -35,6 +35,16 @@ export const MemberProfile: React.FC = () => {
     role: '',
     status: ''
   })
+  const [dniError, setDniError] = useState('')
+  const [copiedField, setCopiedField] = useState<string | null>(null)
+
+  const DNI_NIE_REGEX = /^(\d{8}[A-Za-z]|[XYZxyz]\d{7}[A-Za-z])$/
+
+  const handleCopy = async (value: string, field: string) => {
+    await navigator.clipboard.writeText(value)
+    setCopiedField(field)
+    setTimeout(() => setCopiedField(null), 2000)
+  }
 
   useEffect(() => {
     const fetchMember = async () => {
@@ -60,6 +70,11 @@ export const MemberProfile: React.FC = () => {
   }, [id])
 
   const handleSaveEdit = async () => {
+    if (editForm.dni.trim() !== '' && !DNI_NIE_REGEX.test(editForm.dni.trim())) {
+      setDniError('Formato de DNI/NIE inválido')
+      return
+    }
+    setDniError('')
     try {
       const payload = { ...editForm, dni: editForm.dni.trim() === '' ? null : editForm.dni }
       const response = await apiClient.put(`/usuarios/${member?.id}`, payload)
@@ -106,7 +121,9 @@ export const MemberProfile: React.FC = () => {
   }
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
-    setEditForm({ ...editForm, [e.target.name]: e.target.value })
+    const { name, value } = e.target
+    if (name === 'dni') setDniError('')
+    setEditForm({ ...editForm, [name]: name === 'dni' ? value.toUpperCase() : value })
   }
 
   if (isLoading)
@@ -152,15 +169,24 @@ export const MemberProfile: React.FC = () => {
           <div className={styles.infoGroup}>
             <label>DNI / NIE</label>
             {isEditing ? (
-              <input
-                type="text"
-                name="dni"
-                value={editForm.dni}
-                onChange={handleInputChange}
-                className={styles.editInput}
-              />
+              <>
+                <input
+                  type="text"
+                  name="dni"
+                  value={editForm.dni}
+                  onChange={handleInputChange}
+                  className={styles.editInput}
+                />
+                {dniError && <span className={styles.fieldError}>{dniError}</span>}
+              </>
+            ) : member.dni ? (
+              <p className={styles.copyable} onClick={() => handleCopy(member.dni!, 'dni')}>
+                {member.dni}
+                <span className={styles.copyIcon}>⎘</span>
+                {copiedField === 'dni' && <span className={styles.copiedBadge}>¡Copiado!</span>}
+              </p>
             ) : (
-              <p>{member.dni || '---'}</p>
+              <p>---</p>
             )}
           </div>
 
@@ -175,7 +201,11 @@ export const MemberProfile: React.FC = () => {
                 className={styles.editInput}
               />
             ) : (
-              <p>{member.email}</p>
+              <p className={styles.copyable} onClick={() => handleCopy(member.email, 'email')}>
+                {member.email}
+                <span className={styles.copyIcon}>⎘</span>
+                {copiedField === 'email' && <span className={styles.copiedBadge}>¡Copiado!</span>}
+              </p>
             )}
           </div>
 
@@ -238,7 +268,12 @@ export const MemberProfile: React.FC = () => {
             </>
           ) : (
             <>
-              <button className={styles.renewBtn} onClick={() => setShowRenewModal(true)}>
+              <button
+                className={styles.renewBtn}
+                onClick={() => setShowRenewModal(true)}
+                disabled={!member.dni || member.dni.trim() === ''}
+                title={!member.dni || member.dni.trim() === '' ? 'El socio debe tener un DNI registrado para poder renovar' : undefined}
+              >
                 Renovar Membresía
                 <span className={styles.renewSubtext}>Cargar 1 Mes</span>
               </button>
