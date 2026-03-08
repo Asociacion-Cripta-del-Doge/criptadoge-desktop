@@ -61,6 +61,15 @@ export const Layout: React.FC = () => {
           >
             Eventos
           </NavLink>
+          <NavLink
+            to="/calendario"
+            onClick={closeMenu}
+            className={({ isActive }) =>
+              isActive ? `${styles.navLink} ${styles.active}` : styles.navLink
+            }
+          >
+            Calendario
+          </NavLink>
         </nav>
 
         <div className={styles.logoutWrapper}>

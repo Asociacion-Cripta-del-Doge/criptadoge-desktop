@@ -1,0 +1,152 @@
+@use '../../styles/variables' as v;
+@use '../../styles/mixins' as m;
+
+.container {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  h1 {
+    font-family: v.$font-title;
+    font-size: 1.6rem;
+    letter-spacing: 2px;
+    color: v.$text-main;
+    margin: 0;
+  }
+}
+
+.filters {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.filterBtn {
+  @include m.action-btn;
+  padding: 0.4rem 0.9rem;
+  font-size: 0.8rem;
+  font-family: v.$font-main;
+  font-weight: bold;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  border-radius: 4px;
+  transition: all 0.2s;
+}
+
+.filterActive {
+  border-color: v.$color-primary;
+  color: v.$color-primary;
+}
+
+.calendarWrapper {
+  @include m.card-base(1.5rem, 8px);
+
+  // Override FullCalendar CSS variables for dark theme
+  --fc-page-bg-color: #{v.$bg-card};
+  --fc-border-color: #{v.$color-border};
+  --fc-neutral-bg-color: #{v.$bg-main};
+  --fc-today-bg-color: rgba(23, 61, 141, 0.15);
+  --fc-highlight-color: rgba(23, 61, 141, 0.2);
+  --fc-event-bg-color: #{v.$color-primary};
+  --fc-event-border-color: #{v.$color-primary};
+  --fc-event-text-color: #{v.$text-main};
+  --fc-button-bg-color: #{v.$bg-main};
+  --fc-button-border-color: #{v.$color-border};
+  --fc-button-text-color: #{v.$text-main};
+  --fc-button-hover-bg-color: #{v.$color-primary};
+  --fc-button-hover-border-color: #{v.$color-primary};
+  --fc-button-active-bg-color: #{v.$color-primary};
+  --fc-button-active-border-color: #{v.$color-primary};
+
+  // Overrides for text colors
+  :global(.fc) {
+    color: v.$text-main;
+    font-family: v.$font-main;
+  }
+
+  :global(.fc-toolbar-title) {
+    font-family: v.$font-title;
+    font-size: 1.1rem;
+    letter-spacing: 1px;
+    color: v.$text-main;
+  }
+
+  :global(.fc-col-header-cell-cushion),
+  :global(.fc-daygrid-day-number) {
+    color: v.$text-muted;
+    text-decoration: none;
+  }
+
+  :global(.fc-daygrid-day-number:hover) {
+    color: v.$text-main;
+  }
+
+  :global(.fc-button) {
+    font-family: v.$font-main;
+    font-weight: bold;
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    border-radius: 6px;
+    padding: 0.4rem 0.8rem;
+    transition: all 0.2s;
+  }
+
+  :global(.fc-button:focus) {
+    box-shadow: none;
+  }
+
+  :global(.fc-event) {
+    border-radius: 4px;
+    font-size: 0.8rem;
+    font-weight: bold;
+    padding: 2px 5px;
+    cursor: pointer;
+    transition: opacity 0.15s;
+  }
+
+  :global(.fc-event:hover) {
+    opacity: 0.85;
+  }
+
+  :global(.fc-event-title) {
+    font-family: v.$font-main;
+  }
+
+  :global(.fc-more-link) {
+    color: v.$text-muted;
+    font-size: 0.75rem;
+
+    &:hover {
+      color: v.$text-main;
+    }
+  }
+
+  :global(.fc-popover) {
+    background-color: v.$bg-card;
+    border: 1px solid v.$color-border;
+    border-radius: 8px;
+  }
+
+  :global(.fc-popover-header) {
+    background-color: v.$bg-main;
+    color: v.$text-muted;
+    font-size: 0.8rem;
+    font-weight: bold;
+    text-transform: uppercase;
+    border-radius: 8px 8px 0 0;
+  }
+}
+
+.loading {
+  color: v.$text-muted;
+  font-size: 0.9rem;
+  text-align: center;
+  padding: 3rem 0;
+}
