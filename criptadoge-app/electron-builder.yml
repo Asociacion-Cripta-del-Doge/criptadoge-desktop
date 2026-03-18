@@ -1,5 +1,5 @@
-appId: com.electron.app
-productName: criptadoge-app
+appId: com.criptadeldoge.app
+productName: La Cripta del Doge
 directories:
   buildResources: build
 files:
@@ -12,7 +12,7 @@ files:
 asarUnpack:
   - resources/**
 win:
-  executableName: criptadoge-app
+  executableName: CriptaDelDoge
 nsis:
   artifactName: ${name}-${version}-setup.${ext}
   shortcutName: ${productName}
@@ -38,6 +38,3 @@ linux:
 appImage:
   artifactName: ${name}-${version}.${ext}
 npmRebuild: false
-publish:
-  provider: generic
-  url: https://example.com/auto-updates
