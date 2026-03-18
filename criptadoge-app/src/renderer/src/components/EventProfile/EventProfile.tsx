@@ -2,6 +2,15 @@ import React, { useState, useEffect } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
 import { getEventById, deleteEvent, updateEvent } from '../../api/eventsApi'
 import { AppEvent } from '../../data/events'
+
+const LABEL_KEY: Record<string, string> = {
+  'Magic: The Gathering': 'magic',
+  'Yu-Gi-Oh!':           'yugioh',
+  'Pokémon TCG':         'pokemon',
+  'Juegos de Mesa':      'mesa',
+  'Rol / D&D':           'rol',
+  'Otro':                'otro'
+}
 import styles from './EventProfile.module.scss'
 import { Modal } from '../Modal/Modal'
 import { EventMaker } from '../EventMaker/EventMaker'
@@ -61,7 +70,9 @@ export const EventProfile: React.FC = () => {
 
       <div className={styles.profileContainer}>
         <div className={styles.header}>
-          <span className={styles.badge}>{event.label}</span>
+          <span className={`${styles.badge} ${styles[`badge-${LABEL_KEY[event.label] ?? 'otro'}`]}`}>
+            {event.label}
+          </span>
           <h1>{event.title}</h1>
           <div className={styles.dateTime}>
             <span>Fecha ➡ {event.date}</span>

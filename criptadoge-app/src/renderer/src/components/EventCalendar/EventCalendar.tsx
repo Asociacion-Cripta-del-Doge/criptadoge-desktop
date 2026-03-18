@@ -9,16 +9,7 @@ import { useNavigate } from 'react-router-dom'
 import styles from './EventCalendar.module.scss'
 import { EventMaker } from '../EventMaker/EventMaker'
 import { useEvents } from '../../hooks/useEvents'
-import { AppEvent } from '../../data/events'
-
-const LABEL_COLORS: Record<string, string> = {
-  'Magic: The Gathering': '#173d8d',
-  'Yu-Gi-Oh!': '#eab308',
-  'Pokémon TCG': '#ec4899',
-  'Juegos de Mesa': '#10b981',
-  'Rol / D&D': '#ef4444',
-  'Otro': '#94a3b8'
-}
+import { AppEvent, LABEL_COLORS } from '../../data/events'
 
 const FILTER_LABELS = ['Todos', 'Magic: The Gathering', 'Yu-Gi-Oh!', 'Pokémon TCG', 'Juegos de Mesa', 'Rol / D&D']
 

@@ -4,6 +4,15 @@ import styles from './EventList.module.scss'
 import { EventMaker } from '../EventMaker/EventMaker'
 import { useEvents } from '../../hooks/useEvents'
 
+const LABEL_KEY: Record<string, string> = {
+  'Magic: The Gathering': 'magic',
+  'Yu-Gi-Oh!':           'yugioh',
+  'Pokémon TCG':         'pokemon',
+  'Juegos de Mesa':      'mesa',
+  'Rol / D&D':           'rol',
+  'Otro':                'otro'
+}
+
 export const EventList: React.FC = () => {
   const { events, isLoading, addEvent } = useEvents()
   const [isMakerOpen, setIsMakerOpen] = useState(false)
@@ -40,7 +49,9 @@ export const EventList: React.FC = () => {
               events.map((evt) => (
                 <tr key={evt.id}>
                   <td>
-                    <span className={styles.badge}>{evt.label}</span>
+                    <span className={`${styles.badge} ${styles[`badge-${LABEL_KEY[evt.label] ?? 'otro'}`]}`}>
+                      {evt.label}
+                    </span>
                   </td>
                   <td>
                     <strong>{evt.title}</strong>

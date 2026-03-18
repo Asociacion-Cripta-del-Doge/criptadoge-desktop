@@ -1,6 +1,7 @@
 @use '../../styles/variables' as v;
 @use 'sass:color';
 @use '../../styles/mixins' as m;
+@use '../../styles/labels' as l;
 
 @keyframes fadeIn {
   from {
@@ -90,11 +91,17 @@
   font-size: 0.85rem;
   font-family: v.$font-mono;
   font-weight: bold;
-  background: rgba(v.$color-primary, 0.2);
-  color: color.adjust(v.$color-primary, $lightness: 30%);
-  border: 1px solid v.$color-primary;
+  border: 1px solid transparent;
   text-transform: uppercase;
   letter-spacing: 1px;
+}
+
+@each $key, $clr in l.$label-colors {
+  .badge-#{$key} {
+    background-color: rgba($clr, 0.2);
+    border-color: $clr;
+    color: #f8fafc;
+  }
 }
 
 .dateTime {
