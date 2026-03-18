@@ -1,5 +1,6 @@
 @use '../../styles/variables' as v;
 @use '../../styles/mixins' as m;
+@use '../../styles/labels' as l;
 
 .container {
   padding: 2rem;
@@ -43,9 +44,16 @@
 
 .badge {
   @include m.badge-base;
-  background-color: rgba(v.$color-primary, 0.15);
-  color: v.$color-primary;
+  border: 1px solid transparent;
   display: inline-block;
+}
+
+@each $key, $clr in l.$label-colors {
+  .badge-#{$key} {
+    background-color: rgba($clr, 0.2);
+    border-color: $clr;
+    color: #f8fafc;
+  }
 }
 
 .description {
