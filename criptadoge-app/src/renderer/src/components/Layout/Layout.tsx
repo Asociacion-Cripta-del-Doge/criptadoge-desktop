@@ -2,7 +2,6 @@ import React, { useState } from 'react'
 import { Outlet, NavLink } from 'react-router-dom'
 import styles from './Layout.module.scss'
 import { useAuth } from '../../context/AuthContext'
-import { TitleBar } from '../TitleBar/TitleBar'
 
 export const Layout: React.FC = () => {
   const { logout } = useAuth()
@@ -12,8 +11,6 @@ export const Layout: React.FC = () => {
 
   return (
     <div className={styles.layoutContainer}>
-      <TitleBar />
-      <div className={styles.appBody}>
       <div className={styles.topBar}>
         <span className={styles.topBarLogo}>LA CRIPTA</span>
         <button
@@ -85,7 +82,6 @@ export const Layout: React.FC = () => {
       <main className={styles.mainContent}>
         <Outlet />
       </main>
-      </div>
     </div>
   )
 }

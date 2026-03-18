@@ -2,17 +2,10 @@
 
 .layoutContainer {
   display: flex;
-  flex-direction: column;
-  height: 100vh;
+  height: 100%;
   background-color: v.$bg-main;
   color: v.$text-main;
   font-family: v.$font-main;
-}
-
-.appBody {
-  display: flex;
-  flex: 1;
-  overflow: hidden;
 }
 
 .topBar {
