@@ -88,8 +88,8 @@ export const MemberProfile: React.FC = () => {
   const handleConfirmRenew = async () => {
     if (!member) return
     try {
-      const { data } = await apiClient.put(`/usuarios/${member.id}/membresia`)
-      setMember(data)
+      const { data } = await apiClient.put(`/usuarios/${member.id}/membresia`, {})
+      setMember((prev) => ({ ...prev!, ...data }))
       setShowRenewModal(false)
     } catch (err) {
       alert('Error al intentar renovar al socio.')
