@@ -48,18 +48,18 @@ export const EventList: React.FC = () => {
             ) : events.length > 0 ? (
               events.map((evt) => (
                 <tr key={evt.id}>
-                  <td>
+                  <td data-label="Etiqueta">
                     <span className={`${styles.badge} ${styles[`badge-${LABEL_KEY[evt.label] ?? 'otro'}`]}`}>
                       {evt.label}
                     </span>
                   </td>
-                  <td>
+                  <td data-label="Evento">
                     <strong>{evt.title}</strong>
                     <div className={styles.description}>{evt.description}</div>
                   </td>
-                  <td>{evt.date}</td>
-                  <td>{evt.time}</td>
-                  <td>
+                  <td data-label="Fecha">{evt.date}</td>
+                  <td data-label="Hora">{evt.time}</td>
+                  <td data-label="Acciones">
                     <button
                       className={styles.actionBtn}
                       onClick={() => navigate(`/eventos/${evt.id}`)}
