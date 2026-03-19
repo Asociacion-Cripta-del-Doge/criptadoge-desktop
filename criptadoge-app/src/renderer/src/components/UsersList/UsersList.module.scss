@@ -139,6 +139,8 @@
     input,
     select {
       @include m.form-input;
+      width: 100%;
+      box-sizing: border-box;
       padding: 0.85rem;
       transition: all 0.2s;
 
