@@ -47,12 +47,26 @@
 
 .table {
   @include m.table-base;
+
+  th:nth-child(1),
+  td:nth-child(1) {
+    width: 1%;
+    white-space: nowrap;
+  }
+
+  th:nth-child(3),
+  td:nth-child(3),
+  th:nth-child(4),
+  td:nth-child(4) {
+    white-space: nowrap;
+  }
 }
 
 .badge {
   @include m.badge-base;
   border: 1px solid transparent;
   display: inline-block;
+  white-space: nowrap;
 }
 
 @each $key, $clr in l.$label-colors {
@@ -76,6 +90,7 @@
 .actionBtn {
   @include m.action-btn;
   padding: 0.5rem 1rem;
+  white-space: nowrap;
 }
 
 .messageRow {
