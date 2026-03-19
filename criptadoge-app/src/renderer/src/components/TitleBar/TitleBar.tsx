@@ -1,7 +1,13 @@
-import React from 'react'
+import React, { useState, useEffect } from 'react'
 import styles from './TitleBar.module.scss'
 
 export const TitleBar: React.FC = () => {
+  const [isMaximized, setIsMaximized] = useState(false)
+
+  useEffect(() => {
+    window.api.onMaximizeChange((value) => setIsMaximized(value))
+  }, [])
+
   return (
     <div className={styles.titlebar}>
       <div className={styles.appInfo}>
@@ -20,11 +26,19 @@ export const TitleBar: React.FC = () => {
         <button
           className={styles.controlBtn}
           onClick={() => window.api.maximize()}
-          title="Maximizar"
+          title={isMaximized ? 'Restaurar' : 'Maximizar'}
         >
-          <svg width="10" height="10" viewBox="0 0 10 10">
-            <rect x="0.5" y="0.5" width="9" height="9" fill="none" stroke="currentColor" />
-          </svg>
+          {isMaximized ? (
+            <svg width="10" height="10" viewBox="0 0 10 10">
+              {/* Icono restaurar: dos cuadrados superpuestos */}
+              <rect x="2" y="0" width="8" height="8" fill="none" stroke="currentColor" strokeWidth="1" />
+              <rect x="0" y="2" width="8" height="8" fill="none" stroke="currentColor" strokeWidth="1" />
+            </svg>
+          ) : (
+            <svg width="10" height="10" viewBox="0 0 10 10">
+              <rect x="0.5" y="0.5" width="9" height="9" fill="none" stroke="currentColor" />
+            </svg>
+          )}
         </button>
         <button
           className={`${styles.controlBtn} ${styles.closeBtn}`}
