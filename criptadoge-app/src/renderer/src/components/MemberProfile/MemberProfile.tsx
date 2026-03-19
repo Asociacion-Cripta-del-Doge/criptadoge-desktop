@@ -88,7 +88,7 @@ export const MemberProfile: React.FC = () => {
   const handleConfirmRenew = async () => {
     if (!member) return
     try {
-      const { data } = await apiClient.put(`/usuarios/${member.id}/membresia`)
+      const { data } = await apiClient.put(`/usuarios/${member.id}/membresia`, {})
       setMember(data)
       setShowRenewModal(false)
     } catch (err) {
