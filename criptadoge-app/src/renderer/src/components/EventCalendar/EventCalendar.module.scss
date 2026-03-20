@@ -71,9 +71,10 @@
   }
 
   :global(.fc-toolbar-title) {
-    font-family: v.$font-title;
+    font-family: v.$font-main;
+    font-weight: 700;
     font-size: 1.1rem;
-    letter-spacing: 1px;
+    letter-spacing: 0.5px;
     color: v.$text-main;
   }
 
