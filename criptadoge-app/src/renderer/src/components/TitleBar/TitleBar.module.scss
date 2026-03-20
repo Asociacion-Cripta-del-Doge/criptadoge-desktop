@@ -57,3 +57,17 @@
     color: v.$text-main;
   }
 }
+
+.helpBtn {
+  font-family: v.$font-main;
+  font-size: 0.85rem;
+  font-weight: bold;
+  color: v.$text-muted;
+  border-right: 1px solid v.$color-border;
+  margin-right: 0.25rem;
+
+  &:hover {
+    background-color: rgba(v.$color-accent, 0.15);
+    color: v.$color-accent;
+  }
+}
