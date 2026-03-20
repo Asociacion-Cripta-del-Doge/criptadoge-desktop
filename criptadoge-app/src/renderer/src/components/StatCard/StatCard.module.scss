@@ -28,8 +28,9 @@
 
 .value {
   color: v.$text-main;
-  font-family: v.$font-title;
+  font-family: v.$font-mono;
   font-size: 2.5rem;
+  font-weight: 700;
   margin: 0.5rem 0;
 }
 

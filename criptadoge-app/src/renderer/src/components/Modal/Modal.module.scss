@@ -27,7 +27,8 @@
   animation: modalIn 0.2s ease-out forwards;
 
   h3 {
-    font-family: v.$font-title;
+    font-family: v.$font-main;
+    font-weight: 700;
     color: v.$text-main;
     font-size: 1.5rem;
     margin-bottom: 1.5rem;
