@@ -1,4 +1,5 @@
-import React, { createContext, useContext, useState, useEffect } from 'react'
+import React, { createContext, useContext, useState, useEffect, useCallback } from 'react'
+import { apiClient } from '../api/axiosClient'
 
 export interface User {
   id: number | string
@@ -21,42 +22,49 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const [isAuthenticated, setIsAuthenticated] = useState(false)
   const [isLoading, setIsLoading] = useState(true)
 
-  useEffect(() => {
-    const token = localStorage.getItem('cripta_token')
-    const storedUser = localStorage.getItem('cripta_user')
-
-    if (token && storedUser) {
-      try {
-        setUser(JSON.parse(storedUser))
-        setIsAuthenticated(true)
-      } catch {
-        localStorage.removeItem('cripta_token')
-        localStorage.removeItem('cripta_user')
-      }
-    }
-
-    setIsLoading(false)
-  }, [])
-
-  useEffect(() => {
-    const handleUnauthorized = () => logout()
-    window.addEventListener('auth:unauthorized', handleUnauthorized)
-    return () => window.removeEventListener('auth:unauthorized', handleUnauthorized)
-  }, [])
-
-  const login = (token: string, userData: User) => {
-    localStorage.setItem('cripta_token', token)
-    localStorage.setItem('cripta_user', JSON.stringify(userData))
-    setUser(userData)
-    setIsAuthenticated(true)
-  }
-
-  const logout = () => {
+  const logout = useCallback(() => {
     localStorage.removeItem('cripta_token')
     localStorage.removeItem('cripta_user')
     setUser(null)
     setIsAuthenticated(false)
-  }
+  }, [])
+
+  const login = useCallback((token: string, userData: User) => {
+    localStorage.setItem('cripta_token', token)
+    localStorage.setItem('cripta_user', JSON.stringify(userData))
+    setUser(userData)
+    setIsAuthenticated(true)
+  }, [])
+
+  useEffect(() => {
+    const validateSession = async () => {
+      const token = localStorage.getItem('cripta_token')
+      const storedUser = localStorage.getItem('cripta_user')
+
+      if (!token || !storedUser) {
+        setIsLoading(false)
+        return
+      }
+
+      try {
+        const parsed = JSON.parse(storedUser)
+        const { data } = await apiClient.get(`/usuarios/${parsed.id}`)
+        setUser(data)
+        setIsAuthenticated(true)
+      } catch {
+        logout()
+      } finally {
+        setIsLoading(false)
+      }
+    }
+
+    validateSession()
+  }, [logout])
+
+  useEffect(() => {
+    window.addEventListener('auth:unauthorized', logout)
+    return () => window.removeEventListener('auth:unauthorized', logout)
+  }, [logout])
 
   return (
     <AuthContext.Provider value={{ user, isAuthenticated, isLoading, login, logout }}>
