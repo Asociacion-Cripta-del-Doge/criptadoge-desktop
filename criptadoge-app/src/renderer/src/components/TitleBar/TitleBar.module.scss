@@ -58,6 +58,15 @@
   }
 }
 
+.settingsBtn {
+  color: v.$text-muted;
+
+  &:hover {
+    background-color: rgba(v.$color-accent, 0.15);
+    color: v.$color-accent;
+  }
+}
+
 .helpBtn {
   font-family: v.$font-main;
   font-size: 0.85rem;
