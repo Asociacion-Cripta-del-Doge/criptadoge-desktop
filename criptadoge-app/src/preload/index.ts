@@ -8,7 +8,9 @@ const api = {
   close: () => ipcRenderer.send('window-close'),
   onMaximizeChange: (callback: (isMaximized: boolean) => void) => {
     ipcRenderer.on('window-maximized', (_, value) => callback(value))
-  }
+  },
+  setAutoStart: (enable: boolean): Promise<void> => ipcRenderer.invoke('set-autostart', enable),
+  getAutoStart: (): Promise<boolean> => ipcRenderer.invoke('get-autostart')
 }
 
 // Use `contextBridge` APIs to expose Electron APIs to

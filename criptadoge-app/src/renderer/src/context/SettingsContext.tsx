@@ -9,7 +9,7 @@ interface SettingsContextType {
   theme: 'light' | 'dark'
   autoStart: boolean
   setTheme: (t: 'light' | 'dark') => void
-  setAutoStart: (v: boolean) => void
+  setAutoStart: (v: boolean) => Promise<void>
 }
 
 const SettingsContext = createContext<SettingsContextType | null>(null)
@@ -38,11 +38,17 @@ export const SettingsProvider: React.FC<{ children: React.ReactNode }> = ({ chil
     setThemeState(t)
   }
 
-  const setAutoStart = (v: boolean) => {
+  useEffect(() => {
+    window.api.getAutoStart().then((osValue) => {
+      setAutoStartState(osValue)
+      localStorage.setItem('cripta_autostart', String(osValue))
+    })
+  }, [])
+
+  const setAutoStart = async (v: boolean): Promise<void> => {
     localStorage.setItem('cripta_autostart', String(v))
     setAutoStartState(v)
-    // TODO: llamar API nativa Electron para registrar/desregistrar inicio con Windows
-    // window.api.setAutoLaunch(v)
+    await window.api.setAutoStart(v)
   }
 
   return (
