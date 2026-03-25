@@ -1,0 +1,125 @@
+# Arquitectura — La Cripta del Doge App
+
+## 1. Sistema de Autenticación
+
+### Flujo de login
+1. El usuario introduce credenciales en `Login.tsx`
+2. Se hace `POST /auth/login` al backend
+3. La respuesta devuelve `{ token, user }` que se persiste en `localStorage`:
+   - `cripta_token` — Bearer JWT
+   - `cripta_user` — JSON con `{ id, email, role }`
+
+### Validación de sesión al arrancar
+`AuthContext.tsx` valida la sesión contra el backend en cada inicio de la app:
+
+```
+App monta → AuthProvider.useEffect →
+  localStorage tiene token? → GET /usuarios/:id →
+    OK → setUser + setIsAuthenticated(true)
+    Error → logout() (limpia localStorage)
+  No token → isLoading = false, redirige a /login
+```
+
+### Interceptores Axios (`axiosClient.ts`)
+- **Request interceptor**: añade `Authorization: Bearer <token>` a cada petición
+- **Response interceptor**: en error 401 emite `window.dispatchEvent(new Event('auth:unauthorized'))`
+- `AuthContext` escucha ese evento y llama a `logout()` automáticamente
+
+### Rutas protegidas
+`ProtectedRoute.tsx` bloquea el acceso mientras `isLoading === true` (muestra `LoadingScreen`)
+y redirige a `/login` si `!isAuthenticated`.
+
+---
+
+## 2. Sistema de Temas Dinámicos
+
+> Implementado en la rama `feat/menu-opciones`.
+
+### CSS Custom Properties
+Los colores del sistema se definen como variables CSS nativas en `_variables.scss`:
+
+```css
+:root {
+  --bg-main: #0f172a;         /* tema oscuro (defecto) */
+  --bg-card: #1e293b;
+  --color-primary: #173d8d;
+  /* ... */
+  --bg-card-rgb: 30, 41, 59; /* canales RGB para rgba() */
+}
+
+body.theme-light {
+  --bg-main: #f1f5f9;         /* overrides tema claro */
+  --bg-card: #ffffff;
+  /* ... */
+}
+```
+
+Las variables SCSS son bridges: `$bg-main: var(--bg-main)` — permiten usar la sintaxis SCSS
+habitual en los módulos mientras el valor es dinámico en runtime.
+
+> **Limitación SCSS:** `rgba(v.$color-primary, 0.5)` no funciona cuando la variable SCSS
+> apunta a un `var()`. Solución: usar `rgba(var(--color-primary-rgb), 0.5)` con los canales RGB
+> predefinidos.
+
+### SettingsContext (`context/SettingsContext.tsx`)
+Gestiona tema y autoStart de forma reactiva:
+
+```typescript
+setTheme('light') →
+  localStorage.setItem('cripta_theme', 'light')
+  document.body.classList.add('theme-light')  // activa los overrides CSS
+```
+
+El estado inicial se lee de `localStorage`. La clase en `body` es el único punto de control
+del tema — todos los componentes responden automáticamente sin re-renderizados.
+
+---
+
+## 3. Comunicación con la API Nativa de Electron (IPC)
+
+La ventana es frameless (`frame: false`), por lo que los controles y la comunicación nativa
+se implementan vía IPC seguro a través del Context Bridge.
+
+### Arquitectura de capas
+
+```
+Renderer (React)           Preload (Context Bridge)      Main Process (Electron)
+──────────────────         ───────────────────────────   ───────────────────────
+window.api.minimize()  →   ipcRenderer.send('...')    →  ipcMain.on('window-minimize')
+window.api.maximize()  →   ipcRenderer.send('...')    →  ipcMain.on('window-maximize')
+window.api.close()     →   ipcRenderer.send('...')    →  ipcMain.on('window-close')
+
+window.api.getAutoStart() → ipcRenderer.invoke('get-autostart') → ipcMain.handle → app.getLoginItemSettings()
+window.api.setAutoStart() → ipcRenderer.invoke('set-autostart') → ipcMain.handle → app.setLoginItemSettings()
+
+                        ←   ipcRenderer.on('window-maximized') ← mainWindow.webContents.send(...)
+```
+
+### Patrones IPC
+
+| Patrón | Cuándo usarlo | Ejemplo |
+|--------|---------------|---------|
+| `ipcMain.on` + `ipcRenderer.send` | Fire & forget, sin respuesta | Controles de ventana |
+| `ipcMain.handle` + `ipcRenderer.invoke` | Request/response async | `getAutoStart` |
+| `webContents.send` + `ipcRenderer.on` | Push desde main → renderer | Estado maximizado |
+
+### API expuesta (`window.api`)
+Definida en `src/preload/index.ts` y tipada en `src/preload/index.d.ts`:
+
+```typescript
+window.api = {
+  minimize: () => void
+  maximize: () => void
+  close: () => void
+  onMaximizeChange: (cb: (isMaximized: boolean) => void) => void
+  setAutoStart: (enable: boolean) => Promise<void>   // feat/menu-opciones
+  getAutoStart: () => Promise<boolean>               // feat/menu-opciones
+}
+```
+
+### Auto-arranque con el sistema
+`app.setLoginItemSettings({ openAtLogin: true/false })` registra/elimina la entrada
+en el registro de Windows (`HKCU\Software\Microsoft\Windows\CurrentVersion\Run`),
+LaunchAgents en macOS, o XDG autostart en Linux.
+Al arrancar la app, `SettingsContext` consulta el estado real del SO con `getAutoStart()`
+y lo usa como fuente de verdad (en lugar de `localStorage`).
