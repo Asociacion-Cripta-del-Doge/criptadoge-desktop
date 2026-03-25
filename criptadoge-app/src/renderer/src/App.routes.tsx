@@ -30,7 +30,7 @@ export const AppRoutes: React.FC = () => {
       <Routes>
         <Route path="/login" element={<Login />} />
 
-        <Route element={<ProtectedRoute />}>
+        <Route element={<ProtectedRoute allowedRoles={['ADMIN']} />}>
           <Route path="/" element={<Layout />}>
             <Route index element={<Dashboard />} />
             <Route path="socios" element={<UsersList />} />

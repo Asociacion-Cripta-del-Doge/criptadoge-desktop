@@ -44,6 +44,12 @@ export const Login: React.FC = () => {
         localStorage.removeItem('cripta_remembered_email')
       }
 
+      if (response.data.user?.role !== 'ADMIN') {
+        setErrorMessage('No tienes permisos para acceder al panel de administración.')
+        setShowErrorModal(true)
+        return
+      }
+
       login(response.data.access_token, response.data.user)
       navigate('/')
     } catch (error: any) {
