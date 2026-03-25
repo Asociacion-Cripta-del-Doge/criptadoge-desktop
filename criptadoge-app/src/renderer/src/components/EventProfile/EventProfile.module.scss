@@ -101,7 +101,7 @@
   .badge-#{$key} {
     background-color: rgba($clr, 0.2);
     border-color: $clr;
-    color: #f8fafc;
+    color: var(--text-main);
   }
 }
 

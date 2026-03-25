@@ -81,7 +81,7 @@
 
   td {
     padding: 0.9rem 0;
-    border-bottom: 1px solid rgba(51, 65, 85, 0.5);
+    border-bottom: 1px solid rgba(var(--color-border-rgb), 0.5);
     color: v.$text-main;
     font-size: 0.9rem;
   }

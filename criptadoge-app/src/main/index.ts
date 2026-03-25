@@ -70,6 +70,14 @@ app.whenReady().then(() => {
     BrowserWindow.getFocusedWindow()?.close()
   })
 
+  // Auto-start handlers
+  ipcMain.handle('get-autostart', () => {
+    return app.getLoginItemSettings().openAtLogin
+  })
+  ipcMain.handle('set-autostart', (_, enable: boolean) => {
+    app.setLoginItemSettings({ openAtLogin: enable })
+  })
+
   createWindow()
 
   app.on('activate', function () {

@@ -8,6 +8,8 @@ declare global {
       maximize: () => void
       close: () => void
       onMaximizeChange: (callback: (isMaximized: boolean) => void) => void
+      setAutoStart: (enable: boolean) => Promise<void>
+      getAutoStart: () => Promise<boolean>
     }
   }
 }

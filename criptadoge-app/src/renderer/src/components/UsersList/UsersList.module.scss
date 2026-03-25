@@ -234,7 +234,7 @@
     background-color: v.$bg-card;
 
     &:hover {
-      background-color: rgba(23, 61, 141, 0.08);
+      background-color: rgba(var(--color-primary-rgb), 0.08);
     }
   }
 
@@ -242,7 +242,7 @@
     border: none;
     padding: 0.5rem 0;
     font-size: 0.9rem;
-    border-bottom: 1px solid rgba(51, 65, 85, 0.4);
+    border-bottom: 1px solid rgba(var(--color-border-rgb), 0.4);
 
     &:first-child {
       padding-top: 0;

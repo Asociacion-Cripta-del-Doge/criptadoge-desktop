@@ -51,8 +51,8 @@
   --fc-page-bg-color: #{v.$bg-card};
   --fc-border-color: #{v.$color-border};
   --fc-neutral-bg-color: #{v.$bg-main};
-  --fc-today-bg-color: rgba(23, 61, 141, 0.15);
-  --fc-highlight-color: rgba(23, 61, 141, 0.2);
+  --fc-today-bg-color: rgba(var(--color-primary-rgb), 0.15);
+  --fc-highlight-color: rgba(var(--color-primary-rgb), 0.2);
   --fc-event-bg-color: #{v.$color-primary};
   --fc-event-border-color: #{v.$color-primary};
   --fc-event-text-color: #{v.$text-main};

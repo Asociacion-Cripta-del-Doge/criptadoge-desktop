@@ -20,7 +20,7 @@
 
 @mixin btn-primary-hover {
   opacity: 0.9;
-  box-shadow: 0 0 15px rgba(23, 61, 141, 0.45);
+  box-shadow: 0 0 15px rgba(var(--color-primary-rgb), 0.45);
 }
 
 @mixin btn-danger {
@@ -33,7 +33,7 @@
   transition: background-color 0.2s;
 
   &:hover {
-    background-color: rgba(v.$color-error, 0.1);
+    background-color: rgba(var(--color-error-rgb), 0.1);
   }
 }
 
@@ -102,7 +102,7 @@
   tbody tr {
     transition: background-color 0.2s;
     &:hover {
-      background-color: rgba(23, 61, 141, 0.08);
+      background-color: rgba(var(--color-primary-rgb), 0.08);
     }
   }
 }

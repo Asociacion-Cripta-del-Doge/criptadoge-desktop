@@ -51,7 +51,7 @@
 
   &:hover {
     opacity: 0.9;
-    box-shadow: 0 0 18px rgba(23, 61, 141, 0.5);
+    box-shadow: 0 0 18px rgba(var(--color-primary-rgb), 0.5);
   }
 }
 
@@ -74,7 +74,7 @@
     width: 100%;
 
     &:hover {
-      background-color: rgba(v.$color-primary, 0.8);
+      background-color: rgba(var(--color-primary-rgb), 0.8);
     }
   }
 }
