@@ -39,6 +39,7 @@ export const SettingsProvider: React.FC<{ children: React.ReactNode }> = ({ chil
   }
 
   useEffect(() => {
+    if (typeof window.api === 'undefined') return
     window.api.getAutoStart().then((osValue) => {
       setAutoStartState(osValue)
       localStorage.setItem('cripta_autostart', String(osValue))
@@ -48,7 +49,9 @@ export const SettingsProvider: React.FC<{ children: React.ReactNode }> = ({ chil
   const setAutoStart = async (v: boolean): Promise<void> => {
     localStorage.setItem('cripta_autostart', String(v))
     setAutoStartState(v)
-    await window.api.setAutoStart(v)
+    if (typeof window.api !== 'undefined') {
+      await window.api.setAutoStart(v)
+    }
   }
 
   return (

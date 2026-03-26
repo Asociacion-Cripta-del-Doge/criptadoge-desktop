@@ -7,10 +7,14 @@ export const TitleBar: React.FC = () => {
   const [isMaximized, setIsMaximized] = useState(false)
   const [isGuideOpen, setIsGuideOpen] = useState(false)
   const [isSettingsOpen, setIsSettingsOpen] = useState(false)
+  const isElectron = typeof window.api !== 'undefined'
 
   useEffect(() => {
+    if (!isElectron) return
     window.api.onMaximizeChange((value) => setIsMaximized(value))
-  }, [])
+  }, [isElectron])
+
+  if (!isElectron) return null
 
   return (
     <>
