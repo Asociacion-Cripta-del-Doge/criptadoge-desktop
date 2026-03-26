@@ -123,3 +123,88 @@ en el registro de Windows (`HKCU\Software\Microsoft\Windows\CurrentVersion\Run`)
 LaunchAgents en macOS, o XDG autostart en Linux.
 Al arrancar la app, `SettingsContext` consulta el estado real del SO con `getAutoStart()`
 y lo usa como fuente de verdad (en lugar de `localStorage`).
+
+---
+
+## 4. Build Móvil con Capacitor (Android)
+
+Capacitor envuelve la misma aplicación React en un WebView nativo para generar una APK
+instalable en Android, **sin modificar el pipeline de Electron**.
+
+### Configuración (`capacitor.config.ts`)
+
+```typescript
+{
+  appId: 'com.lacripta.app',
+  appName: 'La Cripta',
+  webDir: 'out/renderer'   // salida del build de electron-vite
+}
+```
+
+### Coexistencia con Electron
+
+Los componentes que usan `window.api` (exclusivo de Electron) están protegidos con guards:
+
+```typescript
+// TitleBar.tsx — no se renderiza en contexto móvil/web
+const isElectron = typeof window.api !== 'undefined'
+if (!isElectron) return null
+
+// SettingsContext.tsx — las llamadas IPC se saltan silenciosamente
+if (typeof window.api !== 'undefined') {
+  await window.api.setAutoStart(v)
+}
+```
+
+### URL del backend (`axiosClient.ts`)
+
+```typescript
+baseURL: import.meta.env.VITE_API_URL ?? 'http://localhost:3000'
+```
+
+Configurar en `.env.production` antes de compilar la APK:
+
+```env
+VITE_API_URL=http://<IP-del-servidor>:<puerto>
+```
+
+> En Android, `localhost` apunta al propio dispositivo, no al servidor de desarrollo.
+> Usar la IP real de la máquina o la URL de producción.
+
+### Flujo completo para generar la APK
+
+```
+1. Configurar la URL del backend
+   → Editar criptadoge-app/.env.production
+   → VITE_API_URL=http://<IP-servidor>:3000
+
+2. Compilar el frontend y sincronizar con Android
+   cd criptadoge-app
+   npm run build:mobile
+   # equivale a: npm run build && npx cap sync
+
+3. Abrir el proyecto en Android Studio
+   npm run open:android
+   # equivale a: npx cap open android
+
+4. En Android Studio
+   → Build > Generate Signed Bundle / APK
+   → Seleccionar APK
+   → Configurar keystore (o crear uno nuevo)
+   → Elegir variante: debug (pruebas) o release (distribución)
+   → Finish → el .apk se genera en android/app/build/outputs/apk/
+
+5. Instalar en el dispositivo
+   → Copiar el .apk al teléfono y abrir
+   → O usar: adb install app-debug.apk
+```
+
+### Scripts disponibles
+
+| Script | Descripción |
+|--------|-------------|
+| `npm run build:mobile` | Compila React + sincroniza archivos con la carpeta `android/` |
+| `npm run open:android` | Abre el proyecto en Android Studio |
+
+> La carpeta `android/` está en `.gitignore` — se regenera localmente con `npx cap add android`
+> tras clonar el repositorio.
