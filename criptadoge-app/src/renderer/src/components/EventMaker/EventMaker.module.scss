@@ -21,7 +21,7 @@
     @include m.form-input;
 
     &:focus {
-      box-shadow: 0 0 0 2px rgba(v.$color-primary, 0.2);
+      box-shadow: 0 0 0 2px rgba(var(--color-primary-rgb), 0.2);
     }
 
     &:disabled {
@@ -73,7 +73,7 @@
   @include m.btn-primary;
 
   &:hover:not(:disabled) {
-    background-color: rgba(v.$color-primary, 0.8);
+    background-color: rgba(var(--color-primary-rgb), 0.8);
   }
 }
 

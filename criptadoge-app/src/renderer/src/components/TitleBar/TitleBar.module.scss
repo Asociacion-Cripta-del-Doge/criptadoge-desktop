@@ -46,7 +46,7 @@
   transition: background-color 0.15s, color 0.15s;
 
   &:hover {
-    background-color: rgba(v.$text-main, 0.1);
+    background-color: rgba(var(--text-main-rgb), 0.1);
     color: v.$text-main;
   }
 }
@@ -62,7 +62,7 @@
   color: v.$text-muted;
 
   &:hover {
-    background-color: rgba(v.$color-accent, 0.15);
+    background-color: rgba(var(--color-accent-rgb), 0.15);
     color: v.$color-accent;
   }
 }
@@ -76,7 +76,7 @@
   margin-right: 0.25rem;
 
   &:hover {
-    background-color: rgba(v.$color-accent, 0.15);
+    background-color: rgba(var(--color-accent-rgb), 0.15);
     color: v.$color-accent;
   }
 }
