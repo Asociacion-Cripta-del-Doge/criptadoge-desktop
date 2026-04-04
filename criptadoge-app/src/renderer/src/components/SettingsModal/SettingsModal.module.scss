@@ -1,5 +1,4 @@
 @use '../../styles/variables' as v;
-@use 'sass:color';
 
 .settingsSection {
   display: flex;
@@ -44,13 +43,13 @@
   transition: all 0.2s;
 
   &:hover:not(.active) {
-    border-color: color.adjust(v.$color-border, $lightness: 10%);
+    border-color: rgba(var(--color-border-rgb), 0.8);
     color: v.$text-main;
   }
 
   &.active {
     border-color: v.$color-primary;
-    background-color: rgba(v.$color-primary, 0.25);
+    background-color: rgba(var(--color-primary-rgb), 0.25);
     color: v.$text-main;
     font-weight: 600;
   }
@@ -99,7 +98,7 @@
     }
 
     &:focus + .slider {
-      box-shadow: 0 0 0 2px rgba(v.$color-primary, 0.4);
+      box-shadow: 0 0 0 2px rgba(var(--color-primary-rgb), 0.4);
     }
   }
 }

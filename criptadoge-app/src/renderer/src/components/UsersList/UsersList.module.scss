@@ -1,5 +1,4 @@
 @use '../../styles/variables' as v;
-@use 'sass:color';
 @use '../../styles/mixins' as m;
 
 .container {
@@ -58,17 +57,17 @@
 }
 
 .activo {
-  background-color: rgba(v.$color-accent, 0.15);
+  background-color: rgba(var(--color-accent-rgb), 0.15);
   color: v.$color-accent;
 }
 
 .inactivo {
-  background-color: rgba(v.$color-error, 0.15);
+  background-color: rgba(var(--color-error-rgb), 0.15);
   color: v.$color-error;
 }
 
 .pendiente {
-  background-color: rgba(v.$text-muted, 0.15);
+  background-color: rgba(var(--text-muted-rgb), 0.15);
   color: v.$text-muted;
 }
 
@@ -145,11 +144,11 @@
       transition: all 0.2s;
 
       &:focus {
-        box-shadow: 0 0 8px rgba(v.$color-primary, 0.3);
+        box-shadow: 0 0 8px rgba(var(--color-primary-rgb), 0.3);
       }
 
       &::placeholder {
-        color: rgba(v.$text-muted, 0.5);
+        color: rgba(var(--text-muted-rgb), 0.5);
       }
     }
 
@@ -167,8 +166,8 @@
     margin-top: 0.5rem;
 
     &:hover {
-      background-color: color.adjust(v.$color-primary, $lightness: 10%);
-      box-shadow: 0 0 15px rgba(v.$color-primary, 0.4);
+      background-color: v.$color-primary;
+      box-shadow: 0 0 15px rgba(var(--color-primary-rgb), 0.4);
     }
   }
 }

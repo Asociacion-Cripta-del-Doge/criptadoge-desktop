@@ -1,5 +1,4 @@
 @use '../../styles/variables' as v;
-@use 'sass:color';
 @use '../../styles/mixins' as m;
 @use '../../styles/labels' as l;
 
@@ -167,18 +166,18 @@
   display: inline-flex;
   align-items: center;
   padding: 1rem 1.5rem;
-  background: rgba(v.$color-accent, 0.1);
+  background: rgba(var(--color-accent-rgb), 0.1);
   color: v.$color-accent;
   border-radius: 12px;
   font-size: 1.1rem;
-  border: 1px solid rgba(v.$color-accent, 0.3);
+  border: 1px solid rgba(var(--color-accent-rgb), 0.3);
   font-family: v.$font-mono;
 
   strong {
     margin-left: 0.5rem;
     text-transform: uppercase;
     font-weight: 800;
-    color: color.adjust(v.$color-accent, $lightness: 15%);
+    color: v.$color-accent;
   }
 }
 
@@ -196,8 +195,8 @@
     color 0.2s;
 
   &:hover {
-    background-color: rgba(v.$color-primary, 0.1);
-    color: color.adjust(v.$color-primary, $lightness: 50%);
+    background-color: rgba(var(--color-primary-rgb), 0.1);
+    color: v.$text-main;
   }
 }
 
@@ -207,7 +206,7 @@
   font-family: v.$font-main;
 
   &:hover {
-    color: color.adjust(v.$color-error, $lightness: 30%);
+    color: v.$text-main;
   }
 }
 

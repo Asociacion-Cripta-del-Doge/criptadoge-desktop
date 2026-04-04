@@ -14,10 +14,12 @@
   --color-success:    #10b981;
 
   // Canales RGB para uso en rgba() en CSS puro
+  --bg-main-rgb:         15, 23, 42;
   --bg-card-rgb:         30, 41, 59;
   --color-primary-rgb:   23, 61, 141;
   --color-border-rgb:    51, 65, 85;
   --text-main-rgb:       248, 250, 252;
+  --text-muted-rgb:      148, 163, 184;
   --color-error-rgb:     239, 68, 68;
   --color-accent-rgb:    234, 179, 8;
 }
@@ -34,10 +36,12 @@ body.theme-light {
   --color-error:      #dc2626;
   --color-success:    #059669;
 
+  --bg-main-rgb:         241, 245, 249;
   --bg-card-rgb:         255, 255, 255;
   --color-primary-rgb:   29, 78, 216;
   --color-border-rgb:    226, 232, 240;
   --text-main-rgb:       15, 23, 42;
+  --text-muted-rgb:      100, 116, 139;
   --color-error-rgb:     220, 38, 38;
   --color-accent-rgb:    180, 83, 9;
 }
