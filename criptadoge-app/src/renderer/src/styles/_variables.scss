@@ -1,53 +1,6 @@
-// ── CSS Custom Properties ────────────────────────────────────────────────────
-
-:root {
-  // Colores base (tema oscuro por defecto)
-  --bg-main:          #0f172a;
-  --bg-card:          #1e293b;
-  --color-primary:    #173d8d;
-  --color-secondary:  #ec4899;
-  --color-accent:     #eab308;
-  --color-border:     #334155;
-  --text-muted:       #94a3b8;
-  --text-main:        #f8fafc;
-  --color-error:      #ef4444;
-  --color-success:    #10b981;
-
-  // Canales RGB para uso en rgba() en CSS puro
-  --bg-main-rgb:         15, 23, 42;
-  --bg-card-rgb:         30, 41, 59;
-  --color-primary-rgb:   23, 61, 141;
-  --color-border-rgb:    51, 65, 85;
-  --text-main-rgb:       248, 250, 252;
-  --text-muted-rgb:      148, 163, 184;
-  --color-error-rgb:     239, 68, 68;
-  --color-accent-rgb:    234, 179, 8;
-}
-
-body.theme-light {
-  --bg-main:          #f1f5f9;
-  --bg-card:          #ffffff;
-  --color-primary:    #1d4ed8;
-  --color-secondary:  #db2777;
-  --color-accent:     #b45309;
-  --color-border:     #e2e8f0;
-  --text-muted:       #64748b;
-  --text-main:        #0f172a;
-  --color-error:      #dc2626;
-  --color-success:    #059669;
-
-  --bg-main-rgb:         241, 245, 249;
-  --bg-card-rgb:         255, 255, 255;
-  --color-primary-rgb:   29, 78, 216;
-  --color-border-rgb:    226, 232, 240;
-  --text-main-rgb:       15, 23, 42;
-  --text-muted-rgb:      100, 116, 139;
-  --color-error-rgb:     220, 38, 38;
-  --color-accent-rgb:    180, 83, 9;
-}
-
 // ── Bridge: SCSS variables → CSS Custom Properties ───────────────────────────
-// Los archivos .module.scss siguen usando $var-name sin cambios.
+// Las definiciones de :root y body.theme-light viven en main.css (global).
+// Este archivo solo expone el puente para que los .module.scss usen $var-name.
 
 $bg-main:          var(--bg-main);
 $bg-card:          var(--bg-card);
