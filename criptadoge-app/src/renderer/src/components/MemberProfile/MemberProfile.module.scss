@@ -142,6 +142,11 @@
   color: v.$text-muted;
 }
 
+.desactivado {
+  background-color: rgba(var(--color-error-rgb), 0.15);
+  color: v.$color-error;
+}
+
 .renewSubtext {
   display: block;
   font-size: 0.8rem;

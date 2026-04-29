@@ -34,13 +34,13 @@ export const Dashboard: React.FC = () => {
 
   const totalMembers = members.length
   const activeMembers = members.filter(
-    (m) => getMemberStatus(m.expirationDate) === 'Activo'
+    (m) => getMemberStatus(m) === 'Activo'
   ).length
   const pendingMembers = members.filter(
-    (m) => getMemberStatus(m.expirationDate) === 'Pendiente'
+    (m) => getMemberStatus(m) === 'Pendiente'
   ).length
   const inactiveMembers = members.filter(
-    (m) => getMemberStatus(m.expirationDate) === 'Inactivo'
+    (m) => getMemberStatus(m) === 'Inactivo'
   ).length
 
   const today = new Date()
