@@ -84,24 +84,15 @@
   letter-spacing: 0.5px;
 }
 
-.videoPlaceholder {
+.videoHero {
   width: 100%;
   aspect-ratio: 16 / 9;
   background-color: v.$bg-main;
   border: 1px solid v.$color-border;
   border-radius: 8px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  display: block;
+  object-fit: contain;
   box-shadow: inset 0 0 20px rgba(var(--color-primary-rgb), 0.08);
-}
-
-.videoPlaceholderText {
-  font-family: v.$font-mono;
-  font-size: 0.85rem;
-  color: v.$text-muted;
-  letter-spacing: 1px;
-  text-transform: uppercase;
 }
 
 .sectionDescription {
