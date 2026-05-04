@@ -9,21 +9,25 @@ interface AppGuideProps {
 const GUIDE_SECTIONS = [
   {
     title: 'Gestión de Socios',
+    videoSrc: new URL('../../assets/videos/socios.mp4', import.meta.url).href,
     description:
       'Aprende a crear nuevos socios, editar sus datos, consultar su ficha completa y gestionar el estado de su membresía desde el panel de administración.'
   },
   {
     title: 'Renovar una Membresía',
+    videoSrc: new URL('../../assets/videos/membresia.mp4', import.meta.url).href,
     description:
       'El socio debe tener un DNI registrado para poder renovar. Al confirmar, el sistema extiende la fecha de expiración un mes automáticamente y actualiza el estado a Activo.'
   },
   {
     title: 'Crear y Gestionar Eventos',
+    videoSrc: new URL('../../assets/videos/eventos.mp4', import.meta.url).href,
     description:
       'Crea eventos con título, descripción, etiqueta de categoría, fecha y hora. Puedes editar o eliminar cualquier evento desde su ficha de detalle.'
   },
   {
     title: 'Usar el Calendario',
+    videoSrc: new URL('../../assets/videos/calendario.mp4', import.meta.url).href,
     description:
       'El calendario muestra todos los eventos del sistema con sus colores de etiqueta. Puedes navegar por meses y hacer clic en cualquier evento para ver su detalle.'
   }
@@ -49,9 +53,13 @@ export const AppGuide: React.FC<AppGuideProps> = ({ isOpen, onClose }) => {
           {GUIDE_SECTIONS.map((section) => (
             <div key={section.title} className={styles.section}>
               <h3 className={styles.sectionTitle}>{section.title}</h3>
-              <div className={styles.videoPlaceholder}>
-                <span className={styles.videoPlaceholderText}>Espacio para Vídeo</span>
-              </div>
+              <video
+                className={styles.videoHero}
+                src={section.videoSrc}
+                controls
+                preload="metadata"
+                playsInline
+              />
               <p className={styles.sectionDescription}>{section.description}</p>
             </div>
           ))}
