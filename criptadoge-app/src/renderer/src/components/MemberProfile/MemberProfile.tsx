@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
 import styles from './MemberProfile.module.scss'
-import { getMemberStatus } from '../../data/members'
+import { Member, getMemberStatus } from '../../data/members'
 import { Modal } from '../Modal/Modal'
 import { apiClient } from '../../api/axiosClient'
 
@@ -103,7 +103,7 @@ export const MemberProfile: React.FC = () => {
       setShowDeleteModal(false)
       navigate('/socios')
     } catch (err) {
-      alert('Error al intentar borrar el socio.')
+      alert('Error al intentar desactivar el socio.')
     }
   }
 
@@ -126,7 +126,7 @@ export const MemberProfile: React.FC = () => {
       </div>
     )
 
-  const status = getMemberStatus(member.expirationDate)
+  const status = getMemberStatus(member)
 
   return (
     <div className={styles.container}>
@@ -267,9 +267,13 @@ export const MemberProfile: React.FC = () => {
               <button className={styles.secondaryBtn} onClick={() => setIsEditing(true)}>
                 Editar Datos
               </button>
-              <button className={styles.dangerBtn} onClick={() => setShowDeleteModal(true)}>
-                Borrar Socio
-              </button>
+              {member.status === 'Desactivado' ? (
+                <br></br>
+              ) : (
+                <button className={styles.dangerBtn} onClick={() => setShowDeleteModal(true)}>
+                  Desactivar Socio
+                </button>
+              )}
             </>
           )}
         </div>
@@ -300,19 +304,19 @@ export const MemberProfile: React.FC = () => {
       <Modal
         isOpen={showDeleteModal}
         onClose={() => setShowDeleteModal(false)}
-        title="¡ATENCIÓN! BORRAR SOCIO"
+        title="¡ATENCIÓN! DESACTIVAR SOCIO"
       >
         <p className={styles.modalText}>
-          Estás a punto de borrar permanentemente a{' '}
+          Estás a punto de desactivar a{' '}
           <strong style={{ color: '#ef4444' }}>{member.name}</strong>.<br />
-          Esta acción <strong>no se puede deshacer</strong>. ¿Estás absolutamente seguro?
+          ¿Estás seguro?
         </p>
         <div className={styles.modalActions}>
           <button className={styles.secondaryBtn} onClick={() => setShowDeleteModal(false)}>
             Cancelar
           </button>
           <button className={styles.modalDeleteBtn} onClick={handleConfirmDelete}>
-            Sí, Borrar Definitivamente
+            Sí, Desactivar
           </button>
         </div>
       </Modal>

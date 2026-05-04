@@ -8,7 +8,7 @@ interface MemberRowProps {
 }
 
 export const MemberRow: React.FC<MemberRowProps> = ({ member, onViewProfile }) => {
-  const status = getMemberStatus(member.expirationDate)
+  const status = getMemberStatus(member)
 
   return (
     <tr>
