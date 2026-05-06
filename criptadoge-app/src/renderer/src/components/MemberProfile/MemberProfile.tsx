@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
 import styles from './MemberProfile.module.scss'
-import { Member, getMemberStatus } from '../../data/members'
+import { getMemberStatus } from '../../data/members'
 import { Modal } from '../Modal/Modal'
 import { apiClient } from '../../api/axiosClient'
 
@@ -259,7 +259,11 @@ export const MemberProfile: React.FC = () => {
                 className={styles.renewBtn}
                 onClick={() => setShowRenewModal(true)}
                 disabled={!member.dni || member.dni.trim() === ''}
-                title={!member.dni || member.dni.trim() === '' ? 'El socio debe tener un DNI registrado para poder renovar' : undefined}
+                title={
+                  !member.dni || member.dni.trim() === ''
+                    ? 'El socio debe tener un DNI registrado para poder renovar'
+                    : undefined
+                }
               >
                 Renovar Membresía
                 <span className={styles.renewSubtext}>Cargar 1 Mes</span>
@@ -307,8 +311,8 @@ export const MemberProfile: React.FC = () => {
         title="¡ATENCIÓN! DESACTIVAR SOCIO"
       >
         <p className={styles.modalText}>
-          Estás a punto de desactivar a{' '}
-          <strong style={{ color: '#ef4444' }}>{member.name}</strong>.<br />
+          Estás a punto de desactivar a <strong style={{ color: '#ef4444' }}>{member.name}</strong>.
+          <br />
           ¿Estás seguro?
         </p>
         <div className={styles.modalActions}>

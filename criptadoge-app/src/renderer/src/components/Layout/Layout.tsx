@@ -70,6 +70,15 @@ export const Layout: React.FC = () => {
           >
             Calendario
           </NavLink>
+          <NavLink
+            to="/contacto"
+            onClick={closeMenu}
+            className={({ isActive }) =>
+              isActive ? `${styles.navLink} ${styles.active}` : styles.navLink
+            }
+          >
+            Contacto
+          </NavLink>
         </nav>
 
         <div className={styles.logoutWrapper}>

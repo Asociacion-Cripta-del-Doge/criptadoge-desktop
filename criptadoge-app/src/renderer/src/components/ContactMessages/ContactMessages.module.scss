@@ -1,0 +1,260 @@
+@use '../../styles/variables' as v;
+@use '../../styles/mixins' as m;
+
+.container {
+  background-color: v.$bg-main;
+  color: v.$text-main;
+  font-family: v.$font-main;
+  height: 100%;
+  padding: 2rem;
+  overflow-y: auto;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 2rem;
+  padding-bottom: 1.5rem;
+  border-bottom: 1px solid v.$color-border;
+  position: relative;
+
+  &::after {
+    content: '';
+    position: absolute;
+    bottom: -1px;
+    left: 0;
+    width: 60px;
+    height: 2px;
+    background: v.$color-accent;
+  }
+
+  h1 {
+    font-family: v.$font-title;
+    color: v.$text-main;
+    font-size: 2rem;
+    margin: 0 0 0.5rem 0;
+  }
+
+  p {
+    color: v.$text-muted;
+    font-size: 0.9rem;
+    margin: 0;
+  }
+}
+
+.card {
+  @include m.card-base;
+  overflow-x: auto;
+}
+
+.toolbar {
+  margin-bottom: 1.5rem;
+  display: flex;
+}
+
+.searchInput {
+  width: 100%;
+  max-width: 440px;
+  padding: 0.75rem 1rem;
+  border-radius: 6px;
+  border: 1px solid v.$color-border;
+  background-color: v.$bg-main;
+  color: v.$text-main;
+  font-family: v.$font-main;
+  font-size: 0.95rem;
+  outline: none;
+  transition:
+    border-color 0.2s,
+    box-shadow 0.2s;
+
+  &:focus {
+    border-color: v.$color-primary;
+    box-shadow: 0 0 8px rgba(var(--color-primary-rgb), 0.25);
+  }
+
+  &::placeholder {
+    color: v.$text-muted;
+  }
+}
+
+.table {
+  @include m.table-base;
+  table-layout: fixed;
+
+  th {
+    font-size: 0.8rem;
+    letter-spacing: 0.5px;
+  }
+
+  td {
+    color: v.$text-main;
+    font-size: 0.9rem;
+    vertical-align: top;
+  }
+
+  th:nth-child(1),
+  td:nth-child(1) {
+    width: 14%;
+  }
+
+  th:nth-child(2),
+  td:nth-child(2) {
+    width: 20%;
+  }
+
+  th:nth-child(3),
+  td:nth-child(3) {
+    width: 16%;
+  }
+
+  th:nth-child(4),
+  td:nth-child(4) {
+    width: 28%;
+  }
+
+  th:nth-child(5),
+  td:nth-child(5) {
+    width: 11%;
+  }
+
+  th:nth-child(6),
+  td:nth-child(6) {
+    width: 11%;
+  }
+
+  tr:last-child td {
+    border-bottom: none;
+  }
+}
+
+.subjectCell,
+.messageCell {
+  overflow-wrap: anywhere;
+}
+
+.messageCell {
+  color: v.$text-muted;
+  line-height: 1.45;
+}
+
+.emailLink {
+  color: v.$color-accent;
+  text-decoration: none;
+  overflow-wrap: anywhere;
+
+  &:hover {
+    text-decoration: underline;
+  }
+}
+
+.badge {
+  @include m.badge-base;
+  display: inline-flex;
+  align-items: center;
+  white-space: nowrap;
+}
+
+.pending {
+  background-color: rgba(var(--color-primary-rgb), 0.18);
+  color: v.$text-main;
+  border: 1px solid rgba(var(--color-primary-rgb), 0.45);
+}
+
+.resolved {
+  background-color: rgba(var(--color-success-rgb), 0.16);
+  color: v.$color-success;
+}
+
+.neutral {
+  background-color: rgba(var(--text-muted-rgb), 0.15);
+  color: v.$text-muted;
+}
+
+.statusMessage {
+  text-align: center;
+  padding: 3rem 0 !important;
+  color: v.$text-muted;
+  font-style: italic;
+}
+
+.errorMessage {
+  color: v.$color-error;
+}
+
+@media (max-width: 920px) {
+  .table {
+    min-width: 860px;
+  }
+}
+
+@media (max-width: 768px) {
+  .container {
+    padding: 1rem;
+  }
+
+  .header {
+    h1 {
+      font-size: 1.5rem;
+    }
+  }
+
+  .toolbar {
+    .searchInput {
+      max-width: 100%;
+    }
+  }
+}
+
+@media (max-width: 560px) {
+  .card {
+    padding: 0.75rem;
+  }
+
+  .table,
+  .table thead,
+  .table tbody,
+  .table tr,
+  .table th,
+  .table td {
+    display: block;
+    width: 100%;
+    min-width: 0;
+  }
+
+  .table {
+    table-layout: auto;
+  }
+
+  .table thead {
+    display: none;
+  }
+
+  .table tbody tr {
+    border: 1px solid v.$color-border;
+    border-radius: 8px;
+    margin-bottom: 0.75rem;
+    padding: 1rem;
+    background-color: v.$bg-card;
+  }
+
+  .table tbody td {
+    border: none;
+    padding: 0.55rem 0;
+    border-bottom: 1px solid rgba(var(--color-border-rgb), 0.4);
+
+    &::before {
+      content: attr(data-label);
+      display: block;
+      margin-bottom: 0.25rem;
+      color: v.$text-muted;
+      font-size: 0.72rem;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    &:last-child {
+      border-bottom: none;
+    }
+  }
+}
