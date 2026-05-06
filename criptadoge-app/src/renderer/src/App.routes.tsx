@@ -23,6 +23,11 @@ const EventProfile = lazy(() =>
 const EventCalendar = lazy(() =>
   import('./components/EventCalendar/EventCalendar').then((m) => ({ default: m.EventCalendar }))
 )
+const ContactMessages = lazy(() =>
+  import('./components/ContactMessages/ContactMessages').then((m) => ({
+    default: m.ContactMessages
+  }))
+)
 
 export const AppRoutes: React.FC = () => {
   return (
@@ -38,6 +43,7 @@ export const AppRoutes: React.FC = () => {
             <Route path="eventos" element={<EventList />} />
             <Route path="eventos/:id" element={<EventProfile />} />
             <Route path="calendario" element={<EventCalendar />} />
+            <Route path="contacto" element={<ContactMessages />} />
           </Route>
         </Route>
 

@@ -208,3 +208,32 @@ VITE_API_URL=http://<IP-del-servidor>:<puerto>
 
 > La carpeta `android/` está en `.gitignore` — se regenera localmente con `npx cap add android`
 > tras clonar el repositorio.
+
+---
+
+## 5. Mensajes de contacto
+
+El formulario publico de contacto crea mensajes mediante `POST /contacto` en el backend NestJS,
+o `POST /api/contacto` cuando se accede a traves de Nginx. No requiere autenticacion y recibe:
+
+```json
+{
+  "nombre": "string",
+  "email": "email valido",
+  "asunto": "string",
+  "mensaje": "string"
+}
+```
+
+Todos los campos son obligatorios y `email` debe tener formato valido. Si la peticion es correcta,
+el backend responde `201 Created` con el mensaje guardado en MongoDB, incluyendo `_id`,
+`estado: "pendiente"`, `createdAt` y `updatedAt`.
+
+La vista de administracion `#/contacto` usa el cliente Axios protegido para solicitar `GET /contacto`.
+Este endpoint de lectura esta protegido para administradores con el patron `JwtAuthGuard`,
+`RolesGuard` y `@Roles('ADMIN')`, y devuelve los mensajes guardados en MongoDB.
+
+El frontend muestra los mensajes ordenados de mas reciente a mas antiguo y normaliza tanto respuestas
+en array como respuestas paginadas con `items` o `data`.
+
+Actualmente el flujo de contacto no envia emails; solo persiste el mensaje en MongoDB.

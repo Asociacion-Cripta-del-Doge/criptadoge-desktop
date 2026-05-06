@@ -33,15 +33,9 @@ export const Dashboard: React.FC = () => {
   }, [])
 
   const totalMembers = members.length
-  const activeMembers = members.filter(
-    (m) => getMemberStatus(m) === 'Activo'
-  ).length
-  const pendingMembers = members.filter(
-    (m) => getMemberStatus(m) === 'Pendiente'
-  ).length
-  const inactiveMembers = members.filter(
-    (m) => getMemberStatus(m) === 'Inactivo'
-  ).length
+  const activeMembers = members.filter((m) => getMemberStatus(m) === 'Activo').length
+  const pendingMembers = members.filter((m) => getMemberStatus(m) === 'Pendiente').length
+  const inactiveMembers = members.filter((m) => getMemberStatus(m) === 'Inactivo').length
 
   const today = new Date()
   today.setHours(0, 0, 0, 0)
@@ -54,7 +48,7 @@ export const Dashboard: React.FC = () => {
   }).length
 
   const latestRenewals = [...members]
-    .sort((a, b) => new Date(b.lastRenewal).getTime() - new Date(a.lastRenewal).getTime())
+    .sort((a, b) => new Date(b.lastRenewal ?? 0).getTime() - new Date(a.lastRenewal ?? 0).getTime())
     .slice(0, 3)
 
   if (isLoading) return <div className={styles.statusMessage}>Cargando datos del servidor...</div>
