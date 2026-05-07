@@ -1,23 +1,16 @@
 import React, { useState, useEffect } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
 import { getEventById, deleteEvent, updateEvent } from '../../api/eventsApi'
-import { AppEvent } from '../../data/events'
-
-const LABEL_KEY: Record<string, string> = {
-  'Magic: The Gathering': 'magic',
-  'Yu-Gi-Oh!':           'yugioh',
-  'Pokémon TCG':         'pokemon',
-  'Juegos de Mesa':      'mesa',
-  'Rol / D&D':           'rol',
-  'Otro':                'otro'
-}
+import { AppEvent, EventFormData, getEventLabelTint } from '../../data/events'
 import styles from './EventProfile.module.scss'
 import { Modal } from '../Modal/Modal'
 import { EventMaker } from '../EventMaker/EventMaker'
+import { useEventLabels } from '../../hooks/useEventLabels'
 
 export const EventProfile: React.FC = () => {
   const { id } = useParams<{ id: string }>()
   const navigate = useNavigate()
+  const { getLabelColor } = useEventLabels()
   const [event, setEvent] = useState<AppEvent | null>(null)
   const [isLoading, setIsLoading] = useState(true)
   const [isModalOpen, setIsModalOpen] = useState(false)
@@ -25,7 +18,7 @@ export const EventProfile: React.FC = () => {
   const [isEditModalOpen, setIsEditModalOpen] = useState(false)
 
   useEffect(() => {
-    const fetchEventDetail = async () => {
+    const fetchEventDetail = async (): Promise<void> => {
       try {
         if (id) {
           const data = await getEventById(id)
@@ -39,7 +32,8 @@ export const EventProfile: React.FC = () => {
     }
     fetchEventDetail()
   }, [id])
-  const handleDelete = async () => {
+
+  const handleDelete = async (): Promise<void> => {
     if (!id) return
     setIsDeleting(true)
     try {
@@ -53,7 +47,7 @@ export const EventProfile: React.FC = () => {
     }
   }
 
-  const handleEditSubmit = async (updatedData: any) => {
+  const handleEditSubmit = async (updatedData: EventFormData): Promise<void> => {
     if (!id) return
     const updatedEvent = await updateEvent(id, updatedData)
     setEvent(updatedEvent)
@@ -61,6 +55,8 @@ export const EventProfile: React.FC = () => {
 
   if (isLoading) return <div className={styles.loading}>Cargando pergamino del evento...</div>
   if (!event) return <div className={styles.error}>El evento ha sido tragado por el vacío.</div>
+
+  const labelColor = getLabelColor(event.label)
 
   return (
     <div className={styles.wrapper}>
@@ -70,7 +66,13 @@ export const EventProfile: React.FC = () => {
 
       <div className={styles.profileContainer}>
         <div className={styles.header}>
-          <span className={`${styles.badge} ${styles[`badge-${LABEL_KEY[event.label] ?? 'otro'}`]}`}>
+          <span
+            className={styles.badge}
+            style={{
+              backgroundColor: getEventLabelTint(labelColor, 0.2),
+              borderColor: labelColor
+            }}
+          >
             {event.label}
           </span>
           <h1>{event.title}</h1>

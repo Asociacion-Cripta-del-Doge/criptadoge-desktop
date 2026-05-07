@@ -1,12 +1,14 @@
 import React, { useState, useEffect } from 'react'
 import styles from './EventMaker.module.scss'
 import { Modal } from '../Modal/Modal'
+import { useEventLabels } from '../../hooks/useEventLabels'
+import { EventFormData } from '../../data/events'
 
 interface EventMakerProps {
   isOpen: boolean
   onClose: () => void
-  onSuccess: (eventData: any) => Promise<void> | void
-  initialData?: any
+  onSuccess: (eventData: EventFormData) => Promise<void> | void
+  initialData?: Partial<EventFormData>
 }
 
 export const EventMaker: React.FC<EventMakerProps> = ({
@@ -16,12 +18,14 @@ export const EventMaker: React.FC<EventMakerProps> = ({
   initialData
 }) => {
   const [isSubmitting, setIsSubmitting] = useState(false)
+  const { labels, isLoadingLabels } = useEventLabels()
+  const firstLabel = labels[0]?.name ?? ''
   const [formData, setFormData] = useState({
     title: '',
     description: '',
     date: '',
     time: '',
-    label: 'Magic: The Gathering'
+    label: ''
   })
 
   useEffect(() => {
@@ -31,7 +35,7 @@ export const EventMaker: React.FC<EventMakerProps> = ({
         description: initialData.description || '',
         date: initialData.date || '',
         time: initialData.time || '',
-        label: initialData.label || 'Magic: The Gathering'
+        label: initialData.label || firstLabel
       })
     } else if (isOpen && !initialData) {
       setFormData({
@@ -39,12 +43,12 @@ export const EventMaker: React.FC<EventMakerProps> = ({
         description: '',
         date: '',
         time: '',
-        label: 'Magic: The Gathering'
+        label: firstLabel
       })
     }
-  }, [isOpen, initialData])
+  }, [isOpen, initialData, firstLabel])
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent): Promise<void> => {
     e.preventDefault()
     setIsSubmitting(true)
 
@@ -55,7 +59,7 @@ export const EventMaker: React.FC<EventMakerProps> = ({
         description: '',
         date: '',
         time: '',
-        label: 'Magic: The Gathering'
+        label: firstLabel
       })
       onClose()
     } catch (error) {
@@ -67,6 +71,10 @@ export const EventMaker: React.FC<EventMakerProps> = ({
   }
 
   const modalTitle = initialData ? 'EDITAR EVENTO' : 'NUEVO EVENTO'
+  const labelOptions =
+    formData.label && !labels.some((label) => label.name === formData.label)
+      ? [{ id: formData.label, name: formData.label }, ...labels]
+      : labels
 
   return (
     <Modal isOpen={isOpen} onClose={() => !isSubmitting && onClose()} title={modalTitle}>
@@ -101,7 +109,11 @@ export const EventMaker: React.FC<EventMakerProps> = ({
               type="date"
               required
               disabled={isSubmitting}
-              min={(() => { const d = new Date(); d.setHours(d.getHours() + 1); return d.toISOString().split('T')[0] })()}
+              min={(() => {
+                const d = new Date()
+                d.setHours(d.getHours() + 1)
+                return d.toISOString().split('T')[0]
+              })()}
               value={formData.date}
               onChange={(e) => setFormData({ ...formData, date: e.target.value })}
             />
@@ -113,7 +125,8 @@ export const EventMaker: React.FC<EventMakerProps> = ({
               required
               disabled={isSubmitting}
               min={(() => {
-                const d = new Date(); d.setHours(d.getHours() + 1)
+                const d = new Date()
+                d.setHours(d.getHours() + 1)
                 const minDate = d.toISOString().split('T')[0]
                 return formData.date === minDate ? d.toTimeString().slice(0, 5) : undefined
               })()}
@@ -127,16 +140,19 @@ export const EventMaker: React.FC<EventMakerProps> = ({
           <label>Etiqueta / Juego</label>
           <select
             required
-            disabled={isSubmitting}
+            disabled={isSubmitting || isLoadingLabels || labelOptions.length === 0}
             value={formData.label}
             onChange={(e) => setFormData({ ...formData, label: e.target.value })}
           >
-            <option value="Magic: The Gathering">Magic: The Gathering</option>
-            <option value="Yu-Gi-Oh!">Yu-Gi-Oh!</option>
-            <option value="Pokémon TCG">Pokémon TCG</option>
-            <option value="Juegos de Mesa">Juegos de Mesa</option>
-            <option value="Rol / D&D">Rol / D&D</option>
-            <option value="Otro">Otro</option>
+            {isLoadingLabels ? <option value="">Cargando etiquetas...</option> : null}
+            {!isLoadingLabels && labelOptions.length === 0 ? (
+              <option value="">No hay etiquetas disponibles</option>
+            ) : null}
+            {labelOptions.map((label) => (
+              <option key={label.id} value={label.name}>
+                {label.name}
+              </option>
+            ))}
           </select>
         </div>
 
@@ -149,7 +165,11 @@ export const EventMaker: React.FC<EventMakerProps> = ({
           >
             Cancelar
           </button>
-          <button type="submit" className={styles.submitBtn} disabled={isSubmitting}>
+          <button
+            type="submit"
+            className={styles.submitBtn}
+            disabled={isSubmitting || isLoadingLabels || labelOptions.length === 0}
+          >
             {isSubmitting ? 'Guardando...' : initialData ? 'Actualizar Evento' : 'Crear Evento'}
           </button>
         </div>
