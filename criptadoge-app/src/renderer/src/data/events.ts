@@ -1,12 +1,17 @@
-// src/data/events.ts
+export const DEFAULT_EVENT_LABEL_COLOR = '#94a3b8'
 
-export const LABEL_COLORS: Record<string, string> = {
-  'Magic: The Gathering': '#173d8d',
-  'Yu-Gi-Oh!': '#eab308',
-  'Pokémon TCG': '#ec4899',
-  'Juegos de Mesa': '#10b981',
-  'Rol / D&D': '#ef4444',
-  'Otro': '#94a3b8'
+export interface EventLabel {
+  id: string
+  name: string
+  color?: string
+}
+
+export interface EventFormData {
+  title: string
+  description: string
+  date: string
+  time: string
+  label: string
 }
 
 export interface AppEvent {
@@ -19,29 +24,13 @@ export interface AppEvent {
   status?: string
 }
 
-export const MOCK_EVENTS: AppEvent[] = [
-  {
-    id: '1',
-    title: 'Torneo Pauper FNM',
-    description: 'Torneo suizo de 4 rondas. Premios en sobres para el top 4.',
-    date: '2026-03-15',
-    time: '17:30',
-    label: 'Magic: The Gathering'
-  },
-  {
-    id: '2',
-    title: 'Presentación Nueva Expansión',
-    description: 'Torneo sellado con la nueva caja. Incluye kit de presentación.',
-    date: '2026-04-02',
-    time: '10:00',
-    label: 'Yu-Gi-Oh!'
-  },
-  {
-    id: '3',
-    title: 'Tarde de Commander',
-    description: 'Juego libre formato Commander multiplayer. Entrada gratuita.',
-    date: '2026-01-20',
-    time: '16:00',
-    label: 'Magic: The Gathering'
+export const getEventLabelTint = (color: string, alpha: number): string => {
+  const match = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(color)
+
+  if (!match) {
+    return 'rgba(148, 163, 184, 0.2)'
   }
-]
+
+  const [, r, g, b] = match
+  return `rgba(${parseInt(r, 16)}, ${parseInt(g, 16)}, ${parseInt(b, 16)}, ${alpha})`
+}

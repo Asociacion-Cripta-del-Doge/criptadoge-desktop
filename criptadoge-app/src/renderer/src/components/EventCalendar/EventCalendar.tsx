@@ -4,22 +4,21 @@ import dayGridPlugin from '@fullcalendar/daygrid'
 import timeGridPlugin from '@fullcalendar/timegrid'
 import interactionPlugin from '@fullcalendar/interaction'
 import type { DateClickArg } from '@fullcalendar/interaction'
-import type { EventClickArg, EventMountArg } from '@fullcalendar/core'
+import type { EventClickArg, EventInput, EventMountArg } from '@fullcalendar/core'
 import { useNavigate } from 'react-router-dom'
 import styles from './EventCalendar.module.scss'
 import { EventMaker } from '../EventMaker/EventMaker'
 import { useEvents } from '../../hooks/useEvents'
-import { AppEvent, LABEL_COLORS } from '../../data/events'
+import { AppEvent } from '../../data/events'
+import { useEventLabels } from '../../hooks/useEventLabels'
 
-const FILTER_LABELS = ['Todos', 'Magic: The Gathering', 'Yu-Gi-Oh!', 'Pokémon TCG', 'Juegos de Mesa', 'Rol / D&D']
-
-function toCalendarEvent(evt: AppEvent) {
+function toCalendarEvent(evt: AppEvent, labelColor: string): EventInput {
   return {
     id: evt.id,
     title: evt.title,
     start: evt.time ? `${evt.date}T${evt.time}` : evt.date,
-    backgroundColor: LABEL_COLORS[evt.label] ?? LABEL_COLORS['Otro'],
-    borderColor: LABEL_COLORS[evt.label] ?? LABEL_COLORS['Otro'],
+    backgroundColor: labelColor,
+    borderColor: labelColor,
     extendedProps: {
       description: evt.description,
       label: evt.label,
@@ -30,6 +29,7 @@ function toCalendarEvent(evt: AppEvent) {
 
 export const EventCalendar: React.FC = () => {
   const { events, isLoading, addEvent } = useEvents()
+  const { labels, isLoadingLabels, getLabelColor } = useEventLabels()
   const navigate = useNavigate()
 
   const [activeFilter, setActiveFilter] = useState('Todos')
@@ -37,22 +37,21 @@ export const EventCalendar: React.FC = () => {
   const [selectedDate, setSelectedDate] = useState<string>('')
 
   const calendarEvents = useMemo(() => {
-    const filtered = activeFilter === 'Todos'
-      ? events
-      : events.filter((e) => e.label === activeFilter)
-    return filtered.map(toCalendarEvent)
-  }, [events, activeFilter])
+    const filtered =
+      activeFilter === 'Todos' ? events : events.filter((e) => e.label === activeFilter)
+    return filtered.map((event) => toCalendarEvent(event, getLabelColor(event.label)))
+  }, [events, activeFilter, getLabelColor])
 
-  const handleDateClick = (arg: DateClickArg) => {
+  const handleDateClick = (arg: DateClickArg): void => {
     setSelectedDate(arg.dateStr)
     setMakerOpen(true)
   }
 
-  const handleEventClick = (arg: EventClickArg) => {
+  const handleEventClick = (arg: EventClickArg): void => {
     navigate(`/eventos/${arg.event.id}`)
   }
 
-  const handleEventDidMount = (arg: EventMountArg) => {
+  const handleEventDidMount = (arg: EventMountArg): void => {
     const { title, extendedProps } = arg.event
     const time = extendedProps.time ? ` · ${extendedProps.time}` : ''
     const desc = extendedProps.description ? `\n${extendedProps.description}` : ''
@@ -66,13 +65,15 @@ export const EventCalendar: React.FC = () => {
       </header>
 
       <div className={styles.filters}>
-        {FILTER_LABELS.map((label) => (
+        {['Todos', ...labels.map((label) => label.name)].map((label) => (
           <button
             key={label}
             className={`${styles.filterBtn} ${activeFilter === label ? styles.filterActive : ''}`}
-            style={activeFilter === label && label !== 'Todos'
-              ? { borderColor: LABEL_COLORS[label], color: LABEL_COLORS[label] }
-              : undefined}
+            style={
+              activeFilter === label && label !== 'Todos'
+                ? { borderColor: getLabelColor(label), color: getLabelColor(label) }
+                : undefined
+            }
             onClick={() => setActiveFilter(label)}
           >
             {label}
@@ -81,7 +82,7 @@ export const EventCalendar: React.FC = () => {
       </div>
 
       <div className={styles.calendarWrapper}>
-        {isLoading ? (
+        {isLoading || isLoadingLabels ? (
           <div className={styles.loading}>Cargando eventos...</div>
         ) : (
           <FullCalendar

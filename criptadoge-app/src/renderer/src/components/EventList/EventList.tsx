@@ -3,18 +3,12 @@ import { useNavigate } from 'react-router-dom'
 import styles from './EventList.module.scss'
 import { EventMaker } from '../EventMaker/EventMaker'
 import { useEvents } from '../../hooks/useEvents'
-
-const LABEL_KEY: Record<string, string> = {
-  'Magic: The Gathering': 'magic',
-  'Yu-Gi-Oh!':           'yugioh',
-  'Pokémon TCG':         'pokemon',
-  'Juegos de Mesa':      'mesa',
-  'Rol / D&D':           'rol',
-  'Otro':                'otro'
-}
+import { useEventLabels } from '../../hooks/useEventLabels'
+import { getEventLabelTint } from '../../data/events'
 
 export const EventList: React.FC = () => {
   const { events, isLoading, addEvent } = useEvents()
+  const { getLabelColor } = useEventLabels()
   const [isMakerOpen, setIsMakerOpen] = useState(false)
   const navigate = useNavigate()
 
@@ -46,29 +40,39 @@ export const EventList: React.FC = () => {
                 </td>
               </tr>
             ) : events.length > 0 ? (
-              events.map((evt) => (
-                <tr key={evt.id}>
-                  <td data-label="Etiqueta">
-                    <span className={`${styles.badge} ${styles[`badge-${LABEL_KEY[evt.label] ?? 'otro'}`]}`}>
-                      {evt.label}
-                    </span>
-                  </td>
-                  <td data-label="Evento">
-                    <strong>{evt.title}</strong>
-                    <div className={styles.description}>{evt.description}</div>
-                  </td>
-                  <td data-label="Fecha">{evt.date}</td>
-                  <td data-label="Hora">{evt.time}</td>
-                  <td data-label="Acciones">
-                    <button
-                      className={styles.actionBtn}
-                      onClick={() => navigate(`/eventos/${evt.id}`)}
-                    >
-                      Ver Detalles
-                    </button>
-                  </td>
-                </tr>
-              ))
+              events.map((evt) => {
+                const labelColor = getLabelColor(evt.label)
+
+                return (
+                  <tr key={evt.id}>
+                    <td data-label="Etiqueta">
+                      <span
+                        className={styles.badge}
+                        style={{
+                          backgroundColor: getEventLabelTint(labelColor, 0.2),
+                          borderColor: labelColor
+                        }}
+                      >
+                        {evt.label}
+                      </span>
+                    </td>
+                    <td data-label="Evento">
+                      <strong>{evt.title}</strong>
+                      <div className={styles.description}>{evt.description}</div>
+                    </td>
+                    <td data-label="Fecha">{evt.date}</td>
+                    <td data-label="Hora">{evt.time}</td>
+                    <td data-label="Acciones">
+                      <button
+                        className={styles.actionBtn}
+                        onClick={() => navigate(`/eventos/${evt.id}`)}
+                      >
+                        Ver Detalles
+                      </button>
+                    </td>
+                  </tr>
+                )
+              })
             ) : (
               <tr>
                 <td colSpan={5} className={styles.messageRow}>
