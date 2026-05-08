@@ -104,24 +104,32 @@
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    width: 2.25rem;
-    min-width: 2.25rem;
-    height: 2.25rem;
-    padding: 0;
+    min-width: 2rem;
+    height: 2rem;
+    padding: 0 0.65rem;
     letter-spacing: 0;
     line-height: 1;
+    border-radius: 999px;
   }
 
   :global(.fc-prev-button .fc-icon),
   :global(.fc-next-button .fc-icon) {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    width: 1rem;
-    height: 1rem;
-    margin: 0;
-    font-size: 1rem;
+    display: none;
+  }
+
+  :global(.fc-prev-button::before),
+  :global(.fc-next-button::before) {
+    font-size: 1.1rem;
+    font-weight: 800;
     line-height: 1;
+  }
+
+  :global(.fc-prev-button::before) {
+    content: '←';
+  }
+
+  :global(.fc-next-button::before) {
+    content: '→';
   }
 
   :global(.fc-button:focus) {
