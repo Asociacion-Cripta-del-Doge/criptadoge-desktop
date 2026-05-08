@@ -7,7 +7,7 @@ export const Layout: React.FC = () => {
   const { logout } = useAuth()
   const [isMenuOpen, setIsMenuOpen] = useState(false)
 
-  const closeMenu = () => setIsMenuOpen(false)
+  const closeMenu = (): void => setIsMenuOpen(false)
 
   return (
     <div className={styles.layoutContainer}>
@@ -87,6 +87,15 @@ export const Layout: React.FC = () => {
             }
           >
             Mesas
+          </NavLink>
+          <NavLink
+            to="/reservas"
+            onClick={closeMenu}
+            className={({ isActive }) =>
+              isActive ? `${styles.navLink} ${styles.active}` : styles.navLink
+            }
+          >
+            Reservas
           </NavLink>
         </nav>
 

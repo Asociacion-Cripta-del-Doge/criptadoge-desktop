@@ -237,3 +237,26 @@ El frontend muestra los mensajes ordenados de mas reciente a mas antiguo y norma
 en array como respuestas paginadas con `items` o `data`.
 
 Actualmente el flujo de contacto no envia emails; solo persiste el mensaje en MongoDB.
+
+---
+
+## 6. Reservas de mesas
+
+La vista de administracion `#/reservas` consume el modulo backend `/reservas` para listar todas
+las reservas, comprobar disponibilidad por mesa y franja horaria, crear reservas para el usuario
+autenticado y cancelar reservas activas.
+
+El formulario envia los campos del DTO del backend:
+
+```json
+{
+  "mesaId": "uuid",
+  "fechaHoraInicio": "ISO 8601",
+  "fechaHoraFin": "ISO 8601",
+  "asientosReservados": 1
+}
+```
+
+La disponibilidad se consulta antes de crear mediante `GET /reservas/disponibilidad`. La tabla
+principal usa `GET /reservas`, por lo que esta pestana queda restringida al rol `ADMIN` igual que
+el resto del panel interno.

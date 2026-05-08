@@ -33,6 +33,11 @@ const MesaManagement = lazy(() =>
     default: m.MesaManagement
   }))
 )
+const ReservationManagement = lazy(() =>
+  import('./components/ReservationManagement/ReservationManagement').then((m) => ({
+    default: m.ReservationManagement
+  }))
+)
 
 export const AppRoutes: React.FC = () => {
   return (
@@ -50,6 +55,7 @@ export const AppRoutes: React.FC = () => {
             <Route path="calendario" element={<EventCalendar />} />
             <Route path="contacto" element={<ContactMessages />} />
             <Route path="mesas" element={<MesaManagement />} />
+            <Route path="reservas" element={<ReservationManagement />} />
           </Route>
         </Route>
 
