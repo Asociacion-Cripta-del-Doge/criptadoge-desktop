@@ -1,0 +1,375 @@
+@use '../../styles/variables' as v;
+@use '../../styles/mixins' as m;
+
+.container {
+  background-color: v.$bg-main;
+  color: v.$text-main;
+  font-family: v.$font-main;
+  height: 100%;
+  padding: 2rem;
+  overflow-y: auto;
+  min-width: 0;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 1rem;
+  margin-bottom: 2rem;
+  padding-bottom: 1.5rem;
+  border-bottom: 1px solid v.$color-border;
+  position: relative;
+
+  &::after {
+    content: '';
+    position: absolute;
+    bottom: -1px;
+    left: 0;
+    width: 60px;
+    height: 2px;
+    background: v.$color-accent;
+  }
+
+  h1 {
+    font-family: v.$font-title;
+    color: v.$text-main;
+    font-size: 2rem;
+    margin: 0 0 0.5rem 0;
+  }
+
+  p {
+    color: v.$text-muted;
+    font-size: 0.9rem;
+    margin: 0;
+  }
+}
+
+.primaryBtn {
+  @include m.btn-primary;
+  padding: 0.85rem 1.2rem;
+  white-space: nowrap;
+
+  &:hover {
+    @include m.btn-primary-hover;
+  }
+}
+
+.card {
+  @include m.card-base;
+  overflow-x: auto;
+  max-width: 100%;
+}
+
+.toolbar {
+  margin-bottom: 1.5rem;
+  display: flex;
+}
+
+.searchInput {
+  width: 100%;
+  max-width: 420px;
+  padding: 0.75rem 1rem;
+  border-radius: 6px;
+  border: 1px solid v.$color-border;
+  background-color: v.$bg-main;
+  color: v.$text-main;
+  font-family: v.$font-main;
+  font-size: 0.95rem;
+  outline: none;
+  transition:
+    border-color 0.2s,
+    box-shadow 0.2s;
+
+  &:focus {
+    border-color: v.$color-primary;
+    box-shadow: 0 0 8px rgba(var(--color-primary-rgb), 0.25);
+  }
+
+  &::placeholder {
+    color: v.$text-muted;
+  }
+}
+
+.errorBanner {
+  margin-bottom: 1rem;
+  padding: 0.85rem 1rem;
+  border: 1px solid rgba(var(--color-error-rgb), 0.4);
+  border-radius: 6px;
+  background-color: rgba(var(--color-error-rgb), 0.08);
+  color: v.$color-error;
+}
+
+.table {
+  @include m.table-base;
+  table-layout: fixed;
+
+  th {
+    font-size: 0.8rem;
+    letter-spacing: 0.5px;
+  }
+
+  td {
+    color: v.$text-main;
+    font-size: 0.9rem;
+    vertical-align: middle;
+  }
+
+  th:nth-child(1),
+  td:nth-child(1) {
+    width: 25%;
+  }
+
+  th:nth-child(2),
+  td:nth-child(2) {
+    width: 22%;
+  }
+
+  th:nth-child(3),
+  td:nth-child(3) {
+    width: 23%;
+  }
+
+  th:nth-child(4),
+  td:nth-child(4) {
+    width: 30%;
+  }
+
+  tr:last-child td {
+    border-bottom: none;
+  }
+}
+
+.badge {
+  @include m.badge-base;
+  display: inline-flex;
+  align-items: center;
+  white-space: nowrap;
+}
+
+.paid {
+  background-color: rgba(var(--color-primary-rgb), 0.18);
+  color: v.$text-main;
+  border: 1px solid rgba(var(--color-primary-rgb), 0.45);
+}
+
+.free {
+  background-color: rgba(var(--color-success-rgb), 0.16);
+  color: v.$color-success;
+}
+
+.actions {
+  display: flex;
+  gap: 0.6rem;
+  flex-wrap: wrap;
+}
+
+.actionBtn {
+  @include m.action-btn;
+  padding: 0.55rem 0.8rem;
+}
+
+.dangerBtn {
+  @include m.btn-danger;
+  padding: 0.55rem 0.8rem;
+
+  &:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+  }
+}
+
+.statusMessage {
+  text-align: center;
+  padding: 3rem 0 !important;
+  color: v.$text-muted;
+  font-style: italic;
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  text-align: left;
+}
+
+.row {
+  display: flex;
+  gap: 1rem;
+}
+
+.formGroup {
+  @include m.form-group;
+  flex: 1;
+
+  input {
+    @include m.form-input;
+
+    &:focus {
+      box-shadow: 0 0 0 2px rgba(var(--color-primary-rgb), 0.2);
+    }
+
+    &:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+  }
+}
+
+.checkboxRow {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  color: v.$text-main;
+  font-weight: bold;
+  cursor: pointer;
+
+  input {
+    width: 18px;
+    height: 18px;
+    accent-color: v.$color-primary;
+    cursor: pointer;
+
+    &:disabled {
+      cursor: not-allowed;
+    }
+  }
+}
+
+.modalActions {
+  @include m.modal-actions-row;
+  margin-top: 0.5rem;
+
+  button {
+    transition: opacity 0.2s;
+
+    &:disabled {
+      opacity: 0.7;
+      cursor: not-allowed;
+    }
+  }
+}
+
+.secondaryBtn {
+  background-color: transparent;
+  border: 1px solid v.$color-border;
+  color: v.$text-main;
+
+  &:hover:not(:disabled) {
+    background-color: rgba(255, 255, 255, 0.05);
+  }
+}
+
+.submitBtn {
+  @include m.btn-primary;
+
+  &:hover:not(:disabled) {
+    background-color: rgba(var(--color-primary-rgb), 0.8);
+  }
+}
+
+@media (max-width: 768px) {
+  .container {
+    padding: 1rem;
+  }
+
+  .header {
+    flex-direction: column;
+    margin-bottom: 1.5rem;
+
+    h1 {
+      font-size: 1.5rem;
+    }
+  }
+
+  .primaryBtn {
+    width: 100%;
+  }
+
+  .card {
+    padding: 1rem;
+  }
+
+  .searchInput {
+    max-width: 100%;
+  }
+
+  .row {
+    flex-direction: column;
+  }
+}
+
+@media (max-width: 720px) {
+  .card {
+    overflow-x: visible;
+  }
+
+  .table,
+  .table thead,
+  .table tbody,
+  .table tr,
+  .table th,
+  .table td {
+    display: block;
+    width: 100%;
+    min-width: 0;
+  }
+
+  .table {
+    table-layout: auto;
+    min-width: 0;
+  }
+
+  .table thead {
+    display: none;
+  }
+
+  .table tbody tr {
+    border: 1px solid v.$color-border;
+    border-radius: 8px;
+    margin-bottom: 0.75rem;
+    padding: 1rem;
+    background-color: v.$bg-card;
+  }
+
+  .table tbody td {
+    border: none;
+    padding: 0.55rem 0;
+    border-bottom: 1px solid rgba(var(--color-border-rgb), 0.4);
+
+    &::before {
+      content: attr(data-label);
+      display: block;
+      margin-bottom: 0.25rem;
+      color: v.$text-muted;
+      font-size: 0.72rem;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    &:last-child {
+      border-bottom: none;
+    }
+  }
+}
+
+@media (max-width: 480px) {
+  .header {
+    h1 {
+      font-size: 1.3rem;
+    }
+  }
+
+  .card {
+    padding: 0.75rem;
+  }
+
+  .actions {
+    flex-direction: column;
+  }
+
+  .actionBtn,
+  .dangerBtn {
+    width: 100%;
+  }
+}
