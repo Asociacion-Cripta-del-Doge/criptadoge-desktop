@@ -24,13 +24,13 @@ const buildEmptyForm = (mesaId = ''): ReservaFormData => {
   start.setHours(start.getHours() + 1)
 
   const end = new Date(start)
-  end.setHours(end.getHours() + 2)
+  end.setHours(end.getHours() + 1)
 
   return {
     mesaId,
     fechaHoraInicio: toDatetimeLocalValue(start),
     fechaHoraFin: toDatetimeLocalValue(end),
-    asientosReservados: 1
+    asientosReservados: 2
   }
 }
 
@@ -61,6 +61,12 @@ const formatDateTime = (value: string): string => {
   }).format(date)
 }
 
+const formatPrice = (value: number): string =>
+  new Intl.NumberFormat('es-ES', {
+    style: 'currency',
+    currency: 'EUR'
+  }).format(value)
+
 const getEstadoClass = (estado: string): string => {
   if (estado === 'PENDIENTE') return styles.pending
   if (estado === 'CONFIRMADA') return styles.confirmed
@@ -71,6 +77,20 @@ const getEstadoClass = (estado: string): string => {
 
 const canCancel = (reserva: ReservaMesa): boolean =>
   reserva.estado !== 'CANCELADA' && reserva.estado !== 'COMPLETADA'
+
+const getReservableSeatsLimit = (mesa?: Mesa): number => {
+  if (!mesa) return 2
+  return Math.floor(mesa.asientos / 2) * 2
+}
+
+const normalizeSeatCount = (value: number, mesa?: Mesa): number => {
+  const limit = getReservableSeatsLimit(mesa)
+  const numericValue = Number.isFinite(value) ? value : 2
+  const evenValue = numericValue % 2 === 0 ? numericValue : numericValue + 1
+  const clampedValue = Math.min(Math.max(2, evenValue), Math.max(2, limit))
+
+  return clampedValue
+}
 
 export const ReservationManagement: React.FC = () => {
   const [reservas, setReservas] = useState<ReservaMesa[]>([])
@@ -129,6 +149,11 @@ export const ReservationManagement: React.FC = () => {
     })
   }, [estadoFilter, reservas, searchTerm])
 
+  const selectedMesa = useMemo(
+    () => mesas.find((mesa) => mesa.id === formData.mesaId),
+    [formData.mesaId, mesas]
+  )
+
   const openCreateModal = (): void => {
     setError(null)
     setAvailability(null)
@@ -145,16 +170,58 @@ export const ReservationManagement: React.FC = () => {
   const updateFormField =
     (field: keyof ReservaFormData) =>
     (event: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>): void => {
-      const value =
-        field === 'asientosReservados'
-          ? Math.max(1, Number(event.target.value))
-          : event.target.value
-      setFormData((prev) => ({ ...prev, [field]: value }))
+      if (field === 'asientosReservados') {
+        setFormData((prev) => ({
+          ...prev,
+          asientosReservados: normalizeSeatCount(Number(event.target.value), selectedMesa)
+        }))
+        setAvailability(null)
+        return
+      }
+
+      const value = event.target.value
+      setFormData((prev) => {
+        if (field !== 'mesaId') return { ...prev, [field]: value }
+
+        const nextMesa = mesas.find((mesa) => mesa.id === value)
+        return {
+          ...prev,
+          mesaId: value,
+          asientosReservados: normalizeSeatCount(prev.asientosReservados, nextMesa)
+        }
+      })
       setAvailability(null)
     }
 
+  const validateForm = (): string | null => {
+    const start = new Date(formData.fechaHoraInicio)
+    const end = new Date(formData.fechaHoraFin)
+    const seatLimit = getReservableSeatsLimit(selectedMesa)
+
+    if (!selectedMesa) return 'Selecciona una mesa valida.'
+    if (seatLimit < 2) return 'La mesa seleccionada no permite reservas de al menos 2 asientos.'
+    if (Number.isNaN(start.getTime()) || Number.isNaN(end.getTime())) {
+      return 'Indica una fecha y hora validas.'
+    }
+    if (end <= start) return 'La hora de fin debe ser posterior al inicio.'
+    if (formData.asientosReservados < 2) return 'La reserva debe ser de al menos 2 asientos.'
+    if (formData.asientosReservados % 2 !== 0) return 'Los asientos reservados deben ser pares.'
+    if (formData.asientosReservados > seatLimit) {
+      return `La mesa seleccionada permite reservar como maximo ${seatLimit} asientos.`
+    }
+
+    return null
+  }
+
   const handleCheckAvailability = async (): Promise<DisponibilidadReserva | null> => {
     try {
+      const validationError = validateForm()
+      if (validationError) {
+        setError(validationError)
+        setAvailability(null)
+        return null
+      }
+
       setIsChecking(true)
       setError(null)
       const data = await checkReservaDisponibilidad(formData)
@@ -177,6 +244,12 @@ export const ReservationManagement: React.FC = () => {
       setIsSubmitting(true)
       setError(null)
 
+      const validationError = validateForm()
+      if (validationError) {
+        setError(validationError)
+        return
+      }
+
       const checkedAvailability = availability ?? (await handleCheckAvailability())
       if (!checkedAvailability?.disponible) {
         setError('No hay asientos suficientes para ese horario.')
@@ -185,7 +258,8 @@ export const ReservationManagement: React.FC = () => {
 
       const newReserva = await createReserva(formData)
       setReservas((prev) => sortReservas([newReserva, ...prev]))
-      closeModal()
+      setIsModalOpen(false)
+      setAvailability(null)
     } catch (err) {
       console.error('Error al crear reserva:', err)
       setError(getErrorMessage(err))
@@ -263,6 +337,7 @@ export const ReservationManagement: React.FC = () => {
               <th>Inicio</th>
               <th>Fin</th>
               <th>Asientos</th>
+              <th>Precio</th>
               <th>Estado</th>
               <th>Acciones</th>
             </tr>
@@ -270,7 +345,7 @@ export const ReservationManagement: React.FC = () => {
           <tbody>
             {isLoading ? (
               <tr>
-                <td colSpan={7} className={styles.statusMessage}>
+                <td colSpan={8} className={styles.statusMessage}>
                   Cargando reservas...
                 </td>
               </tr>
@@ -279,6 +354,11 @@ export const ReservationManagement: React.FC = () => {
                 <tr key={reserva.id}>
                   <td data-label="Mesa">
                     <strong>{reserva.mesa ? `Mesa ${reserva.mesa.orden}` : 'Sin mesa'}</strong>
+                    {reserva.mesa ? (
+                      <small className={styles.mutedText}>
+                        {reserva.mesa.esDePago ? 'De pago' : 'Gratuita'}
+                      </small>
+                    ) : null}
                   </td>
                   <td data-label="Socio">
                     <span>{reserva.user?.name ?? 'Usuario actual'}</span>
@@ -289,6 +369,7 @@ export const ReservationManagement: React.FC = () => {
                   <td data-label="Inicio">{formatDateTime(reserva.fechaHoraInicio)}</td>
                   <td data-label="Fin">{formatDateTime(reserva.fechaHoraFin)}</td>
                   <td data-label="Asientos">{reserva.asientosReservados}</td>
+                  <td data-label="Precio">{formatPrice(reserva.precio)}</td>
                   <td data-label="Estado">
                     <span className={`${styles.badge} ${getEstadoClass(reserva.estado)}`}>
                       {reserva.estado}
@@ -307,7 +388,7 @@ export const ReservationManagement: React.FC = () => {
               ))
             ) : (
               <tr>
-                <td colSpan={7} className={styles.statusMessage}>
+                <td colSpan={8} className={styles.statusMessage}>
                   {searchTerm || estadoFilter !== 'TODAS'
                     ? 'No hay reservas que coincidan con el filtro.'
                     : 'No hay reservas registradas.'}
@@ -331,6 +412,7 @@ export const ReservationManagement: React.FC = () => {
               {mesas.map((mesa) => (
                 <option key={mesa.id} value={mesa.id}>
                   Mesa {mesa.orden} - {mesa.asientos} asientos
+                  {mesa.esDePago ? ' - de pago' : ' - gratuita'}
                 </option>
               ))}
             </select>
@@ -363,8 +445,9 @@ export const ReservationManagement: React.FC = () => {
             <label>Asientos reservados</label>
             <input
               type="number"
-              min={1}
-              step={1}
+              min={2}
+              max={Math.max(2, getReservableSeatsLimit(selectedMesa))}
+              step={2}
               required
               disabled={isSubmitting || isChecking}
               value={formData.asientosReservados}
