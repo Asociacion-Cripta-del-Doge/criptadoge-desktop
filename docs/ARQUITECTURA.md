@@ -264,3 +264,27 @@ El backend calcula el precio informativo al crear la reserva: las mesas gratuita
 y las mesas de pago aplican la primera hora gratis para socios activos y despues `1.25` euros por
 asiento y hora facturable. La tabla principal muestra ese precio guardado y usa `GET /reservas`,
 por lo que esta pestana queda restringida al rol `ADMIN` igual que el resto del panel interno.
+
+---
+
+## 7. Textos configurables de la web
+
+La vista de administracion `#/textos-web` permite gestionar desde la app los textos visibles que la
+web carga desde MongoDB. La pantalla consume `GET /web-texts/admin`, agrupa los registros por
+`section`, permite filtrar por idioma y buscar por `key`, texto, seccion o tipo.
+
+El formulario de creacion envia:
+
+```json
+{
+  "key": "home.hero.subtitle",
+  "value": "Texto visible en la web",
+  "section": "home.hero",
+  "type": "textarea",
+  "locale": "es"
+}
+```
+
+La edicion usa `PATCH /web-texts/:id`. Las keys y el locale quedan bloqueados durante la edicion
+para evitar duplicados contra el indice unico `{ key, locale }`; si hace falta otro idioma, se crea
+un nuevo registro con la misma key y distinto `locale`.
