@@ -10,7 +10,7 @@ import { useEventLabels } from '../../hooks/useEventLabels'
 export const EventProfile: React.FC = () => {
   const { id } = useParams<{ id: string }>()
   const navigate = useNavigate()
-  const { getLabelColor } = useEventLabels()
+  const { labels, isLoadingLabels, getLabelColor } = useEventLabels()
   const [event, setEvent] = useState<AppEvent | null>(null)
   const [isLoading, setIsLoading] = useState(true)
   const [isModalOpen, setIsModalOpen] = useState(false)
@@ -136,6 +136,8 @@ export const EventProfile: React.FC = () => {
         onClose={() => setIsEditModalOpen(false)}
         onSuccess={handleEditSubmit}
         initialData={event}
+        labels={labels}
+        isLoadingLabels={isLoadingLabels}
       />
     </div>
   )

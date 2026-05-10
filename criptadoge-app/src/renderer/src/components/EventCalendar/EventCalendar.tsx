@@ -109,6 +109,8 @@ export const EventCalendar: React.FC = () => {
         onClose={() => setMakerOpen(false)}
         onSuccess={addEvent}
         initialData={selectedDate ? { date: selectedDate } : undefined}
+        labels={labels}
+        isLoadingLabels={isLoadingLabels}
       />
     </div>
   )

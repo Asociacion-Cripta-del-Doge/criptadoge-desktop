@@ -1,0 +1,206 @@
+@use '../../styles/variables' as v;
+@use '../../styles/mixins' as m;
+
+.container {
+  padding: 2rem;
+  height: 100%;
+  overflow: auto;
+  color: v.$text-main;
+}
+
+.header {
+  margin-bottom: 2rem;
+
+  h1 {
+    font-family: v.$font-title;
+    font-size: 2rem;
+    margin: 0;
+  }
+}
+
+.card {
+  @include m.card-base;
+}
+
+.primaryBtn {
+  @include m.btn-primary;
+  padding: 0.85rem 1.5rem;
+  font-size: 1rem;
+
+  &:hover {
+    @include m.btn-primary-hover;
+  }
+
+  &:disabled {
+    opacity: 0.7;
+    cursor: not-allowed;
+  }
+}
+
+.errorBanner,
+.successBanner {
+  padding: 0.85rem 1rem;
+  border-radius: 6px;
+  margin-bottom: 1rem;
+}
+
+.errorBanner {
+  border: 1px solid rgba(var(--color-error-rgb), 0.4);
+  background-color: rgba(var(--color-error-rgb), 0.08);
+  color: v.$color-error;
+}
+
+.successBanner {
+  border: 1px solid rgba(var(--color-success-rgb), 0.35);
+  background-color: rgba(var(--color-success-rgb), 0.1);
+  color: v.$color-success;
+}
+
+.labelForm {
+  display: grid;
+  grid-template-columns: minmax(220px, 1fr) auto auto;
+  align-items: end;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.labelNameField,
+.labelColorField {
+  @include m.form-group;
+  min-width: 0;
+
+  input {
+    @include m.form-input;
+    width: 100%;
+
+    &:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+  }
+}
+
+.labelColorField {
+  width: 5.5rem;
+
+  input {
+    height: 3rem;
+    padding: 0.25rem;
+    cursor: pointer;
+  }
+}
+
+.labelList {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+}
+
+.labelItem {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.75rem;
+  min-width: 0;
+  padding: 0.6rem 0.75rem;
+  border: 1px solid v.$color-border;
+  border-radius: 8px;
+  background-color: rgba(var(--bg-main-rgb), 0.5);
+}
+
+.badge {
+  @include m.badge-base;
+  border: 1px solid transparent;
+  display: inline-block;
+  white-space: nowrap;
+}
+
+.labelUsage {
+  color: v.$text-muted;
+  font-size: 0.85rem;
+  white-space: nowrap;
+}
+
+.editLabelName {
+  @include m.form-input;
+  width: 11rem;
+  min-width: 0;
+  padding: 0.55rem 0.75rem;
+  font-size: 0.9rem;
+}
+
+.editLabelColor {
+  width: 2.75rem;
+  height: 2.4rem;
+  padding: 0.2rem;
+  border: 1px solid v.$color-border;
+  border-radius: 6px;
+  background-color: v.$bg-main;
+  cursor: pointer;
+
+  &:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+  }
+}
+
+.editLabelBtn,
+.saveLabelBtn {
+  @include m.action-btn;
+  padding: 0.45rem 0.75rem;
+  font-family: v.$font-main;
+
+  &:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+  }
+}
+
+.saveLabelBtn {
+  border-color: v.$color-primary;
+  color: v.$color-primary;
+}
+
+.deleteLabelBtn {
+  @include m.btn-danger;
+  padding: 0.45rem 0.75rem;
+  font-family: v.$font-main;
+
+  &:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+  }
+}
+
+.labelMessage {
+  color: v.$text-muted;
+  padding: 0.5rem 0;
+}
+
+@media (max-width: 768px) {
+  .container {
+    padding: 1rem;
+  }
+
+  .header h1 {
+    font-size: 1.5rem;
+  }
+
+  .labelForm {
+    grid-template-columns: 1fr;
+    align-items: stretch;
+  }
+
+  .labelColorField {
+    width: 100%;
+  }
+
+  .labelItem {
+    width: 100%;
+    justify-content: space-between;
+  }
+
+  .editLabelName {
+    flex: 1;
+    width: auto;
+  }
+}

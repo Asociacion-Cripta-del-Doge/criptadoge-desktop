@@ -21,6 +21,7 @@
   --text-main-rgb:       248, 250, 252;
   --text-muted-rgb:      148, 163, 184;
   --color-error-rgb:     239, 68, 68;
+  --color-success-rgb:   16, 185, 129;
   --color-accent-rgb:    234, 179, 8;
 }
 
@@ -43,6 +44,7 @@ body.theme-light {
   --text-main-rgb:       15, 23, 42;
   --text-muted-rgb:      100, 116, 139;
   --color-error-rgb:     220, 38, 38;
+  --color-success-rgb:   5, 150, 105;
   --color-accent-rgb:    180, 83, 9;
 }
 
