@@ -281,6 +281,18 @@
   color: v.$color-error;
 }
 
+.modalText {
+  color: v.$text-muted;
+  line-height: 1.6;
+  margin: 0 0 2rem;
+  text-align: center;
+  font-size: 1rem;
+
+  strong {
+    color: v.$text-main;
+  }
+}
+
 .modalActions {
   @include m.modal-actions-row;
   margin-top: 0.5rem;
