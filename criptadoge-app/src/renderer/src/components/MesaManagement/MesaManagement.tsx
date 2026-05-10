@@ -17,6 +17,11 @@ const emptyForm: MesaFormData = {
   esDePago: false
 }
 
+const normalizeSeatCount = (value: number): number => {
+  const safeValue = Number.isFinite(value) ? value : 2
+  return Math.max(2, Math.ceil(safeValue / 2) * 2)
+}
+
 const getErrorMessage = (error: unknown): string => {
   if (typeof error === 'object' && error !== null && 'response' in error) {
     const response = (error as { response?: { data?: { message?: string | string[] } } }).response
@@ -82,7 +87,7 @@ export const MesaManagement: React.FC = () => {
   const openEditModal = (mesa: Mesa): void => {
     setEditingMesa(mesa)
     setFormData({
-      asientos: mesa.asientos,
+      asientos: normalizeSeatCount(mesa.asientos),
       orden: mesa.orden,
       esDePago: mesa.esDePago
     })
@@ -99,7 +104,8 @@ export const MesaManagement: React.FC = () => {
   const handleNumberChange =
     (field: 'asientos' | 'orden') =>
     (event: React.ChangeEvent<HTMLInputElement>): void => {
-      const value = Math.max(1, Number(event.target.value))
+      const inputValue = Number(event.target.value)
+      const value = field === 'asientos' ? normalizeSeatCount(inputValue) : Math.max(1, inputValue)
       setFormData((prev) => ({ ...prev, [field]: value }))
     }
 
@@ -109,13 +115,18 @@ export const MesaManagement: React.FC = () => {
     setError(null)
 
     try {
+      const payload: MesaFormData = {
+        ...formData,
+        asientos: normalizeSeatCount(formData.asientos)
+      }
+
       if (editingMesa) {
-        const updatedMesa = await updateMesa(editingMesa.id, formData)
+        const updatedMesa = await updateMesa(editingMesa.id, payload)
         setMesas((prev) =>
           sortMesas(prev.map((mesa) => (mesa.id === updatedMesa.id ? updatedMesa : mesa)))
         )
       } else {
-        const newMesa = await createMesa(formData)
+        const newMesa = await createMesa(payload)
         setMesas((prev) => sortMesas([...prev, newMesa]))
       }
 
@@ -250,8 +261,8 @@ export const MesaManagement: React.FC = () => {
               <label>Asientos</label>
               <input
                 type="number"
-                min={1}
-                step={1}
+                min={2}
+                step={2}
                 required
                 disabled={isSubmitting}
                 value={formData.asientos}

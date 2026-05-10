@@ -38,6 +38,11 @@ const ReservationManagement = lazy(() =>
     default: m.ReservationManagement
   }))
 )
+const WebTextManagement = lazy(() =>
+  import('./components/WebTextManagement/WebTextManagement').then((m) => ({
+    default: m.WebTextManagement
+  }))
+)
 
 export const AppRoutes: React.FC = () => {
   return (
@@ -56,6 +61,7 @@ export const AppRoutes: React.FC = () => {
             <Route path="contacto" element={<ContactMessages />} />
             <Route path="mesas" element={<MesaManagement />} />
             <Route path="reservas" element={<ReservationManagement />} />
+            <Route path="textos-web" element={<WebTextManagement />} />
           </Route>
         </Route>
 

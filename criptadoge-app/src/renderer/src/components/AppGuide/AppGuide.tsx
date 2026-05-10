@@ -6,7 +6,14 @@ interface AppGuideProps {
   onClose: () => void
 }
 
-const GUIDE_SECTIONS = [
+interface GuideSection {
+  title: string
+  description: string
+  videoSrc?: string
+  steps?: string[]
+}
+
+const GUIDE_SECTIONS: GuideSection[] = [
   {
     title: 'Gestión de Socios',
     videoSrc: new URL('../../assets/videos/socios.mp4', import.meta.url).href,
@@ -30,6 +37,24 @@ const GUIDE_SECTIONS = [
     videoSrc: new URL('../../assets/videos/calendario.mp4', import.meta.url).href,
     description:
       'El calendario muestra todos los eventos del sistema con sus colores de etiqueta. Puedes navegar por meses y hacer clic en cualquier evento para ver su detalle.'
+  },
+  {
+    title: 'Textos web',
+    description:
+      'Este apartado sirve para crear y editar los textos que la web carga desde base de datos. Crear un texto es necesario cuando la web empieza a usar una key nueva que todavia no existe en MongoDB.',
+    steps: [
+      'Antes de crear, usa el buscador para comprobar que la key no existe ya en ese idioma.',
+      'Pulsa Nuevo Texto y rellena la Key. La key es el nombre interno del texto: no se ve en la web, pero sirve para que la web sepa que texto debe mostrar.',
+      'La primera parte de la key se llama prefijo. Piensa en el prefijo como la carpeta donde vive el texto. Por ejemplo, home.hero significa portada principal, home.contact significa contacto y footer significa pie de pagina.',
+      'Despues del prefijo se anade el nombre concreto del texto. Ejemplos: home.hero.title para el titulo principal, home.hero.subtitle para el subtitulo, home.contact.formButton para un boton del formulario o footer.legal para un texto legal.',
+      'Usa siempre puntos para separar partes de la key y evita espacios. Es mejor home.hero.title que titulo portada.',
+      'En Seccion escribe el prefijo de la key. Si la key es home.hero.subtitle, la seccion sera home.hero. Si la key es footer.legal, la seccion sera footer.',
+      'En Idioma usa el locale del contenido, normalmente es. Si mas adelante se crea la version inglesa, se puede repetir la misma key con locale en.',
+      'Elige el tipo segun el uso: Texto corto para botones, labels y titulares pequenos; Texto largo para parrafos; Markdown solo para contenido con formato especial.',
+      'En Contenido escribe el texto final que vera la web. Evita HTML libre y revisa acentos, saltos de linea y llamadas a la accion antes de guardar.',
+      'Guarda el texto y confirma que aparece dentro de su seccion. Si la web ya consume esa key, empezara a mostrar el valor de BD en vez del fallback local.',
+      'Para cambiar un texto existente usa Editar. La key y el idioma quedan bloqueados en edicion para evitar duplicados accidentales.'
+    ]
   }
 ]
 
@@ -53,14 +78,23 @@ export const AppGuide: React.FC<AppGuideProps> = ({ isOpen, onClose }) => {
           {GUIDE_SECTIONS.map((section) => (
             <div key={section.title} className={styles.section}>
               <h3 className={styles.sectionTitle}>{section.title}</h3>
-              <video
-                className={styles.videoHero}
-                src={section.videoSrc}
-                controls
-                preload="metadata"
-                playsInline
-              />
+              {section.videoSrc ? (
+                <video
+                  className={styles.videoHero}
+                  src={section.videoSrc}
+                  controls
+                  preload="metadata"
+                  playsInline
+                />
+              ) : null}
               <p className={styles.sectionDescription}>{section.description}</p>
+              {section.steps ? (
+                <ul className={styles.stepList}>
+                  {section.steps.map((step) => (
+                    <li key={step}>{step}</li>
+                  ))}
+                </ul>
+              ) : null}
             </div>
           ))}
         </div>

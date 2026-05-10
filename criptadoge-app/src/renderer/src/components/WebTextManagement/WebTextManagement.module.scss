@@ -1,0 +1,384 @@
+@use '../../styles/variables' as v;
+@use '../../styles/mixins' as m;
+
+.container {
+  background-color: v.$bg-main;
+  color: v.$text-main;
+  font-family: v.$font-main;
+  height: 100%;
+  padding: 2rem;
+  overflow-y: auto;
+  min-width: 0;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 1rem;
+  margin-bottom: 2rem;
+  padding-bottom: 1.5rem;
+  border-bottom: 1px solid v.$color-border;
+  position: relative;
+
+  &::after {
+    content: '';
+    position: absolute;
+    bottom: -1px;
+    left: 0;
+    width: 60px;
+    height: 2px;
+    background: v.$color-accent;
+  }
+
+  h1 {
+    font-family: v.$font-title;
+    color: v.$text-main;
+    font-size: 2rem;
+    margin: 0 0 0.5rem 0;
+  }
+
+  p {
+    color: v.$text-muted;
+    font-size: 0.9rem;
+    margin: 0;
+  }
+}
+
+.primaryBtn {
+  @include m.btn-primary;
+  padding: 0.85rem 1.2rem;
+  white-space: nowrap;
+
+  &:hover {
+    @include m.btn-primary-hover;
+  }
+}
+
+.toolbarCard {
+  @include m.card-base;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 180px;
+  gap: 1rem;
+  align-items: end;
+  margin-bottom: 1rem;
+}
+
+.searchGroup,
+.filterGroup,
+.formGroup {
+  @include m.form-group;
+}
+
+.searchInput,
+.selectInput,
+.formGroup input,
+.formGroup select,
+.formGroup textarea {
+  @include m.form-input;
+}
+
+.formGroup textarea {
+  min-height: 180px;
+  resize: vertical;
+  line-height: 1.45;
+}
+
+.searchInput,
+.selectInput {
+  width: 100%;
+}
+
+.errorBanner,
+.successBanner {
+  margin-bottom: 1rem;
+  padding: 0.85rem 1rem;
+  border-radius: 6px;
+}
+
+.errorBanner {
+  border: 1px solid rgba(var(--color-error-rgb), 0.4);
+  background-color: rgba(var(--color-error-rgb), 0.08);
+  color: v.$color-error;
+}
+
+.successBanner {
+  border: 1px solid rgba(var(--color-success-rgb), 0.35);
+  background-color: rgba(var(--color-success-rgb), 0.1);
+  color: v.$color-success;
+}
+
+.contentGrid {
+  display: grid;
+  grid-template-columns: 280px minmax(0, 1fr);
+  gap: 1rem;
+  align-items: start;
+}
+
+.sectionPanel,
+.textPanel {
+  min-width: 0;
+}
+
+.sectionPanel {
+  @include m.card-base(1rem);
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  position: sticky;
+  top: 0;
+}
+
+.sectionButton {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.8rem;
+  width: 100%;
+  padding: 0.8rem;
+  border: 1px solid transparent;
+  border-radius: 6px;
+  background-color: transparent;
+  color: v.$text-muted;
+  text-align: left;
+  cursor: pointer;
+  font-family: v.$font-main;
+  transition: all 0.2s;
+
+  span {
+    overflow-wrap: anywhere;
+  }
+
+  strong {
+    flex-shrink: 0;
+    color: v.$text-main;
+    font-family: v.$font-mono;
+    font-size: 0.82rem;
+  }
+
+  &:hover {
+    color: v.$text-main;
+    background-color: rgba(var(--color-primary-rgb), 0.12);
+  }
+
+  &.active {
+    color: v.$text-main;
+    border-color: rgba(var(--color-primary-rgb), 0.55);
+    background-color: rgba(var(--color-primary-rgb), 0.22);
+  }
+}
+
+.sectionBlock {
+  @include m.card-base;
+  margin-bottom: 1rem;
+}
+
+.sectionHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 1rem;
+  padding-bottom: 0.85rem;
+  border-bottom: 1px solid v.$color-border;
+
+  h2 {
+    margin: 0;
+    font-size: 1.15rem;
+    color: v.$text-main;
+  }
+
+  span {
+    color: v.$text-muted;
+    font-size: 0.82rem;
+    text-transform: uppercase;
+  }
+}
+
+.textList {
+  display: grid;
+  gap: 0.8rem;
+}
+
+.textCard {
+  border: 1px solid v.$color-border;
+  border-radius: 8px;
+  padding: 1rem;
+  background-color: rgba(var(--color-primary-rgb), 0.04);
+}
+
+.textCardHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 1rem;
+
+  h3 {
+    margin: 0 0 0.3rem 0;
+    font-family: v.$font-mono;
+    font-size: 0.92rem;
+    color: v.$text-main;
+    overflow-wrap: anywhere;
+  }
+
+  p {
+    margin: 0;
+    color: v.$text-muted;
+    font-size: 0.8rem;
+  }
+}
+
+.badges {
+  display: flex;
+  gap: 0.45rem;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+}
+
+.badge {
+  @include m.badge-base;
+  display: inline-flex;
+  align-items: center;
+  border: 1px solid rgba(var(--color-primary-rgb), 0.38);
+  background-color: rgba(var(--color-primary-rgb), 0.15);
+  color: v.$text-main;
+  white-space: nowrap;
+}
+
+.preview {
+  margin: 0.85rem 0 0 0;
+  color: v.$text-muted;
+  line-height: 1.5;
+  overflow-wrap: anywhere;
+}
+
+.cardActions {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 1rem;
+}
+
+.actionBtn {
+  @include m.action-btn;
+  padding: 0.55rem 0.9rem;
+}
+
+.statusMessage {
+  @include m.card-base;
+  padding: 3rem 1rem;
+  text-align: center;
+  color: v.$text-muted;
+  font-style: italic;
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+  text-align: left;
+}
+
+.row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 0.45fr);
+  gap: 1rem;
+}
+
+.modalActions {
+  @include m.modal-actions-row;
+  margin-top: 0.5rem;
+
+  button {
+    transition: opacity 0.2s;
+
+    &:disabled {
+      opacity: 0.7;
+      cursor: not-allowed;
+    }
+  }
+}
+
+.secondaryBtn {
+  background-color: transparent;
+  border: 1px solid v.$color-border;
+  color: v.$text-main;
+
+  &:hover:not(:disabled) {
+    background-color: rgba(255, 255, 255, 0.05);
+  }
+}
+
+.submitBtn {
+  @include m.btn-primary;
+
+  &:hover:not(:disabled) {
+    background-color: rgba(var(--color-primary-rgb), 0.8);
+  }
+}
+
+@media (max-width: 1100px) {
+  .contentGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .sectionPanel {
+    position: static;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+  }
+}
+
+@media (max-width: 768px) {
+  .container {
+    padding: 1rem;
+  }
+
+  .header {
+    flex-direction: column;
+    margin-bottom: 1.5rem;
+
+    h1 {
+      font-size: 1.5rem;
+    }
+  }
+
+  .primaryBtn {
+    width: 100%;
+  }
+
+  .toolbarCard {
+    grid-template-columns: 1fr;
+    padding: 1rem;
+  }
+
+  .sectionBlock,
+  .statusMessage {
+    padding: 1rem;
+  }
+
+  .textCardHeader {
+    flex-direction: column;
+  }
+
+  .badges {
+    justify-content: flex-start;
+  }
+
+  .row {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 480px) {
+  .header h1 {
+    font-size: 1.3rem;
+  }
+
+  .sectionPanel {
+    grid-template-columns: 1fr;
+  }
+
+  .modalActions {
+    flex-direction: column;
+  }
+}
