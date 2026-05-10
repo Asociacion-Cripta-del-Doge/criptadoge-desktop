@@ -219,6 +219,15 @@
   font-family: v.$font-main;
 }
 
+.errorBanner {
+  margin-bottom: 1rem;
+  padding: 0.85rem 1rem;
+  border: 1px solid rgba(var(--color-error-rgb), 0.4);
+  border-radius: 6px;
+  background-color: rgba(var(--color-error-rgb), 0.08);
+  color: v.$color-error;
+}
+
 .modalActions {
   @include m.modal-actions-row;
 

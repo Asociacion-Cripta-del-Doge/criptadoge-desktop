@@ -499,11 +499,7 @@ export const ReservationManagement: React.FC = () => {
         </form>
       </Modal>
 
-      <Modal
-        isOpen={Boolean(reservaToCancel)}
-        onClose={closeCancelModal}
-        title="CANCELAR RESERVA"
-      >
+      <Modal isOpen={Boolean(reservaToCancel)} onClose={closeCancelModal} title="CANCELAR RESERVA">
         <p className={styles.modalText}>
           Quieres cancelar la reserva de{' '}
           <strong>

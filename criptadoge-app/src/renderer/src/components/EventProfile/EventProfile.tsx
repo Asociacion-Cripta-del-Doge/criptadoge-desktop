@@ -16,6 +16,7 @@ export const EventProfile: React.FC = () => {
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [isDeleting, setIsDeleting] = useState(false)
   const [isEditModalOpen, setIsEditModalOpen] = useState(false)
+  const [deleteError, setDeleteError] = useState<string | null>(null)
 
   useEffect(() => {
     const fetchEventDetail = async (): Promise<void> => {
@@ -36,14 +37,14 @@ export const EventProfile: React.FC = () => {
   const handleDelete = async (): Promise<void> => {
     if (!id) return
     setIsDeleting(true)
+    setDeleteError(null)
     try {
       await deleteEvent(id)
       navigate('/eventos')
     } catch (error) {
       console.error('Error al borrar el evento:', error)
-      alert('Hubo un problema al intentar borrar el evento.')
+      setDeleteError('Hubo un problema al intentar borrar el evento.')
       setIsDeleting(false)
-      setIsModalOpen(false)
     }
   }
 
@@ -94,7 +95,13 @@ export const EventProfile: React.FC = () => {
               <button className={styles.secondaryBtn} onClick={() => setIsEditModalOpen(true)}>
                 Editar Evento
               </button>
-              <button className={styles.dangerBtn} onClick={() => setIsModalOpen(true)}>
+              <button
+                className={styles.dangerBtn}
+                onClick={() => {
+                  setDeleteError(null)
+                  setIsModalOpen(true)
+                }}
+              >
                 Eliminar Evento
               </button>
             </div>
@@ -110,6 +117,7 @@ export const EventProfile: React.FC = () => {
           ¿Estás seguro de que deseas eliminar el evento <strong>{event.title}</strong>?<br />
           Esta acción no se puede deshacer.
         </p>
+        {deleteError ? <div className={styles.errorBanner}>{deleteError}</div> : null}
         <div className={styles.modalActions}>
           <button
             className={styles.secondaryBtn}

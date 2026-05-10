@@ -16,6 +16,18 @@ interface User {
   expirationDate: string | null
 }
 
+const getErrorMessage = (error: unknown, fallback: string): string => {
+  if (typeof error === 'object' && error !== null && 'response' in error) {
+    const response = (error as { response?: { data?: { message?: string | string[] } } }).response
+    const message = response?.data?.message
+
+    if (Array.isArray(message)) return message.join(' ')
+    if (message) return message
+  }
+
+  return fallback
+}
+
 export const MemberProfile: React.FC = () => {
   const { id } = useParams<{ id: string }>()
   const navigate = useNavigate()
@@ -26,6 +38,9 @@ export const MemberProfile: React.FC = () => {
 
   const [showRenewModal, setShowRenewModal] = useState(false)
   const [showDeleteModal, setShowDeleteModal] = useState(false)
+  const [feedbackModal, setFeedbackModal] = useState<{ title: string; message: string } | null>(
+    null
+  )
 
   const [isEditing, setIsEditing] = useState(false)
   const [editForm, setEditForm] = useState({
@@ -40,14 +55,14 @@ export const MemberProfile: React.FC = () => {
 
   const DNI_NIE_REGEX = /^(\d{8}[A-Za-z]|[XYZxyz]\d{7}[A-Za-z])$/
 
-  const handleCopy = async (value: string, field: string) => {
+  const handleCopy = async (value: string, field: string): Promise<void> => {
     await navigator.clipboard.writeText(value)
     setCopiedField(field)
     setTimeout(() => setCopiedField(null), 2000)
   }
 
   useEffect(() => {
-    const fetchMember = async () => {
+    const fetchMember = async (): Promise<void> => {
       try {
         setIsLoading(true)
         const response = await apiClient.get(`/usuarios/${id}`)
@@ -69,7 +84,7 @@ export const MemberProfile: React.FC = () => {
     if (id) fetchMember()
   }, [id])
 
-  const handleSaveEdit = async () => {
+  const handleSaveEdit = async (): Promise<void> => {
     if (editForm.dni.trim() !== '' && !DNI_NIE_REGEX.test(editForm.dni.trim())) {
       setDniError('Formato de DNI/NIE inválido')
       return
@@ -80,34 +95,43 @@ export const MemberProfile: React.FC = () => {
       const response = await apiClient.put(`/usuarios/${member?.id}`, payload)
       setMember(response.data)
       setIsEditing(false)
-    } catch (err: any) {
-      alert(err.response?.data?.message || 'Error al guardar los cambios.')
+    } catch (err) {
+      setFeedbackModal({
+        title: 'ERROR AL GUARDAR',
+        message: getErrorMessage(err, 'Error al guardar los cambios.')
+      })
     }
   }
 
-  const handleConfirmRenew = async () => {
+  const handleConfirmRenew = async (): Promise<void> => {
     if (!member) return
     try {
       const { data } = await apiClient.put(`/usuarios/${member.id}/membresia`, {})
       setMember((prev) => ({ ...prev!, ...data }))
       setShowRenewModal(false)
-    } catch (err) {
-      alert('Error al intentar renovar al socio.')
+    } catch {
+      setFeedbackModal({
+        title: 'ERROR AL RENOVAR',
+        message: 'Error al intentar renovar al socio.'
+      })
     }
   }
 
-  const handleConfirmDelete = async () => {
+  const handleConfirmDelete = async (): Promise<void> => {
     if (!member) return
     try {
       await apiClient.delete(`/usuarios/${member.id}`)
       setShowDeleteModal(false)
       navigate('/socios')
-    } catch (err) {
-      alert('Error al intentar desactivar el socio.')
+    } catch {
+      setFeedbackModal({
+        title: 'ERROR AL DESACTIVAR',
+        message: 'Error al intentar desactivar el socio.'
+      })
     }
   }
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>): void => {
     const { name, value } = e.target
     if (name === 'dni') setDniError('')
     setEditForm({ ...editForm, [name]: name === 'dni' ? value.toUpperCase() : value })
@@ -321,6 +345,19 @@ export const MemberProfile: React.FC = () => {
           </button>
           <button className={styles.modalDeleteBtn} onClick={handleConfirmDelete}>
             Sí, Desactivar
+          </button>
+        </div>
+      </Modal>
+
+      <Modal
+        isOpen={Boolean(feedbackModal)}
+        onClose={() => setFeedbackModal(null)}
+        title={feedbackModal?.title ?? 'AVISO'}
+      >
+        <p className={styles.modalText}>{feedbackModal?.message}</p>
+        <div className={styles.modalActions}>
+          <button className={styles.secondaryBtn} onClick={() => setFeedbackModal(null)}>
+            Entendido
           </button>
         </div>
       </Modal>
