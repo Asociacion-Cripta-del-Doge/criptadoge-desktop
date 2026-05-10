@@ -1,25 +1,27 @@
 import React, { useState, useEffect } from 'react'
 import styles from './EventMaker.module.scss'
 import { Modal } from '../Modal/Modal'
-import { useEventLabels } from '../../hooks/useEventLabels'
-import { EventFormData } from '../../data/events'
+import { EventFormData, EventLabel } from '../../data/events'
 
 interface EventMakerProps {
   isOpen: boolean
   onClose: () => void
   onSuccess: (eventData: EventFormData) => Promise<void> | void
   initialData?: Partial<EventFormData>
+  labels: EventLabel[]
+  isLoadingLabels: boolean
 }
 
 export const EventMaker: React.FC<EventMakerProps> = ({
   isOpen,
   onClose,
   onSuccess,
-  initialData
+  initialData,
+  labels,
+  isLoadingLabels
 }) => {
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [submitError, setSubmitError] = useState<string | null>(null)
-  const { labels, isLoadingLabels } = useEventLabels()
   const firstLabel = labels[0]?.name ?? ''
   const [formData, setFormData] = useState({
     title: '',

@@ -23,6 +23,11 @@ const EventProfile = lazy(() =>
 const EventCalendar = lazy(() =>
   import('./components/EventCalendar/EventCalendar').then((m) => ({ default: m.EventCalendar }))
 )
+const EventLabelManagement = lazy(() =>
+  import('./components/EventLabelManagement/EventLabelManagement').then((m) => ({
+    default: m.EventLabelManagement
+  }))
+)
 const ContactMessages = lazy(() =>
   import('./components/ContactMessages/ContactMessages').then((m) => ({
     default: m.ContactMessages
@@ -58,6 +63,7 @@ export const AppRoutes: React.FC = () => {
             <Route path="eventos" element={<EventList />} />
             <Route path="eventos/:id" element={<EventProfile />} />
             <Route path="calendario" element={<EventCalendar />} />
+            <Route path="etiquetas" element={<EventLabelManagement />} />
             <Route path="contacto" element={<ContactMessages />} />
             <Route path="mesas" element={<MesaManagement />} />
             <Route path="reservas" element={<ReservationManagement />} />

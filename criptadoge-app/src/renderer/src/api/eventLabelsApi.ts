@@ -27,6 +27,17 @@ export const createEventLabel = async (labelData: {
   return mapEventLabel(data)
 }
 
+export const updateEventLabel = async (
+  id: string,
+  labelData: {
+    name?: string
+    color?: string
+  }
+): Promise<EventLabel> => {
+  const { data } = await apiClient.patch(`/event-labels/${id}`, labelData)
+  return mapEventLabel(data)
+}
+
 export const deleteEventLabel = async (id: string): Promise<void> => {
   await apiClient.delete(`/event-labels/${id}`)
 }
