@@ -255,6 +255,7 @@ export const MesaManagement: React.FC = () => {
         isOpen={isModalOpen}
         onClose={closeModal}
         title={editingMesa ? 'EDITAR MESA' : 'NUEVA MESA'}
+        className={styles.managementModal}
       >
         <form className={styles.form} onSubmit={handleSubmit}>
           <div className={styles.row}>

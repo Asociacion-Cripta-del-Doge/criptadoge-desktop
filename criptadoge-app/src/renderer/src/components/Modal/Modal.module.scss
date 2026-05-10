@@ -3,25 +3,27 @@
 
 .modalOverlay {
   position: fixed;
-  top: 0;
-  left: 0;
-  width: 100vw;
-  height: 100vh;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  padding: 1.5rem;
   background-color: rgba(0, 0, 0, 0.75);
   backdrop-filter: blur(4px);
   display: flex;
   justify-content: center;
   align-items: center;
   z-index: 1000;
+  overflow: hidden;
 }
 
 .modalCard {
   @include m.card-base(2.5rem);
   border-top: 2px solid v.$color-accent;
-  width: 90%;
+  width: min(100%, 500px);
   max-width: 500px;
   max-height: 90vh;
-  overflow-y: auto;
+  min-width: 0;
+  overflow: auto;
   text-align: center;
   box-shadow: 0 10px 40px rgba(0, 0, 0, 0.6), 0 0 0 1px rgba(var(--color-primary-rgb), 0.1);
   animation: modalIn 0.2s ease-out forwards;
@@ -36,9 +38,12 @@
 }
 
 @media (max-width: 480px) {
+  .modalOverlay {
+    padding: 1rem;
+  }
+
   .modalCard {
     padding: 1.5rem;
-    width: 95%;
 
     h3 {
       font-size: 1.2rem;

@@ -68,6 +68,7 @@
 .filterGroup,
 .formGroup {
   @include m.form-group;
+  min-width: 0;
 }
 
 .searchInput,
@@ -76,6 +77,8 @@
 .formGroup select,
 .formGroup textarea {
   @include m.form-input;
+  width: 100%;
+  min-width: 0;
 }
 
 .formGroup textarea {
@@ -271,17 +274,24 @@
   font-style: italic;
 }
 
+.webTextModal {
+  width: min(100%, 720px);
+  max-width: 720px;
+}
+
 .form {
   display: flex;
   flex-direction: column;
   gap: 1.25rem;
   text-align: left;
+  min-width: 0;
 }
 
 .row {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(0, 0.45fr);
+  grid-template-columns: minmax(0, 1fr) minmax(160px, 0.45fr);
   gap: 1rem;
+  min-width: 0;
 }
 
 .modalActions {

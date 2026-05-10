@@ -410,7 +410,12 @@ export const ReservationManagement: React.FC = () => {
         </table>
       </div>
 
-      <Modal isOpen={isModalOpen} onClose={closeModal} title="NUEVA RESERVA">
+      <Modal
+        isOpen={isModalOpen}
+        onClose={closeModal}
+        title="NUEVA RESERVA"
+        className={styles.reservationModal}
+      >
         <form className={styles.form} onSubmit={handleSubmit}>
           <div className={styles.formGroup}>
             <label>Mesa</label>
@@ -429,7 +434,7 @@ export const ReservationManagement: React.FC = () => {
             </select>
           </div>
 
-          <div className={styles.row}>
+          <div className={styles.dateRow}>
             <div className={styles.formGroup}>
               <label>Inicio</label>
               <input
