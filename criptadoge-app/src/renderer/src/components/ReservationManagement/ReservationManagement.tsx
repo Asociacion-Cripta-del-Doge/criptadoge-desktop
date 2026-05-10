@@ -105,6 +105,7 @@ export const ReservationManagement: React.FC = () => {
   const [isChecking, setIsChecking] = useState(false)
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [cancellingId, setCancellingId] = useState<string | null>(null)
+  const [reservaToCancel, setReservaToCancel] = useState<ReservaMesa | null>(null)
 
   const fetchData = async (): Promise<void> => {
     try {
@@ -268,19 +269,29 @@ export const ReservationManagement: React.FC = () => {
     }
   }
 
-  const handleCancel = async (reserva: ReservaMesa): Promise<void> => {
-    const confirmed = window.confirm('Quieres cancelar esta reserva?')
-    if (!confirmed) return
+  const closeCancelModal = (): void => {
+    if (cancellingId) return
+    setReservaToCancel(null)
+  }
+
+  const openCancelModal = (reserva: ReservaMesa): void => {
+    setError(null)
+    setReservaToCancel(reserva)
+  }
+
+  const handleConfirmCancel = async (): Promise<void> => {
+    if (!reservaToCancel) return
 
     try {
-      setCancellingId(reserva.id)
+      setCancellingId(reservaToCancel.id)
       setError(null)
-      const cancelledReserva = await cancelReserva(reserva.id)
+      const cancelledReserva = await cancelReserva(reservaToCancel.id)
       setReservas((prev) =>
         sortReservas(
           prev.map((item) => (item.id === cancelledReserva.id ? cancelledReserva : item))
         )
       )
+      setReservaToCancel(null)
     } catch (err) {
       console.error('Error al cancelar reserva:', err)
       setError(getErrorMessage(err))
@@ -378,7 +389,7 @@ export const ReservationManagement: React.FC = () => {
                   <td data-label="Acciones">
                     <button
                       className={styles.dangerBtn}
-                      onClick={() => handleCancel(reserva)}
+                      onClick={() => openCancelModal(reserva)}
                       disabled={!canCancel(reserva) || cancellingId === reserva.id}
                     >
                       {cancellingId === reserva.id ? 'Cancelando...' : 'Cancelar'}
@@ -399,7 +410,12 @@ export const ReservationManagement: React.FC = () => {
         </table>
       </div>
 
-      <Modal isOpen={isModalOpen} onClose={closeModal} title="NUEVA RESERVA">
+      <Modal
+        isOpen={isModalOpen}
+        onClose={closeModal}
+        title="NUEVA RESERVA"
+        className={styles.reservationModal}
+      >
         <form className={styles.form} onSubmit={handleSubmit}>
           <div className={styles.formGroup}>
             <label>Mesa</label>
@@ -418,7 +434,7 @@ export const ReservationManagement: React.FC = () => {
             </select>
           </div>
 
-          <div className={styles.row}>
+          <div className={styles.dateRow}>
             <div className={styles.formGroup}>
               <label>Inicio</label>
               <input
@@ -486,6 +502,34 @@ export const ReservationManagement: React.FC = () => {
             </button>
           </div>
         </form>
+      </Modal>
+
+      <Modal isOpen={Boolean(reservaToCancel)} onClose={closeCancelModal} title="CANCELAR RESERVA">
+        <p className={styles.modalText}>
+          Quieres cancelar la reserva de{' '}
+          <strong>
+            {reservaToCancel?.mesa ? `Mesa ${reservaToCancel.mesa.orden}` : 'esta mesa'}
+          </strong>
+          ? Esta accion actualizara su estado y liberara los asientos.
+        </p>
+        <div className={styles.modalActions}>
+          <button
+            type="button"
+            className={styles.secondaryBtn}
+            onClick={closeCancelModal}
+            disabled={Boolean(cancellingId)}
+          >
+            Volver
+          </button>
+          <button
+            type="button"
+            className={styles.dangerBtn}
+            onClick={handleConfirmCancel}
+            disabled={Boolean(cancellingId)}
+          >
+            {cancellingId ? 'Cancelando...' : 'Si, cancelar'}
+          </button>
+        </div>
       </Modal>
     </div>
   )

@@ -28,7 +28,9 @@
   @include m.btn-primary;
   padding: 0.75rem 1.5rem;
   border-radius: 6px;
-  transition: opacity 0.2s, box-shadow 0.2s;
+  transition:
+    opacity 0.2s,
+    box-shadow 0.2s;
 
   &:hover {
     @include m.btn-primary-hover;
@@ -115,6 +117,15 @@
   color: v.$color-error;
   font-size: 0.8rem;
   margin-top: 0.3rem;
+}
+
+.errorBanner {
+  grid-column: 1 / -1;
+  padding: 0.85rem 1rem;
+  border: 1px solid rgba(var(--color-error-rgb), 0.4);
+  border-radius: 6px;
+  background-color: rgba(var(--color-error-rgb), 0.08);
+  color: v.$color-error;
 }
 
 .createForm {

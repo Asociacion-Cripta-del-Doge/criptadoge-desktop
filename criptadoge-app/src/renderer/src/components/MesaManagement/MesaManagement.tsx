@@ -44,6 +44,7 @@ export const MesaManagement: React.FC = () => {
   const [formData, setFormData] = useState<MesaFormData>(emptyForm)
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [deletingId, setDeletingId] = useState<string | null>(null)
+  const [mesaToDelete, setMesaToDelete] = useState<Mesa | null>(null)
 
   const fetchMesas = async (): Promise<void> => {
     try {
@@ -139,15 +140,25 @@ export const MesaManagement: React.FC = () => {
     }
   }
 
-  const handleDelete = async (mesa: Mesa): Promise<void> => {
-    const confirmed = window.confirm(`Quieres borrar la mesa ${mesa.orden}?`)
-    if (!confirmed) return
+  const closeDeleteModal = (): void => {
+    if (deletingId) return
+    setMesaToDelete(null)
+  }
+
+  const openDeleteModal = (mesa: Mesa): void => {
+    setError(null)
+    setMesaToDelete(mesa)
+  }
+
+  const handleConfirmDelete = async (): Promise<void> => {
+    if (!mesaToDelete) return
 
     try {
-      setDeletingId(mesa.id)
+      setDeletingId(mesaToDelete.id)
       setError(null)
-      await deleteMesa(mesa.id)
-      setMesas((prev) => prev.filter((item) => item.id !== mesa.id))
+      await deleteMesa(mesaToDelete.id)
+      setMesas((prev) => prev.filter((item) => item.id !== mesaToDelete.id))
+      setMesaToDelete(null)
     } catch (err) {
       console.error('Error al borrar mesa:', err)
       setError(getErrorMessage(err))
@@ -205,7 +216,9 @@ export const MesaManagement: React.FC = () => {
                   </td>
                   <td data-label="Asientos">{mesa.asientos}</td>
                   <td data-label="Tipo">
-                    <span className={`${styles.badge} ${mesa.esDePago ? styles.paid : styles.free}`}>
+                    <span
+                      className={`${styles.badge} ${mesa.esDePago ? styles.paid : styles.free}`}
+                    >
                       {mesa.esDePago ? 'De pago' : 'Gratuita'}
                     </span>
                   </td>
@@ -216,7 +229,7 @@ export const MesaManagement: React.FC = () => {
                       </button>
                       <button
                         className={styles.dangerBtn}
-                        onClick={() => handleDelete(mesa)}
+                        onClick={() => openDeleteModal(mesa)}
                         disabled={deletingId === mesa.id}
                       >
                         {deletingId === mesa.id ? 'Borrando...' : 'Borrar'}
@@ -242,6 +255,7 @@ export const MesaManagement: React.FC = () => {
         isOpen={isModalOpen}
         onClose={closeModal}
         title={editingMesa ? 'EDITAR MESA' : 'NUEVA MESA'}
+        className={styles.managementModal}
       >
         <form className={styles.form} onSubmit={handleSubmit}>
           <div className={styles.row}>
@@ -297,6 +311,31 @@ export const MesaManagement: React.FC = () => {
             </button>
           </div>
         </form>
+      </Modal>
+
+      <Modal isOpen={Boolean(mesaToDelete)} onClose={closeDeleteModal} title="BORRAR MESA">
+        <p className={styles.modalText}>
+          Quieres borrar la <strong>Mesa {mesaToDelete?.orden}</strong>? Esta accion no se puede
+          deshacer.
+        </p>
+        <div className={styles.modalActions}>
+          <button
+            type="button"
+            className={styles.secondaryBtn}
+            onClick={closeDeleteModal}
+            disabled={Boolean(deletingId)}
+          >
+            Volver
+          </button>
+          <button
+            type="button"
+            className={styles.dangerBtn}
+            onClick={handleConfirmDelete}
+            disabled={Boolean(deletingId)}
+          >
+            {deletingId ? 'Borrando...' : 'Si, borrar'}
+          </button>
+        </div>
       </Modal>
     </div>
   )

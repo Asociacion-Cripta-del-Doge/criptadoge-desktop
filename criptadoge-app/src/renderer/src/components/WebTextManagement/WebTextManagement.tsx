@@ -341,6 +341,7 @@ export const WebTextManagement: React.FC = () => {
         isOpen={isModalOpen}
         onClose={closeModal}
         title={editingText ? 'EDITAR TEXTO WEB' : 'NUEVO TEXTO WEB'}
+        className={styles.webTextModal}
       >
         <form className={styles.form} onSubmit={handleSubmit}>
           <div className={styles.row}>

@@ -16,6 +16,18 @@ interface User {
   expirationDate: string | null
 }
 
+const getErrorMessage = (error: unknown, fallback: string): string => {
+  if (typeof error === 'object' && error !== null && 'response' in error) {
+    const response = (error as { response?: { data?: { message?: string | string[] } } }).response
+    const message = response?.data?.message
+
+    if (Array.isArray(message)) return message.join(' ')
+    if (message) return message
+  }
+
+  return fallback
+}
+
 export const UsersList: React.FC = () => {
   const navigate = useNavigate()
   const [searchTerm, setSearchTerm] = useState('')
@@ -25,6 +37,7 @@ export const UsersList: React.FC = () => {
   const [error, setError] = useState<string | null>(null)
 
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false)
+  const [createError, setCreateError] = useState<string | null>(null)
   const [newUser, setNewUser] = useState({
     dni: '',
     name: '',
@@ -37,7 +50,7 @@ export const UsersList: React.FC = () => {
   const DNI_NIE_REGEX = /^(\d{8}[A-Za-z]|[XYZxyz]\d{7}[A-Za-z])$/
 
   useEffect(() => {
-    const fetchUsers = async () => {
+    const fetchUsers = async (): Promise<void> => {
       try {
         setIsLoading(true)
         const response = await apiClient.get('/usuarios')
@@ -63,8 +76,9 @@ export const UsersList: React.FC = () => {
     })
   }, [searchTerm, users])
 
-  const handleCreateSubmit = async (e: React.FormEvent) => {
+  const handleCreateSubmit = async (e: React.FormEvent): Promise<void> => {
     e.preventDefault()
+    setCreateError(null)
     if (newUser.dni.trim() !== '' && !DNI_NIE_REGEX.test(newUser.dni.trim())) {
       setDniError('Formato de DNI/NIE inválido')
       return
@@ -81,13 +95,13 @@ export const UsersList: React.FC = () => {
       setIsCreateModalOpen(false)
       setNewUser({ dni: '', name: '', email: '', password: '', role: 'MEMBER', status: 'Activo' })
       window.location.reload()
-    } catch (err: any) {
+    } catch (err) {
       console.error('Error al crear usuario:', err)
-      alert(err.response?.data?.message || 'Hubo un error al crear el socio. Revisa la consola.')
+      setCreateError(getErrorMessage(err, 'Hubo un error al crear el socio. Revisa la consola.'))
     }
   }
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>): void => {
     const { name, value } = e.target
     if (name === 'dni') setDniError('')
     setNewUser((prev) => ({ ...prev, [name]: name === 'dni' ? value.toUpperCase() : value }))
@@ -148,7 +162,7 @@ export const UsersList: React.FC = () => {
             ) : (
               <tr>
                 <td colSpan={6} className={styles.noResults}>
-                  No se han encontrado socios con "{searchTerm}"
+                  No se han encontrado socios con &quot;{searchTerm}&quot;
                 </td>
               </tr>
             )}
@@ -158,10 +172,15 @@ export const UsersList: React.FC = () => {
 
       <Modal
         isOpen={isCreateModalOpen}
-        onClose={() => setIsCreateModalOpen(false)}
+        onClose={() => {
+          setCreateError(null)
+          setIsCreateModalOpen(false)
+        }}
         title="ALTA DE NUEVO SOCIO"
       >
         <form onSubmit={handleCreateSubmit} className={styles.createForm}>
+          {createError ? <div className={styles.errorBanner}>{createError}</div> : null}
+
           <div className={styles.formGroup}>
             <label>Nombre Completo</label>
             <input

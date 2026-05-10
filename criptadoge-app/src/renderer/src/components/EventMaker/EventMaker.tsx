@@ -18,6 +18,7 @@ export const EventMaker: React.FC<EventMakerProps> = ({
   initialData
 }) => {
   const [isSubmitting, setIsSubmitting] = useState(false)
+  const [submitError, setSubmitError] = useState<string | null>(null)
   const { labels, isLoadingLabels } = useEventLabels()
   const firstLabel = labels[0]?.name ?? ''
   const [formData, setFormData] = useState({
@@ -51,6 +52,7 @@ export const EventMaker: React.FC<EventMakerProps> = ({
   const handleSubmit = async (e: React.FormEvent): Promise<void> => {
     e.preventDefault()
     setIsSubmitting(true)
+    setSubmitError(null)
 
     try {
       await onSuccess(formData)
@@ -64,7 +66,7 @@ export const EventMaker: React.FC<EventMakerProps> = ({
       onClose()
     } catch (error) {
       console.error('Error al crear/editar evento:', error)
-      alert('Hubo un error al guardar el evento en la base de datos.')
+      setSubmitError('Hubo un error al guardar el evento en la base de datos.')
     } finally {
       setIsSubmitting(false)
     }
@@ -77,8 +79,18 @@ export const EventMaker: React.FC<EventMakerProps> = ({
       : labels
 
   return (
-    <Modal isOpen={isOpen} onClose={() => !isSubmitting && onClose()} title={modalTitle}>
+    <Modal
+      isOpen={isOpen}
+      onClose={() => {
+        if (isSubmitting) return
+        setSubmitError(null)
+        onClose()
+      }}
+      title={modalTitle}
+    >
       <form className={styles.form} onSubmit={handleSubmit}>
+        {submitError ? <div className={styles.errorBanner}>{submitError}</div> : null}
+
         <div className={styles.formGroup}>
           <label>Título del Evento</label>
           <input
@@ -160,7 +172,10 @@ export const EventMaker: React.FC<EventMakerProps> = ({
           <button
             type="button"
             className={styles.secondaryBtn}
-            onClick={onClose}
+            onClick={() => {
+              setSubmitError(null)
+              onClose()
+            }}
             disabled={isSubmitting}
           >
             Cancelar

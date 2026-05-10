@@ -211,7 +211,41 @@ VITE_API_URL=http://<IP-del-servidor>:<puerto>
 
 ---
 
-## 5. Mensajes de contacto
+## 5. Componentes UI compartidos
+
+### Modal (`src/renderer/src/components/Modal`)
+
+`Modal.tsx` centraliza el overlay, el cierre al pulsar fuera y la tarjeta base de dialogo. El
+componente acepta `className` para que cada pantalla pueda ajustar el ancho del dialogo sin
+duplicar la estructura ni romper otros modales.
+
+El modal base:
+
+- centra la tarjeta con `position: fixed`, `inset: 0`, `display: flex` y padding de seguridad;
+- limita la altura con `max-height: 90vh` y permite scroll interno con `overflow: auto`;
+- usa `width: min(100%, 500px)` como tamano por defecto.
+
+Los formularios que necesitan mas espacio deben definir una clase de modulo SCSS y pasarla como
+`className`, por ejemplo:
+
+```tsx
+<Modal className={styles.reservationModal} ...>
+```
+
+Patrones actuales:
+
+- `MesaManagement`: `managementModal`, ancho maximo `500px`.
+- `ReservationManagement`: `reservationModal`, ancho maximo `600px`; los campos de fecha usan
+  grid responsive para evitar scroll horizontal con `datetime-local`.
+- `WebTextManagement`: `webTextModal`, ancho maximo `720px`; inputs, selects y textarea usan
+  `width: 100%` y `min-width: 0` para no forzar desbordes.
+
+Cuando se anadan nuevos modales con filas de formulario, mantener `min-width: 0` en contenedores
+grid/flex e inputs nativos para que el centrado visual no se rompa por anchos minimos del navegador.
+
+---
+
+## 6. Mensajes de contacto
 
 El formulario publico de contacto crea mensajes mediante `POST /contacto` en el backend NestJS,
 o `POST /api/contacto` cuando se accede a traves de Nginx. No requiere autenticacion y recibe:
@@ -240,7 +274,7 @@ Actualmente el flujo de contacto no envia emails; solo persiste el mensaje en Mo
 
 ---
 
-## 6. Reservas de mesas
+## 7. Reservas de mesas
 
 La vista de administracion `#/reservas` consume el modulo backend `/reservas` para listar todas
 las reservas, comprobar disponibilidad por mesa y franja horaria, crear reservas para el usuario
@@ -267,7 +301,7 @@ por lo que esta pestana queda restringida al rol `ADMIN` igual que el resto del 
 
 ---
 
-## 7. Textos configurables de la web
+## 8. Textos configurables de la web
 
 La vista de administracion `#/textos-web` permite gestionar desde la app los textos visibles que la
 web carga desde MongoDB. La pantalla consume `GET /web-texts/admin`, agrupa los registros por
