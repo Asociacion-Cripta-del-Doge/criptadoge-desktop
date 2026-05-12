@@ -1,6 +1,31 @@
 import React, { useEffect, useMemo, useState } from 'react'
 import styles from './ContactMessages.module.scss'
-import { ContactMessage, getContactMessages } from '../../api/contactMessagesApi'
+import {
+  ContactMessage,
+  ContactMessageStatus,
+  getContactMessages,
+  updateContactMessageStatus
+} from '../../api/contactMessagesApi'
+
+const CONTACT_STATUS_OPTIONS: Array<{ value: ContactMessageStatus; label: string }> = [
+  { value: 'pendiente', label: 'Pendiente' },
+  { value: 'en_proceso', label: 'En proceso' },
+  { value: 'respondido', label: 'Respondido' },
+  { value: 'resuelto', label: 'Resuelto' },
+  { value: 'archivado', label: 'Archivado' }
+]
+
+const getErrorMessage = (error: unknown): string => {
+  if (typeof error === 'object' && error !== null && 'response' in error) {
+    const response = (error as { response?: { data?: { message?: string | string[] } } }).response
+    const message = response?.data?.message
+
+    if (Array.isArray(message)) return message.join(' ')
+    if (message) return message
+  }
+
+  return 'No se pudo actualizar el estado del mensaje.'
+}
 
 const formatDate = (value: string): string => {
   if (!value) return 'Sin fecha'
@@ -21,15 +46,25 @@ const getStatusClass = (estado: string): string => {
   const normalized = estado.toLowerCase()
 
   if (normalized === 'pendiente') return styles.pending
+  if (normalized === 'en_proceso') return styles.inProgress
   if (normalized === 'resuelto' || normalized === 'respondido') return styles.resolved
+  if (normalized === 'archivado') return styles.archived
   return styles.neutral
+}
+
+const getEmptyMessage = (searchTerm: string, statusFilter: string): string => {
+  if (searchTerm) return `No se han encontrado mensajes con "${searchTerm}"`
+  if (statusFilter !== 'todos') return 'No hay mensajes con ese estado.'
+  return 'No hay mensajes de contacto registrados.'
 }
 
 export const ContactMessages: React.FC = () => {
   const [messages, setMessages] = useState<ContactMessage[]>([])
   const [searchTerm, setSearchTerm] = useState('')
+  const [statusFilter, setStatusFilter] = useState('todos')
   const [isLoading, setIsLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
+  const [updatingId, setUpdatingId] = useState<string | null>(null)
 
   useEffect(() => {
     const fetchMessages = async (): Promise<void> => {
@@ -51,14 +86,48 @@ export const ContactMessages: React.FC = () => {
 
   const filteredMessages = useMemo(() => {
     const term = searchTerm.trim().toLowerCase()
-    if (!term) return messages
 
-    return messages.filter((message) =>
-      [message.nombre, message.email, message.asunto, message.mensaje, message.estado].some(
-        (value) => value.toLowerCase().includes(term)
+    return messages.filter((message) => {
+      const matchesStatus = statusFilter === 'todos' || message.estado === statusFilter
+      const matchesSearch =
+        !term ||
+        [message.nombre, message.email, message.asunto, message.mensaje, message.estado].some(
+          (value) => value.toLowerCase().includes(term)
+        )
+
+      return matchesStatus && matchesSearch
+    })
+  }, [messages, searchTerm, statusFilter])
+
+  const handleStatusChange = async (
+    message: ContactMessage,
+    nextStatus: ContactMessageStatus
+  ): Promise<void> => {
+    if (!message.id || message.estado === nextStatus) return
+
+    const previousStatus = message.estado
+
+    try {
+      setUpdatingId(message.id)
+      setError(null)
+      setMessages((prev) =>
+        prev.map((item) => (item.id === message.id ? { ...item, estado: nextStatus } : item))
       )
-    )
-  }, [messages, searchTerm])
+
+      const updatedMessage = await updateContactMessageStatus(message.id, nextStatus)
+      setMessages((prev) =>
+        prev.map((item) => (item.id === updatedMessage.id ? updatedMessage : item))
+      )
+    } catch (err) {
+      console.error('Error al actualizar estado del mensaje:', err)
+      setMessages((prev) =>
+        prev.map((item) => (item.id === message.id ? { ...item, estado: previousStatus } : item))
+      )
+      setError(getErrorMessage(err))
+    } finally {
+      setUpdatingId(null)
+    }
+  }
 
   return (
     <div className={styles.container}>
@@ -78,7 +147,21 @@ export const ContactMessages: React.FC = () => {
             value={searchTerm}
             onChange={(event) => setSearchTerm(event.target.value)}
           />
+          <select
+            className={styles.filterSelect}
+            value={statusFilter}
+            onChange={(event) => setStatusFilter(event.target.value)}
+          >
+            <option value="todos">Todos los estados</option>
+            {CONTACT_STATUS_OPTIONS.map((option) => (
+              <option key={option.value} value={option.value}>
+                {option.label}
+              </option>
+            ))}
+          </select>
         </div>
+
+        {error && messages.length > 0 ? <div className={styles.errorBanner}>{error}</div> : null}
 
         <table className={styles.table}>
           <thead>
@@ -98,7 +181,7 @@ export const ContactMessages: React.FC = () => {
                   Cargando mensajes de contacto...
                 </td>
               </tr>
-            ) : error ? (
+            ) : error && messages.length === 0 ? (
               <tr>
                 <td colSpan={6} className={`${styles.statusMessage} ${styles.errorMessage}`}>
                   {error}
@@ -120,9 +203,23 @@ export const ContactMessages: React.FC = () => {
                     {message.mensaje}
                   </td>
                   <td data-label="Estado">
-                    <span className={`${styles.badge} ${getStatusClass(message.estado)}`}>
-                      {message.estado}
-                    </span>
+                    <div className={`${styles.statusControl} ${getStatusClass(message.estado)}`}>
+                      <select
+                        className={styles.statusSelect}
+                        value={message.estado}
+                        aria-label={`Cambiar estado de ${message.asunto}`}
+                        disabled={!message.id || updatingId === message.id}
+                        onChange={(event) =>
+                          handleStatusChange(message, event.target.value as ContactMessageStatus)
+                        }
+                      >
+                        {CONTACT_STATUS_OPTIONS.map((option) => (
+                          <option key={option.value} value={option.value}>
+                            {option.label}
+                          </option>
+                        ))}
+                      </select>
+                    </div>
                   </td>
                   <td data-label="Recibido">{formatDate(message.createdAt)}</td>
                 </tr>
@@ -130,9 +227,7 @@ export const ContactMessages: React.FC = () => {
             ) : (
               <tr>
                 <td colSpan={6} className={styles.statusMessage}>
-                  {searchTerm
-                    ? `No se han encontrado mensajes con "${searchTerm}"`
-                    : 'No hay mensajes de contacto registrados.'}
+                  {getEmptyMessage(searchTerm, statusFilter)}
                 </td>
               </tr>
             )}

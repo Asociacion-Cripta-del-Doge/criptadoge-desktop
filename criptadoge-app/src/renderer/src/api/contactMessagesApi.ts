@@ -11,6 +11,14 @@ export interface ContactMessage {
   updatedAt: string
 }
 
+export type ContactMessageStatus =
+  | 'pendiente'
+  | 'en_proceso'
+  | 'respondido'
+  | 'resuelto'
+  | 'archivado'
+  | string
+
 type RawContactMessage = Partial<ContactMessage> & {
   _id?: string
 }
@@ -40,4 +48,12 @@ export const getContactMessages = async (): Promise<ContactMessage[]> => {
   return messages
     .map(normalizeContactMessage)
     .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
+}
+
+export const updateContactMessageStatus = async (
+  id: string,
+  estado: ContactMessageStatus
+): Promise<ContactMessage> => {
+  const { data } = await apiClient.patch<RawContactMessage>(`/contacto/${id}`, { estado })
+  return normalizeContactMessage(data)
 }

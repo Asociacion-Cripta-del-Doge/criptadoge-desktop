@@ -267,6 +267,17 @@ La vista de administracion `#/contacto` usa el cliente Axios protegido para soli
 Este endpoint de lectura esta protegido para administradores con el patron `JwtAuthGuard`,
 `RolesGuard` y `@Roles('ADMIN')`, y devuelve los mensajes guardados en MongoDB.
 
+La misma vista permite actualizar el seguimiento del mensaje con `PATCH /contacto/:id`,
+enviando:
+
+```json
+{
+  "estado": "pendiente | en_proceso | respondido | resuelto | archivado"
+}
+```
+
+La respuesta debe devolver el mensaje actualizado con `_id`, `estado`, `createdAt` y `updatedAt`.
+
 El frontend muestra los mensajes ordenados de mas reciente a mas antiguo y normaliza tanto respuestas
 en array como respuestas paginadas con `items` o `data`.
 
