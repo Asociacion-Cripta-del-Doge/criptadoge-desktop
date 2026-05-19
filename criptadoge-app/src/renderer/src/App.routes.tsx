@@ -33,6 +33,11 @@ const ContactMessages = lazy(() =>
     default: m.ContactMessages
   }))
 )
+const MembershipRequests = lazy(() =>
+  import('./components/MembershipRequests/MembershipRequests').then((m) => ({
+    default: m.MembershipRequests
+  }))
+)
 const MesaManagement = lazy(() =>
   import('./components/MesaManagement/MesaManagement').then((m) => ({
     default: m.MesaManagement
@@ -65,6 +70,7 @@ export const AppRoutes: React.FC = () => {
             <Route path="calendario" element={<EventCalendar />} />
             <Route path="etiquetas" element={<EventLabelManagement />} />
             <Route path="contacto" element={<ContactMessages />} />
+            <Route path="membresias" element={<MembershipRequests />} />
             <Route path="mesas" element={<MesaManagement />} />
             <Route path="reservas" element={<ReservationManagement />} />
             <Route path="textos-web" element={<WebTextManagement />} />

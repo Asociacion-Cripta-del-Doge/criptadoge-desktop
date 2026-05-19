@@ -333,3 +333,15 @@ El formulario de creacion envia:
 La edicion usa `PATCH /web-texts/:id`. Las keys y el locale quedan bloqueados durante la edicion
 para evitar duplicados contra el indice unico `{ key, locale }`; si hace falta otro idioma, se crea
 un nuevo registro con la misma key y distinto `locale`.
+
+---
+
+## 9. Solicitudes de membresia
+
+La vista de administracion `#/membresias` muestra las solicitudes enviadas desde el formulario
+publico de membresia de la web. La pantalla consume `GET /membership/requests`, endpoint protegido
+para administracion, y normaliza respuestas en array directo o paginadas mediante `items`/`data`.
+
+Cada solicitud muestra nombre, email, telefono, fecha de nacimiento, origen opcional, estado y fecha
+de recepcion. La pantalla es de solo lectura: no modifica estados porque el endpoint de actualizacion
+no forma parte del contrato documentado de la API.
