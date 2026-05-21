@@ -159,7 +159,7 @@ if (typeof window.api !== 'undefined') {
 ### URL del backend (`axiosClient.ts`)
 
 ```typescript
-baseURL: import.meta.env.VITE_API_URL ?? 'http://localhost:3000'
+baseURL: import.meta.env.VITE_API_URL?.trim() || 'http://localhost:8080/api'
 ```
 
 Configurar en `.env.production` antes de compilar la APK:
@@ -176,7 +176,7 @@ VITE_API_URL=http://<IP-del-servidor>:<puerto>
 ```
 1. Configurar la URL del backend
    → Editar criptadoge-app/.env.production
-   → VITE_API_URL=http://<IP-servidor>:3000
+   → VITE_API_URL=http://<IP-servidor>:8080/api
 
 2. Compilar el frontend y sincronizar con Android
    cd criptadoge-app

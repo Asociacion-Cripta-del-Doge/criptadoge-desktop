@@ -29,7 +29,7 @@ npm install
 npm run dev       # Levanta Electron + renderer en modo desarrollo
 ```
 
-> La app se conecta por defecto a `http://localhost:3000`. Asegúrate de tener el backend corriendo.
+> La app se conecta por defecto a `http://localhost:8080/api`, usando el Nginx del stack Docker de la web. Si necesitas conectar directamente al backend, define `VITE_API_URL=http://localhost:3000`.
 
 ## Comandos disponibles
 
