@@ -12,6 +12,7 @@ interface User {
   email: string
   role: string
   status: string
+  coins?: number
   lastRenewal: string | null
   expirationDate: string | null
 }
@@ -37,10 +38,16 @@ export const MemberProfile: React.FC = () => {
   const [error, setError] = useState<string | null>(null)
 
   const [showRenewModal, setShowRenewModal] = useState(false)
+  const [showCoinsModal, setShowCoinsModal] = useState(false)
   const [showDeleteModal, setShowDeleteModal] = useState(false)
   const [feedbackModal, setFeedbackModal] = useState<{ title: string; message: string } | null>(
     null
   )
+  const [coinsForm, setCoinsForm] = useState({
+    amount: 100,
+    reason: ''
+  })
+  const [isGrantingCoins, setIsGrantingCoins] = useState(false)
 
   const [isEditing, setIsEditing] = useState(false)
   const [editForm, setEditForm] = useState({
@@ -114,6 +121,53 @@ export const MemberProfile: React.FC = () => {
         title: 'ERROR AL RENOVAR',
         message: 'Error al intentar renovar al socio.'
       })
+    }
+  }
+
+  const handleGrantCoins = async (event: React.FormEvent): Promise<void> => {
+    event.preventDefault()
+    if (!member) return
+
+    const amount = Math.trunc(Number(coinsForm.amount))
+    if (!Number.isFinite(amount) || amount <= 0) {
+      setFeedbackModal({
+        title: 'CANTIDAD INVALIDA',
+        message: 'Introduce una cantidad de monedas mayor que cero.'
+      })
+      return
+    }
+
+    try {
+      setIsGrantingCoins(true)
+      const { data } = await apiClient.post(`/usuarios/${member.id}/coins`, {
+        amount,
+        reason: coinsForm.reason.trim() || 'manual_grant'
+      })
+
+      setMember((prev) =>
+        prev
+          ? {
+              ...prev,
+              coins: typeof data?.coins === 'number' ? data.coins : (prev.coins ?? 0) + amount
+            }
+          : prev
+      )
+      setShowCoinsModal(false)
+      setCoinsForm({ amount: 100, reason: '' })
+      setFeedbackModal({
+        title: 'MONEDAS AÑADIDAS',
+        message: `Se han añadido ${amount} monedas a ${member.name}.`
+      })
+    } catch (err) {
+      setFeedbackModal({
+        title: 'ERROR AL DAR MONEDAS',
+        message: getErrorMessage(
+          err,
+          'No se pudieron añadir monedas. Comprueba que el backend expone POST /usuarios/:id/coins.'
+        )
+      })
+    } finally {
+      setIsGrantingCoins(false)
     }
   }
 
@@ -263,6 +317,12 @@ export const MemberProfile: React.FC = () => {
                   <strong>{member.expirationDate || '---'}</strong>
                 </p>
               </div>
+              <div className={styles.infoGroup}>
+                <label>Monedas</label>
+                <p>
+                  <strong>{typeof member.coins === 'number' ? member.coins : '---'}</strong>
+                </p>
+              </div>
             </>
           )}
         </div>
@@ -294,6 +354,10 @@ export const MemberProfile: React.FC = () => {
               </button>
               <button className={styles.secondaryBtn} onClick={() => setIsEditing(true)}>
                 Editar Datos
+              </button>
+              <button className={styles.coinsBtn} onClick={() => setShowCoinsModal(true)}>
+                Dar Monedas
+                <span className={styles.renewSubtext}>Recompensa manual</span>
               </button>
               {member.status === 'Desactivado' ? (
                 <br></br>
@@ -327,6 +391,61 @@ export const MemberProfile: React.FC = () => {
             Confirmar
           </button>
         </div>
+      </Modal>
+
+      <Modal
+        isOpen={showCoinsModal}
+        onClose={() => {
+          if (!isGrantingCoins) setShowCoinsModal(false)
+        }}
+        title="DAR MONEDAS"
+      >
+        <form className={styles.coinsForm} onSubmit={handleGrantCoins}>
+          <p className={styles.modalText}>
+            Añadir monedas a <strong className={styles.highlight}>{member.name}</strong>.
+          </p>
+
+          <div className={styles.formGroup}>
+            <label>Cantidad</label>
+            <input
+              type="number"
+              min={1}
+              step={1}
+              value={coinsForm.amount}
+              disabled={isGrantingCoins}
+              onChange={(event) =>
+                setCoinsForm((prev) => ({ ...prev, amount: Number(event.target.value) }))
+              }
+            />
+          </div>
+
+          <div className={styles.formGroup}>
+            <label>Motivo</label>
+            <input
+              type="text"
+              value={coinsForm.reason}
+              disabled={isGrantingCoins}
+              onChange={(event) =>
+                setCoinsForm((prev) => ({ ...prev, reason: event.target.value }))
+              }
+              placeholder="Ej: premio torneo"
+            />
+          </div>
+
+          <div className={styles.modalActions}>
+            <button
+              type="button"
+              className={styles.secondaryBtn}
+              onClick={() => setShowCoinsModal(false)}
+              disabled={isGrantingCoins}
+            >
+              Cancelar
+            </button>
+            <button type="submit" className={styles.coinsBtn} disabled={isGrantingCoins}>
+              {isGrantingCoins ? 'Añadiendo...' : 'Añadir monedas'}
+            </button>
+          </div>
+        </form>
       </Modal>
 
       <Modal
