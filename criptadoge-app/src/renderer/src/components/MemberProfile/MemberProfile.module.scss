@@ -106,6 +106,32 @@
   }
 }
 
+.coinsBtn {
+  background-color: rgba(var(--color-accent-rgb), 0.16);
+  border: 1px solid rgba(var(--color-accent-rgb), 0.45);
+  color: v.$color-accent;
+  padding: 1rem;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: bold;
+  font-family: v.$font-main;
+  text-transform: uppercase;
+  transition:
+    background-color 0.2s,
+    transform 0.2s;
+
+  &:hover:not(:disabled) {
+    background-color: rgba(var(--color-accent-rgb), 0.24);
+    transform: translateY(-2px);
+  }
+
+  &:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    transform: none;
+  }
+}
+
 .dangerBtn {
   @include m.btn-danger;
   padding: 1rem;
@@ -208,6 +234,28 @@
   }
 }
 
+.coinsForm {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+  text-align: left;
+}
+
+.formGroup {
+  @include m.form-group;
+
+  input {
+    @include m.form-input;
+    width: 100%;
+    box-sizing: border-box;
+
+    &:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+  }
+}
+
 .roleBadge {
   padding: 0.35rem 0.7rem;
   border-radius: 4px;
@@ -296,6 +344,7 @@
 
   .renewBtn,
   .secondaryBtn,
+  .coinsBtn,
   .dangerBtn {
     padding: 1rem;
     font-size: 1rem;

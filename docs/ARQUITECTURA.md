@@ -359,3 +359,7 @@ gestion de cartas con filtros por rareza y coleccion, estadisticas ordenables de
 `GET /admin/cards/stats` y formulario de configuracion de sobres contra `GET/PATCH /admin/pack-config`.
 Las imagenes se leen en el renderer mediante `FileReader` como Data URL antes de enviarse a los
 endpoints `/cards/:id/image` y `/collections/:id/image`.
+
+La ficha de socio permite iniciar una concesion manual de monedas contra `POST /usuarios/:id/coins`
+con `{ amount, reason }`. El backend debe aplicar la suma al usuario indicado y devolver, idealmente,
+el saldo actualizado `{ coins }` para refrescar la ficha sin recargar.
