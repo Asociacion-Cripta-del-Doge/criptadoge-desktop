@@ -11,6 +11,7 @@ import {
   CollectibleCard,
   CollectionFormData,
   PackConfig,
+  cardRarityDropWeights,
   cardRarities,
   createCard,
   createCollection,
@@ -40,7 +41,7 @@ const emptyCollectionForm: CollectionFormData = {
 const emptyCardForm: CardFormData = {
   name: '',
   rarity: 'COMUN',
-  dropWeight: 60,
+  dropWeight: cardRarityDropWeights.COMUN,
   collectionId: null
 }
 
@@ -223,7 +224,7 @@ export const CardManagement: React.FC = () => {
 
   const openCreateCard = (): void => {
     setEditingCard(null)
-    setCardForm(emptyCardForm)
+    setCardForm({ ...emptyCardForm })
     setIsCardModalOpen(true)
   }
 
@@ -232,7 +233,7 @@ export const CardManagement: React.FC = () => {
     setCardForm({
       name: card.name,
       rarity: card.rarity,
-      dropWeight: card.dropWeight,
+      dropWeight: cardRarityDropWeights[card.rarity],
       collectionId: card.collectionId
     })
     setIsCardModalOpen(true)
@@ -246,7 +247,7 @@ export const CardManagement: React.FC = () => {
       const payload = {
         ...cardForm,
         name: cardForm.name.trim(),
-        dropWeight: Math.max(1, Number(cardForm.dropWeight)),
+        dropWeight: cardRarityDropWeights[cardForm.rarity],
         collectionId: cardForm.collectionId ?? null
       }
       const saved = editingCard
@@ -400,11 +401,11 @@ export const CardManagement: React.FC = () => {
             <section className={styles.statsGrid}>
               <StatCard title="Usuarios" value={dashboard?.totalUsers ?? 0} subtitle="Registrados" />
               <StatCard title="Cartas" value={dashboard?.totalCards ?? 0} subtitle="Disponibles" />
-              <StatCard title="Sobres" value={dashboard?.totalPacks ?? 0} subtitle="Abiertos" />
+              <StatCard title="Colecciones" value={dashboard?.totalCollections ?? 0} subtitle="Creadas" />
               <StatCard
-                title="Monedas"
-                value={dashboard?.totalCoinsInCirculation ?? 0}
-                subtitle="En circulacion"
+                title="Sobres"
+                value={dashboard?.totalPacks ?? 0}
+                subtitle={`${dashboard?.packsOpened ?? 0} abiertos`}
               />
             </section>
           ) : null}
@@ -515,7 +516,7 @@ export const CardManagement: React.FC = () => {
                     <th>Imagen</th>
                     <th>Nombre</th>
                     <th>Rareza</th>
-                    <th>Peso</th>
+                    <th>Peso por rareza</th>
                     <th>Coleccion</th>
                     <th>Acciones</th>
                   </tr>
@@ -539,7 +540,7 @@ export const CardManagement: React.FC = () => {
                           {rarityLabels[card.rarity]}
                         </span>
                       </td>
-                      <td data-label="Peso">{card.dropWeight}</td>
+                      <td data-label="Peso por rareza">{card.dropWeight}</td>
                       <td data-label="Coleccion">{card.collectionName}</td>
                       <td data-label="Acciones">
                         <div className={styles.actions}>
@@ -579,7 +580,7 @@ export const CardManagement: React.FC = () => {
                       <button onClick={() => toggleSort('rarity')}>Rareza</button>
                     </th>
                     <th>
-                      <button onClick={() => toggleSort('ownedByUsers')}>Usuarios</button>
+                      <button onClick={() => toggleSort('ownedByUsers')}>Usuarios con carta</button>
                     </th>
                     <th>
                       <button onClick={() => toggleSort('totalCopies')}>Copias</button>
@@ -591,7 +592,7 @@ export const CardManagement: React.FC = () => {
                     <tr key={row.cardId}>
                       <td data-label="Carta">{row.name}</td>
                       <td data-label="Rareza">{rarityLabels[row.rarity]}</td>
-                      <td data-label="Usuarios">{row.ownedByUsers}</td>
+                      <td data-label="Usuarios con carta">{row.ownedByUsers}</td>
                       <td data-label="Copias">{row.totalCopies}</td>
                     </tr>
                   ))}
@@ -724,9 +725,14 @@ export const CardManagement: React.FC = () => {
               <label>Rareza</label>
               <select
                 value={cardForm.rarity}
-                onChange={(event) =>
-                  setCardForm((prev) => ({ ...prev, rarity: event.target.value as CardRarity }))
-                }
+                onChange={(event) => {
+                  const rarity = event.target.value as CardRarity
+                  setCardForm((prev) => ({
+                    ...prev,
+                    rarity,
+                    dropWeight: cardRarityDropWeights[rarity]
+                  }))
+                }}
               >
                 {cardRarities.map((rarity) => (
                   <option key={rarity} value={rarity}>
@@ -736,17 +742,8 @@ export const CardManagement: React.FC = () => {
               </select>
             </div>
             <div className={styles.formGroup}>
-              <label>Peso</label>
-              <input
-                required
-                type="number"
-                min={1}
-                step={1}
-                value={cardForm.dropWeight}
-                onChange={(event) =>
-                  setCardForm((prev) => ({ ...prev, dropWeight: Number(event.target.value) }))
-                }
-              />
+              <label>Peso por rareza</label>
+              <div className={styles.readOnlyValue}>{cardRarityDropWeights[cardForm.rarity]}</div>
             </div>
           </div>
           <div className={styles.formGroup}>

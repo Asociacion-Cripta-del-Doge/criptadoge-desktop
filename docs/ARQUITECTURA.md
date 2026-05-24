@@ -357,8 +357,12 @@ endpoints protegidos para administracion y reutiliza el `apiClient`, por lo que 
 La pantalla incluye resumen de `GET /admin/dashboard`, gestion de colecciones con subida de imagen,
 gestion de cartas con filtros por rareza y coleccion, estadisticas ordenables desde
 `GET /admin/cards/stats` y formulario de configuracion de sobres contra `GET/PATCH /admin/pack-config`.
-Las imagenes se leen en el renderer mediante `FileReader` como Data URL antes de enviarse a los
-endpoints `/cards/:id/image` y `/collections/:id/image`.
+En estadisticas, la columna "Usuarios con carta" usa `ownersCount` del backend, es decir, cuantos
+usuarios distintos tienen al menos una copia de esa carta; "Copias" usa `totalCopies`.
+El peso de sorteo de cada carta se deriva automaticamente de su rareza en la app antes de enviar
+`dropWeight` al backend: COMUN 60, RARA 25, EPICA 12 y LEGENDARIA 3. Las imagenes se leen en el
+renderer mediante `FileReader` como Data URL antes de enviarse a los endpoints `/cards/:id/image`
+y `/collections/:id/image`.
 
 La ficha de socio permite iniciar una concesion manual de monedas contra `POST /usuarios/:id/coins`
 con `{ amount, reason }`. El backend debe aplicar la suma al usuario indicado y devolver, idealmente,

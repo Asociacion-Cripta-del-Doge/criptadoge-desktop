@@ -286,6 +286,18 @@
   }
 }
 
+.readOnlyValue {
+  min-height: 46px;
+  display: flex;
+  align-items: center;
+  padding: 0.85rem 1rem;
+  border-radius: 6px;
+  border: 1px solid v.$color-border;
+  background-color: rgba(var(--bg-main-rgb), 0.65);
+  color: v.$text-main;
+  font-weight: bold;
+}
+
 .checkboxRow {
   display: flex;
   align-items: center;

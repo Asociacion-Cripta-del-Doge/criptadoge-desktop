@@ -43,13 +43,18 @@ export interface CardsDashboard {
   totalUsers: number
   totalCards: number
   totalPacks: number
-  totalCoinsInCirculation: number
+  totalCollections: number
+  packsOpened: number
+  packsUnopened: number
 }
 
 export interface CardStats {
   cardId: number
   name: string
   rarity: CardRarity
+  dropWeight: number
+  imageUrl?: string
+  collectionName: string
   ownedByUsers: number
   totalCopies: number
 }
@@ -64,6 +69,13 @@ type ListResponse<T> =
     }
 
 const rarities: CardRarity[] = ['COMUN', 'RARA', 'EPICA', 'LEGENDARIA']
+
+const rarityDropWeights: Record<CardRarity, number> = {
+  COMUN: 60,
+  RARA: 25,
+  EPICA: 12,
+  LEGENDARIA: 3
+}
 
 const getList = <T>(response: ListResponse<T>): T[] => {
   if (Array.isArray(response)) return response
@@ -118,16 +130,25 @@ const normalizeDashboard = (dashboard: RawEntity): CardsDashboard => ({
   totalUsers: toNumber(dashboard.totalUsers),
   totalCards: toNumber(dashboard.totalCards),
   totalPacks: toNumber(dashboard.totalPacks),
-  totalCoinsInCirculation: toNumber(dashboard.totalCoinsInCirculation)
+  totalCollections: toNumber(dashboard.totalCollections),
+  packsOpened: toNumber(dashboard.packsOpened),
+  packsUnopened: toNumber(dashboard.packsUnopened)
 })
 
-const normalizeStats = (stats: RawEntity): CardStats => ({
-  cardId: toNumber(stats.cardId),
-  name: toString(stats.name),
-  rarity: toRarity(stats.rarity),
-  ownedByUsers: toNumber(stats.ownedByUsers),
-  totalCopies: toNumber(stats.totalCopies)
-})
+const normalizeStats = (stats: RawEntity): CardStats => {
+  const collection = stats.collection as RawEntity | undefined
+
+  return {
+    cardId: toNumber(stats.cardId ?? stats.id),
+    name: toString(stats.name),
+    rarity: toRarity(stats.rarity),
+    dropWeight: toNumber(stats.dropWeight),
+    imageUrl: toString(stats.imageUrl ?? stats.image, undefined),
+    collectionName: toString(collection?.name, 'Sin coleccion'),
+    ownedByUsers: toNumber(stats.ownedByUsers ?? stats.ownersCount),
+    totalCopies: toNumber(stats.totalCopies)
+  }
+}
 
 export const getCardsDashboard = async (): Promise<CardsDashboard> => {
   const { data } = await apiClient.get<RawEntity>('/admin/dashboard')
@@ -208,3 +229,4 @@ export const getCardStats = async (): Promise<CardStats[]> => {
 }
 
 export const cardRarities = rarities
+export const cardRarityDropWeights = rarityDropWeights
