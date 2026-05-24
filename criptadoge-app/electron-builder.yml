@@ -13,7 +13,9 @@ asarUnpack:
   - resources/**
 win:
   executableName: la-cripta-del-doge
+  icon: build/icon.ico
 nsis:
+  installerIcon: build/icon.ico
   artifactName: la-cripta-del-doge-${version}-setup.${ext}
   shortcutName: ${productName}
   uninstallDisplayName: ${productName}
