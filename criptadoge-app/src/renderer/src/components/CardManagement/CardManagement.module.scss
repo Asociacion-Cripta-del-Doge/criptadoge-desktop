@@ -1,0 +1,372 @@
+@use '../../styles/variables' as v;
+@use '../../styles/mixins' as m;
+
+.container {
+  background-color: v.$bg-main;
+  color: v.$text-main;
+  font-family: v.$font-main;
+  height: 100%;
+  padding: 2rem;
+  overflow: auto;
+  min-width: 0;
+}
+
+.header {
+  margin-bottom: 1.5rem;
+  padding-bottom: 1.5rem;
+  border-bottom: 1px solid v.$color-border;
+  position: relative;
+
+  &::after {
+    content: '';
+    position: absolute;
+    bottom: -1px;
+    left: 0;
+    width: 60px;
+    height: 2px;
+    background: v.$color-accent;
+  }
+
+  h1 {
+    font-family: v.$font-title;
+    color: v.$text-main;
+    font-size: 2rem;
+    margin: 0 0 0.5rem 0;
+  }
+
+  p {
+    color: v.$text-muted;
+    font-size: 0.9rem;
+    margin: 0;
+  }
+}
+
+.tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  margin-bottom: 1.5rem;
+}
+
+.tab,
+.activeTab {
+  padding: 0.75rem 1rem;
+  border: 1px solid v.$color-border;
+  border-radius: 6px;
+  background-color: transparent;
+  color: v.$text-muted;
+  cursor: pointer;
+  font-family: v.$font-main;
+  font-weight: bold;
+  text-transform: uppercase;
+}
+
+.activeTab {
+  color: v.$text-main;
+  background-color: v.$color-primary;
+  border-color: v.$color-primary;
+}
+
+.statsGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 1.5rem;
+}
+
+.card {
+  @include m.card-base;
+  overflow: auto;
+}
+
+.sectionHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+
+  h2 {
+    margin: 0;
+    color: v.$text-main;
+    font-size: 1.15rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+  }
+}
+
+.primaryBtn {
+  @include m.btn-primary;
+  padding: 0.85rem 1.2rem;
+  white-space: nowrap;
+
+  &:hover {
+    @include m.btn-primary-hover;
+  }
+}
+
+.filters {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+  margin-bottom: 1.25rem;
+
+  select {
+    @include m.form-input;
+    min-width: 220px;
+  }
+}
+
+.table {
+  @include m.table-base;
+  min-width: 760px;
+
+  th,
+  td {
+    padding-right: 1rem;
+    vertical-align: middle;
+  }
+
+  th button {
+    padding: 0;
+    border: 0;
+    background: transparent;
+    color: inherit;
+    cursor: pointer;
+    font: inherit;
+    text-transform: inherit;
+  }
+}
+
+.actions {
+  display: flex;
+  gap: 0.6rem;
+  flex-wrap: wrap;
+}
+
+.actionBtn {
+  @include m.action-btn;
+  padding: 0.55rem 0.8rem;
+}
+
+.dangerBtn {
+  @include m.btn-danger;
+  padding: 0.55rem 0.8rem;
+
+  &:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+  }
+}
+
+.badge {
+  @include m.badge-base;
+  display: inline-flex;
+  white-space: nowrap;
+}
+
+.active,
+.comun {
+  background-color: rgba(var(--color-success-rgb), 0.16);
+  color: v.$color-success;
+}
+
+.inactive {
+  background-color: rgba(var(--color-border-rgb), 0.25);
+  color: v.$text-muted;
+}
+
+.rara {
+  background-color: rgba(var(--color-primary-rgb), 0.18);
+  color: v.$text-main;
+}
+
+.epica {
+  background-color: rgba(var(--color-secondary-rgb), 0.2);
+  color: v.$text-main;
+}
+
+.legendaria {
+  background-color: rgba(var(--color-accent-rgb), 0.2);
+  color: v.$color-accent;
+}
+
+.collectionThumb,
+.cardThumb {
+  display: block;
+  object-fit: cover;
+  border: 1px solid v.$color-border;
+  background-color: v.$bg-main;
+}
+
+.collectionThumb {
+  width: 56px;
+  height: 56px;
+  border-radius: 6px;
+}
+
+.cardThumb {
+  width: 50px;
+  aspect-ratio: 5 / 7;
+  border-radius: 4px;
+}
+
+.emptyThumb {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 72px;
+  min-height: 38px;
+  padding: 0.4rem;
+  border: 1px dashed v.$color-border;
+  border-radius: 6px;
+  color: v.$text-muted;
+  font-size: 0.75rem;
+  text-align: center;
+}
+
+.errorBanner,
+.noticeBanner {
+  margin-bottom: 1rem;
+  padding: 0.85rem 1rem;
+  border-radius: 6px;
+}
+
+.errorBanner {
+  border: 1px solid rgba(var(--color-error-rgb), 0.4);
+  background-color: rgba(var(--color-error-rgb), 0.08);
+  color: v.$color-error;
+}
+
+.noticeBanner {
+  border: 1px solid rgba(var(--color-success-rgb), 0.35);
+  background-color: rgba(var(--color-success-rgb), 0.1);
+  color: v.$color-success;
+}
+
+.statusMessage {
+  @include m.card-base;
+  text-align: center;
+  color: v.$text-muted;
+  font-style: italic;
+}
+
+.managementModal {
+  width: min(100%, 620px);
+  max-width: 620px;
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+  text-align: left;
+}
+
+.row {
+  display: flex;
+  gap: 1rem;
+  min-width: 0;
+}
+
+.formGroup {
+  @include m.form-group;
+  flex: 1;
+  min-width: 0;
+
+  input,
+  textarea,
+  select {
+    @include m.form-input;
+    width: 100%;
+    min-width: 0;
+  }
+
+  textarea {
+    resize: vertical;
+  }
+}
+
+.checkboxRow {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  color: v.$text-main;
+  font-weight: bold;
+  cursor: pointer;
+
+  input {
+    width: 18px;
+    height: 18px;
+    accent-color: v.$color-primary;
+  }
+}
+
+.modalText {
+  color: v.$text-muted;
+  line-height: 1.6;
+  margin: 0 0 2rem;
+  text-align: center;
+  font-size: 1rem;
+
+  strong {
+    color: v.$text-main;
+  }
+}
+
+.modalActions {
+  @include m.modal-actions-row;
+  margin-top: 0.5rem;
+}
+
+.secondaryBtn {
+  background-color: transparent;
+  border: 1px solid v.$color-border;
+  color: v.$text-main;
+
+  &:hover:not(:disabled) {
+    background-color: rgba(255, 255, 255, 0.05);
+  }
+}
+
+.submitBtn {
+  @include m.btn-primary;
+
+  &:hover:not(:disabled) {
+    background-color: rgba(var(--color-primary-rgb), 0.8);
+  }
+}
+
+.fileInput {
+  @include m.form-input;
+}
+
+.imagePreview {
+  width: min(100%, 260px);
+  aspect-ratio: 5 / 7;
+  object-fit: cover;
+  align-self: center;
+  border: 1px solid v.$color-border;
+  border-radius: 8px;
+  background-color: v.$bg-main;
+}
+
+@media (max-width: 768px) {
+  .container {
+    padding: 1rem;
+  }
+
+  .header h1 {
+    font-size: 1.45rem;
+  }
+
+  .sectionHeader,
+  .row {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .primaryBtn,
+  .filters select {
+    width: 100%;
+  }
+}
