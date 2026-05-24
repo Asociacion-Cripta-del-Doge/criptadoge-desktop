@@ -567,7 +567,6 @@ export const CardManagement: React.FC = () => {
                 <thead>
                   <tr>
                     <th>ID</th>
-                    <th>Imagen</th>
                     <th>Nombre</th>
                     <th>Rareza</th>
                     <th>Peso por rareza</th>
@@ -579,13 +578,6 @@ export const CardManagement: React.FC = () => {
                   {filteredCards.map((card) => (
                     <tr key={card.id}>
                       <td data-label="ID">#{card.id}</td>
-                      <td data-label="Imagen">
-                        {card.imageUrl ? (
-                          <img className={styles.cardThumb} src={card.imageUrl} alt="" />
-                        ) : (
-                          <span className={styles.emptyThumb}>Sin imagen</span>
-                        )}
-                      </td>
                       <td data-label="Nombre">
                         <strong>{card.name}</strong>
                       </td>
