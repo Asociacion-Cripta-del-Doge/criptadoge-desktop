@@ -1,5 +1,5 @@
-appId: com.electron.app
-productName: criptadoge-app
+appId: com.lacriptadeldoge.app
+productName: La Cripta del Doge
 directories:
   buildResources: build
 files:
@@ -12,9 +12,9 @@ files:
 asarUnpack:
   - resources/**
 win:
-  executableName: criptadoge-app
+  executableName: la-cripta-del-doge
 nsis:
-  artifactName: ${name}-${version}-setup.${ext}
+  artifactName: la-cripta-del-doge-${version}-setup.${ext}
   shortcutName: ${productName}
   uninstallDisplayName: ${productName}
   createDesktopShortcut: always
@@ -33,11 +33,8 @@ linux:
     - AppImage
     - snap
     - deb
-  maintainer: electronjs.org
+  maintainer: La Cripta del Doge
   category: Utility
 appImage:
-  artifactName: ${name}-${version}.${ext}
+  artifactName: la-cripta-del-doge-${version}.${ext}
 npmRebuild: false
-publish:
-  provider: generic
-  url: https://example.com/auto-updates

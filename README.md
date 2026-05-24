@@ -31,6 +31,46 @@ npm run dev       # Levanta Electron + renderer en modo desarrollo
 
 > La app se conecta por defecto a `http://localhost:8080/api`, usando el Nginx del stack Docker de la web. Si necesitas conectar directamente al backend, define `VITE_API_URL=http://localhost:3000`.
 
+## Generar instalador Windows
+
+Cada vez que se quiera crear un instalador `.exe` actualizado:
+
+1. Entra en la app Electron:
+
+```bash
+cd criptadoge-app
+```
+
+2. Revisa la URL del backend en `.env.production`:
+
+```env
+VITE_API_URL=http://localhost:8080/api
+```
+
+Para distribuir la app fuera del entorno local, cambia esa URL por la URL pública del servidor antes de compilar. Si usas un dominio nuevo, añádelo también al `connect-src` de `src/renderer/index.html`.
+
+3. Instala dependencias si es una máquina nueva o ha cambiado `package-lock.json`:
+
+```bash
+npm install
+```
+
+4. Genera el instalador:
+
+```bash
+npm run build:win
+```
+
+Este comando ejecuta primero `npm run typecheck`, compila la app con `electron-vite` y después empaqueta con `electron-builder`.
+
+5. Recoge el instalador en:
+
+```text
+criptadoge-app/dist/la-cripta-del-doge-1.0.0-setup.exe
+```
+
+Si se sube la versión en `package.json`, el nombre del archivo cambiará para reflejar esa versión.
+
 ## Comandos disponibles
 
 | Comando | Descripción |
