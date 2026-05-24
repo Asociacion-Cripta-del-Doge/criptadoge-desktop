@@ -345,3 +345,17 @@ para administracion, y normaliza respuestas en array directo o paginadas mediant
 Cada solicitud muestra nombre, email, telefono, fecha de nacimiento, origen opcional, estado y fecha
 de recepcion. La pantalla es de solo lectura: no modifica estados porque el endpoint de actualizacion
 no forma parte del contrato documentado de la API.
+
+---
+
+## 10. Cartas coleccionables
+
+La vista de administracion `#/cartas` agrupa el sistema de cartas coleccionables de la web. Consume
+endpoints protegidos para administracion y reutiliza el `apiClient`, por lo que el token
+`cripta_token` se envia como `Authorization: Bearer <token>` y los 401 fuerzan salida al login.
+
+La pantalla incluye resumen de `GET /admin/dashboard`, gestion de colecciones con subida de imagen,
+gestion de cartas con filtros por rareza y coleccion, estadisticas ordenables desde
+`GET /admin/cards/stats` y formulario de configuracion de sobres contra `GET/PATCH /admin/pack-config`.
+Las imagenes se leen en el renderer mediante `FileReader` como Data URL antes de enviarse a los
+endpoints `/cards/:id/image` y `/collections/:id/image`.

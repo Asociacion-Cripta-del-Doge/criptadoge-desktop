@@ -53,6 +53,11 @@ const WebTextManagement = lazy(() =>
     default: m.WebTextManagement
   }))
 )
+const CardManagement = lazy(() =>
+  import('./components/CardManagement/CardManagement').then((m) => ({
+    default: m.CardManagement
+  }))
+)
 
 export const AppRoutes: React.FC = () => {
   return (
@@ -74,6 +79,7 @@ export const AppRoutes: React.FC = () => {
             <Route path="mesas" element={<MesaManagement />} />
             <Route path="reservas" element={<ReservationManagement />} />
             <Route path="textos-web" element={<WebTextManagement />} />
+            <Route path="cartas" element={<CardManagement />} />
           </Route>
         </Route>
 
