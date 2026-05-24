@@ -91,6 +91,38 @@ const toString = (value: unknown, fallback = ''): string => {
   return typeof value === 'string' ? value : fallback
 }
 
+const normalizeImageUrl = (value: unknown): string | undefined => {
+  const imageUrl = toString(value, '').trim()
+  if (!imageUrl) return undefined
+
+  if (
+    imageUrl.startsWith('http://') ||
+    imageUrl.startsWith('https://') ||
+    imageUrl.startsWith('data:') ||
+    imageUrl.startsWith('blob:') ||
+    imageUrl.startsWith('file:')
+  ) {
+    return imageUrl
+  }
+
+  const baseUrl = apiClient.defaults.baseURL
+  if (!baseUrl) return imageUrl
+
+  try {
+    const normalizedBase = new URL(baseUrl.endsWith('/') ? baseUrl : `${baseUrl}/`)
+    const basePath = normalizedBase.pathname.replace(/\/$/, '')
+    const normalizedPath = imageUrl.startsWith('/') ? imageUrl : `/${imageUrl}`
+
+    if (basePath && normalizedPath.startsWith(`${basePath}/`)) {
+      return `${normalizedBase.origin}${normalizedPath}`
+    }
+
+    return `${normalizedBase.origin}${basePath}${normalizedPath}`
+  } catch {
+    return imageUrl
+  }
+}
+
 const toRarity = (value: unknown): CardRarity => {
   return rarities.includes(value as CardRarity) ? (value as CardRarity) : 'COMUN'
 }
@@ -102,7 +134,7 @@ const normalizeCollection = (collection: RawEntity): CardCollection => ({
   name: toString(collection.name),
   description: toString(collection.description),
   isActive: Boolean(collection.isActive),
-  imageUrl: toString(collection.imageUrl ?? collection.image, undefined)
+  imageUrl: normalizeImageUrl(collection.imageUrl ?? collection.image)
 })
 
 const normalizeCard = (card: RawEntity): CollectibleCard => {
@@ -116,7 +148,7 @@ const normalizeCard = (card: RawEntity): CollectibleCard => {
     dropWeight: toNumber(card.dropWeight),
     collectionId: collectionId === null || collectionId === undefined ? null : toNumber(collectionId),
     collectionName: toString(collection?.name, 'Sin coleccion'),
-    imageUrl: toString(card.imageUrl ?? card.image, undefined)
+    imageUrl: normalizeImageUrl(card.imageUrl ?? card.image)
   }
 }
 
@@ -143,7 +175,7 @@ const normalizeStats = (stats: RawEntity): CardStats => {
     name: toString(stats.name),
     rarity: toRarity(stats.rarity),
     dropWeight: toNumber(stats.dropWeight),
-    imageUrl: toString(stats.imageUrl ?? stats.image, undefined),
+    imageUrl: normalizeImageUrl(stats.imageUrl ?? stats.image),
     collectionName: toString(collection?.name, 'Sin coleccion'),
     ownedByUsers: toNumber(stats.ownedByUsers ?? stats.ownersCount),
     totalCopies: toNumber(stats.totalCopies)
