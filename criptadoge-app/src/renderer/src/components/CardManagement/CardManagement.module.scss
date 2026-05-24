@@ -325,6 +325,86 @@
   }
 }
 
+.cardPicker {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  max-height: 360px;
+  overflow: auto;
+  padding-right: 0.25rem;
+}
+
+.cardPickerItem {
+  display: grid;
+  grid-template-columns: auto 48px minmax(0, 1fr);
+  align-items: center;
+  gap: 0.85rem;
+  padding: 0.75rem;
+  border: 1px solid v.$color-border;
+  border-radius: 6px;
+  background-color: rgba(var(--bg-main-rgb), 0.55);
+  color: v.$text-main;
+  cursor: pointer;
+
+  input {
+    width: 18px;
+    height: 18px;
+    accent-color: v.$color-primary;
+  }
+
+  span {
+    display: flex;
+    min-width: 0;
+    flex-direction: column;
+    gap: 0.2rem;
+  }
+
+  strong {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  small {
+    color: v.$text-muted;
+    font-weight: bold;
+    text-transform: uppercase;
+    font-size: 0.72rem;
+  }
+}
+
+.cardPickerThumb,
+.cardPickerEmptyThumb {
+  width: 48px;
+  aspect-ratio: 5 / 7;
+  border: 1px solid v.$color-border;
+  border-radius: 4px;
+  background-color: v.$bg-main;
+}
+
+.cardPickerThumb {
+  display: block;
+  object-fit: cover;
+}
+
+.cardPickerEmptyThumb {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.25rem;
+  color: v.$text-muted;
+  font-size: 0.65rem;
+  text-align: center;
+}
+
+.emptyState {
+  padding: 1rem;
+  border: 1px dashed v.$color-border;
+  border-radius: 6px;
+  color: v.$text-muted;
+  text-align: center;
+}
+
 .modalActions {
   @include m.modal-actions-row;
   margin-top: 0.5rem;

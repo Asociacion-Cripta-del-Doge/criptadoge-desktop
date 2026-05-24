@@ -93,6 +93,8 @@ export const CardManagement: React.FC = () => {
   const [isCollectionModalOpen, setIsCollectionModalOpen] = useState(false)
   const [editingCollection, setEditingCollection] = useState<CardCollection | null>(null)
   const [collectionForm, setCollectionForm] = useState<CollectionFormData>(emptyCollectionForm)
+  const [addCardsCollection, setAddCardsCollection] = useState<CardCollection | null>(null)
+  const [selectedUnassignedCardIds, setSelectedUnassignedCardIds] = useState<number[]>([])
 
   const [isCardModalOpen, setIsCardModalOpen] = useState(false)
   const [editingCard, setEditingCard] = useState<CollectibleCard | null>(null)
@@ -165,6 +167,12 @@ export const CardManagement: React.FC = () => {
     })
   }, [sortDirection, sortKey, stats])
 
+  const unassignedCards = useMemo(() => {
+    return cards
+      .filter((card) => card.collectionId === null)
+      .sort((a, b) => a.name.localeCompare(b.name))
+  }, [cards])
+
   const refreshCards = async (): Promise<void> => {
     const [cardData, statsData, dashboardData] = await Promise.all([
       getCards(),
@@ -190,6 +198,46 @@ export const CardManagement: React.FC = () => {
       isActive: collection.isActive
     })
     setIsCollectionModalOpen(true)
+  }
+
+  const openAddCardsToCollection = (collection: CardCollection): void => {
+    setAddCardsCollection(collection)
+    setSelectedUnassignedCardIds([])
+  }
+
+  const closeAddCardsModal = (): void => {
+    if (isSubmitting) return
+    setAddCardsCollection(null)
+    setSelectedUnassignedCardIds([])
+  }
+
+  const toggleUnassignedCard = (cardId: number): void => {
+    setSelectedUnassignedCardIds((prev) =>
+      prev.includes(cardId) ? prev.filter((id) => id !== cardId) : [...prev, cardId]
+    )
+  }
+
+  const submitAddCardsToCollection = async (): Promise<void> => {
+    if (!addCardsCollection || selectedUnassignedCardIds.length === 0) return
+
+    try {
+      setIsSubmitting(true)
+      setError(null)
+      await Promise.all(
+        selectedUnassignedCardIds.map((cardId) =>
+          updateCard(cardId, { collectionId: addCardsCollection.id })
+        )
+      )
+      await refreshCards()
+      setNotice('Cartas agregadas a la coleccion correctamente.')
+      setAddCardsCollection(null)
+      setSelectedUnassignedCardIds([])
+    } catch (err) {
+      console.error('Error al agregar cartas a la coleccion:', err)
+      setError(getErrorMessage(err))
+    } finally {
+      setIsSubmitting(false)
+    }
   }
 
   const submitCollection = async (event: React.FormEvent): Promise<void> => {
@@ -454,6 +502,12 @@ export const CardManagement: React.FC = () => {
                           </button>
                           <button
                             className={styles.actionBtn}
+                            onClick={() => openAddCardsToCollection(collection)}
+                          >
+                            Agregar cartas
+                          </button>
+                          <button
+                            className={styles.actionBtn}
                             onClick={() => setCollectionImageTarget(collection)}
                           >
                             Imagen
@@ -703,6 +757,57 @@ export const CardManagement: React.FC = () => {
             </button>
           </div>
         </form>
+      </Modal>
+
+      <Modal
+        isOpen={Boolean(addCardsCollection)}
+        onClose={closeAddCardsModal}
+        title="AGREGAR CARTAS"
+        className={styles.managementModal}
+      >
+        <div className={styles.form}>
+          <p className={styles.modalText}>
+            Selecciona cartas sin coleccion para agregarlas a{' '}
+            <strong>{addCardsCollection?.name}</strong>.
+          </p>
+          {unassignedCards.length > 0 ? (
+            <div className={styles.cardPicker}>
+              {unassignedCards.map((card) => (
+                <label key={card.id} className={styles.cardPickerItem}>
+                  <input
+                    type="checkbox"
+                    checked={selectedUnassignedCardIds.includes(card.id)}
+                    onChange={() => toggleUnassignedCard(card.id)}
+                  />
+                  {card.imageUrl ? (
+                    <img className={styles.cardPickerThumb} src={card.imageUrl} alt="" />
+                  ) : (
+                    <span className={styles.cardPickerEmptyThumb}>Sin imagen</span>
+                  )}
+                  <span>
+                    <strong>{card.name}</strong>
+                    <small>{rarityLabels[card.rarity]}</small>
+                  </span>
+                </label>
+              ))}
+            </div>
+          ) : (
+            <div className={styles.emptyState}>No hay cartas sin coleccion.</div>
+          )}
+          <div className={styles.modalActions}>
+            <button className={styles.secondaryBtn} type="button" onClick={closeAddCardsModal}>
+              Cancelar
+            </button>
+            <button
+              className={styles.submitBtn}
+              type="button"
+              onClick={submitAddCardsToCollection}
+              disabled={selectedUnassignedCardIds.length === 0 || isSubmitting}
+            >
+              {isSubmitting ? 'Agregando...' : 'Agregar cartas'}
+            </button>
+          </div>
+        </div>
       </Modal>
 
       <Modal
