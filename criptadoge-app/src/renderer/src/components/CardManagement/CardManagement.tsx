@@ -26,7 +26,8 @@ import {
   updateCollection,
   updatePackConfig,
   uploadCardImage,
-  uploadCollectionImage
+  uploadCollectionImage,
+  uploadPackCoverImage
 } from '../../api/cardsApi'
 
 type Section = 'resumen' | 'colecciones' | 'cartas' | 'estadisticas' | 'sobres'
@@ -48,7 +49,8 @@ const emptyCardForm: CardFormData = {
 const emptyPackConfig: PackConfig = {
   price: 0,
   cardsPerPack: 0,
-  isActive: false
+  isActive: false,
+  packCoverImageUrl: undefined
 }
 
 const rarityLabels: Record<CardRarity, string> = {
@@ -105,6 +107,7 @@ export const CardManagement: React.FC = () => {
 
   const [cardImageTarget, setCardImageTarget] = useState<CollectibleCard | null>(null)
   const [collectionImageTarget, setCollectionImageTarget] = useState<CardCollection | null>(null)
+  const [isPackImageTarget, setIsPackImageTarget] = useState(false)
   const [imagePreview, setImagePreview] = useState<string | null>(null)
 
   const [deleteTarget, setDeleteTarget] = useState<
@@ -343,6 +346,11 @@ export const CardManagement: React.FC = () => {
         setCollections((prev) => prev.map((item) => (item.id === updated.id ? updated : item)))
         setCollectionImageTarget(null)
       }
+      if (isPackImageTarget) {
+        const updated = await uploadPackCoverImage(imagePreview)
+        setPackConfig(updated)
+        setIsPackImageTarget(false)
+      }
       setImagePreview(null)
       setNotice('Imagen subida correctamente.')
     } catch (err) {
@@ -383,7 +391,8 @@ export const CardManagement: React.FC = () => {
       const saved = await updatePackConfig({
         price: Math.max(0, Number(packConfig.price)),
         cardsPerPack: Math.max(1, Number(packConfig.cardsPerPack)),
-        isActive: packConfig.isActive
+        isActive: packConfig.isActive,
+        packCoverImageUrl: packConfig.packCoverImageUrl
       })
       setPackConfig(saved)
       setNotice('Configuracion de sobres guardada.')
@@ -408,6 +417,7 @@ export const CardManagement: React.FC = () => {
     if (isSubmitting) return
     setCardImageTarget(null)
     setCollectionImageTarget(null)
+    setIsPackImageTarget(false)
     setImagePreview(null)
   }
 
@@ -653,6 +663,28 @@ export const CardManagement: React.FC = () => {
                 <h2>Configuracion de sobres</h2>
               </div>
               <form className={styles.form} onSubmit={submitPackConfig}>
+                <div className={styles.packCoverBlock}>
+                  {packConfig.packCoverImageUrl ? (
+                    <img
+                      className={styles.packCoverPreview}
+                      src={packConfig.packCoverImageUrl}
+                      alt="Imagen actual del sobre"
+                    />
+                  ) : (
+                    <span className={styles.packCoverEmpty}>Sin imagen de sobre</span>
+                  )}
+                  <div>
+                    <h3>Imagen del sobre</h3>
+                    <p>Sube la imagen que vera la web en la compra y la apertura de sobres.</p>
+                    <button
+                      className={styles.actionBtn}
+                      type="button"
+                      onClick={() => setIsPackImageTarget(true)}
+                    >
+                      Subir imagen
+                    </button>
+                  </div>
+                </div>
                 <div className={styles.row}>
                   <div className={styles.formGroup}>
                     <label>Precio</label>
@@ -874,7 +906,7 @@ export const CardManagement: React.FC = () => {
       </Modal>
 
       <Modal
-        isOpen={Boolean(cardImageTarget || collectionImageTarget)}
+        isOpen={Boolean(cardImageTarget || collectionImageTarget || isPackImageTarget)}
         onClose={closeImageModal}
         title="SUBIR IMAGEN"
         className={styles.managementModal}

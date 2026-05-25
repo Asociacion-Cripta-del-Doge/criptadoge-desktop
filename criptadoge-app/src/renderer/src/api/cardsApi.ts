@@ -37,6 +37,7 @@ export interface PackConfig {
   price: number
   cardsPerPack: number
   isActive: boolean
+  packCoverImageUrl?: string
 }
 
 export interface CardsDashboard {
@@ -155,7 +156,8 @@ const normalizeCard = (card: RawEntity): CollectibleCard => {
 const normalizePackConfig = (config: RawEntity): PackConfig => ({
   price: toNumber(config.price),
   cardsPerPack: toNumber(config.cardsPerPack),
-  isActive: Boolean(config.isActive)
+  isActive: Boolean(config.isActive),
+  packCoverImageUrl: normalizeImageUrl(config.packCoverImageUrl)
 })
 
 const normalizeDashboard = (dashboard: RawEntity): CardsDashboard => ({
@@ -252,6 +254,11 @@ export const updatePackConfig = async (
   configData: Partial<PackConfig>
 ): Promise<PackConfig> => {
   const { data } = await apiClient.patch<RawEntity>('/admin/pack-config', configData)
+  return normalizePackConfig(data)
+}
+
+export const uploadPackCoverImage = async (base64: string): Promise<PackConfig> => {
+  const { data } = await apiClient.post<RawEntity>('/admin/pack-config/cover', { base64 })
   return normalizePackConfig(data)
 }
 
